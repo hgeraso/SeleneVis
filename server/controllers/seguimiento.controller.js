@@ -6,10 +6,19 @@ seguimientoCtrl.getDocs = async(req,res)=>{
     const docSeguimientoConsulta= await Seguimiento.find();
     res.json(docSeguimientoConsulta);
 };
-seguimientoCtrl.getStudents = async(req,res)=>{
+seguimientoCtrl.getStudentsCourse = async(req,res)=>{
     const students= await Seguimiento.aggregate([
         { $group: { _id  : "$course", usernames : {$addToSet: "$username"}  } }
     ])
+        res.json(students); 
+}
+
+seguimientoCtrl.getStudents = async(req,res)=>{
+    const students= await Seguimiento.distinct( "username")
+        res.json(students); 
+}
+seguimientoCtrl.getCourses = async(req,res)=>{
+    const students= await Seguimiento.distinct( "course")
         res.json(students); 
 }
 
