@@ -16,7 +16,7 @@ app.use(cors({origin:'http://localhost:4200'}));
 
 // Routes
 app.use('/api/docentes',require('./routes/docente.routes'));
-
+app.use('/api/consulta',require('./routes/seguimiento.routes'))
 
 
 

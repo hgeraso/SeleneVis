@@ -1,6 +1,3 @@
-
-
-
 <div class="container">
     <div class="row">
         <div class="col s5">
@@ -9,55 +6,66 @@
                 <div class="card-content">
                     <form #docenteForm="ngForm" (ngsubmit)="addDocente(docenteForm)" id="formdocente">
                         <div class="row">
-                            <div class="input-field col s12" > 
-                                <input  type="hidden" name="_id"  placeholder="Enter your id" #_id="ngModel" [(ngModel)]="docenteService.selectedDocente._id">
-
-                               </div>
-                            <div class="input-field col s12" > 
-                            <input  id="name" type="text" name="name"  class="validate"  placeholder="Enter your name" #name="ngModel" [(ngModel)]="docenteService.selectedDocente.name"   >
-                            <label for="name" class="active">name</label>
+                            <div class="input-field col s12">
+                                <input type="hidden" name="_id" placeholder="Enter your id" #_id="ngModel"
+                                    [(ngModel)]="docenteService.selectedDocente._id">
 
                             </div>
-                            <div class="input-field col s12" > 
-                                <input type="text" name="course"  placeholder="Enter your Course" #course="ngModel" [(ngModel)]="docenteService.selectedDocente.course"  class="validate" >
-                                
+                            <div class="input-field col s12">
+                                <input id="name" type="text" name="name" class="validate" placeholder="Enter your name"
+                                    #name="ngModel" [(ngModel)]="docenteService.selectedDocente.name">
+                                <label for="name" class="active">name</label>
+
                             </div>
-                            <div class="input-field col s12" data-error="wrong" > 
-                                <input type="text" name="cedula"  placeholder="Enter your cedula" #cedula="ngModel" [(ngModel)]="docenteService.selectedDocente.cedula"  class="validate" >
-                                
+                            <div class="input-field col s12">
+                                <input type="text" name="course" placeholder="Enter your Course" #course="ngModel"
+                                    [(ngModel)]="docenteService.selectedDocente.course" class="validate">
+
                             </div>
-                            <div class="input-field col s12" > 
-                                <input type="password" name="password"  placeholder="Enter your password" #password="ngModel" [(ngModel)]="docenteService.selectedDocente.password"  class="validate" >
-                                
+                            <div class="input-field col s12" data-error="wrong">
+                                <input type="text" name="cedula" placeholder="Enter your cedula" #cedula="ngModel"
+                                    [(ngModel)]="docenteService.selectedDocente.cedula" class="validate">
+
                             </div>
-                            <div class="input-field col s12" > 
-                                <input   type= "hidden"  name="credencial"  placeholder="unassigned type User" #credential="ngModel" [(ngModel)]="docenteService.selectedDocente.credencial"  class="validate" >
+                            <div class="input-field col s12">
+                                <input type="password" name="password" placeholder="Enter your password"
+                                    #password="ngModel" [(ngModel)]="docenteService.selectedDocente.password"
+                                    class="validate">
+
                             </div>
-     
+                            <div class="input-field col s12">
+                                <input type="hidden" name="credencial" placeholder="unassigned type User"
+                                    #credential="ngModel" [(ngModel)]="docenteService.selectedDocente.credencial"
+                                    class="validate">
+                            </div>
+
 
                             <div class="input-field col s12">
-                                <select id="selcredential" name ="selectcredencial" placeholder="Enter yourr credencial" #credential="ngModel" [(ngModel)]="docenteService.selectedDocente.credencial" class="validate" >
-                                  <option value="" disabled selected>Select Type User</option> 
-                                  <option value="Docente">Docente</option>
-                                  <option value="Admin">Admin</option>
-                                  
+                                <select id="selcredential" name="selectcredencial" placeholder="Enter yourr credencial"
+                                    #credential="ngModel" [(ngModel)]="docenteService.selectedDocente.credencial"
+                                    class="validate">
+                                    <option value="" disabled selected>Select Type User</option>
+                                    <option value="Docente">Docente</option>
+                                    <option value="Admin">Admin</option>
+
                                 </select>
                                 <label>Select Type User</label>
-                              </div>
-                           
-                                                    
-            
+                            </div>
+
+
+
                             <div class="card-action">
                                 <div class="input-field col s12">
-                                    <button class="btn right" style="margin-left: 2px"  type="submit" name="action" (click)=addDocente(docenteForm) >Save   </button>
-                                    <button class="btn right" (click)=resetForm(docenteForm) > Clean   </button>
+                                    <button class="btn right" style="margin-left: 2px" type="submit" name="action"
+                                        (click)=addDocente(docenteForm)>Save </button>
+                                    <button class="btn right" (click)=resetForm(docenteForm)> Clean </button>
 
                                 </div>
 
                             </div>
 
                         </div>
-                                                   
+
                     </form>
 
                 </div>
@@ -73,35 +81,24 @@
                     <th>operation</th>
                 </thead>
                 <tbody>
-                     <tr *ngFor= "let docente of docenteService.docentes">
-                         <td> {{docente.name}}</td>
-                         <td> {{docente.course}}</td>
-                         <td> {{docente.cedula}}</td>
-                         <td> {{docente.credencial}}</td>
-                         <td> 
-                             <a (click)= "editDocente(docente)">
-                                 <i class="material-icons">edit</i>
-                             </a>
-                             <a (click)="delDocente(docente._id)">
+                    <tr *ngFor="let docente of docenteService.docentes">
+                        <td> {{docente.name}}</td>
+                        <td> {{docente.course}}</td>
+                        <td> {{docente.cedula}}</td>
+                        <td> {{docente.credencial}}</td>
+                        <td>
+                            <a (click)="editDocente(docente)">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <a (click)="delDocente(docente._id)">
                                 <i class="material-icons">delete</i>
                             </a>
-                         </td>
+                        </td>
 
 
-                     </tr>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
