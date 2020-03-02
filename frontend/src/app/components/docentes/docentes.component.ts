@@ -78,9 +78,12 @@ export class DocentesComponent implements OnInit {
         console.log(res);
       })
   }
+
   editDocente(docente:Docente){
     this.docenteService.selectedDocente= docente;
   }
+
+  
   delDocente(_id:String){
     if(confirm('are you sure you want to delete it?')){
       this.docenteService.deleteDocente(_id)

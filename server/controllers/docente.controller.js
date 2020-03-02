@@ -12,6 +12,7 @@ docenteCtrl.getDocentes = async(req,res)=>{
 
 
 };
+
 docenteCtrl.createDocente=  async(req,res)=>{
     console.log(req.body);
     //res.json('received');
