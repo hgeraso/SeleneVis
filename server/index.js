@@ -22,8 +22,10 @@ var student_routes = require('./routes/student.routes');
 // Routes
 app.use('/api/docentes',require('./routes/docente.routes'));
 app.use('/api/students', student_routes);
-app.use('/api/seguimiento',require('./routes/seguimiento.routes'))
-app.use('/api/courses',require('./routes/course.routes'))
+app.use('/api/seguimiento',require('./routes/seguimiento.routes'));
+app.use('/api/courses',require('./routes/course.routes'));
+app.use('/api/studentts',require('./routes/studentt.routes'));
+
 
 
 

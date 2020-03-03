@@ -1,6 +1,7 @@
 const Course = require('../models/course');
 
 const courseCtrl={}; //he definido un objeto para luego aplicar metodos.
+
 courseCtrl.getCourses = async(req,res)=>{
     
     const cursos= await Course.find();
@@ -10,8 +11,6 @@ courseCtrl.getCourses = async(req,res)=>{
 courseCtrl.createCourse =  async(req,res)=>{
     
     if(req.body){ 
-        console.log('ingreso a la primera condicion');
-
         course = new Course(
             {
             name:req.body.name,
@@ -22,9 +21,8 @@ courseCtrl.createCourse =  async(req,res)=>{
         res.json('saved');
         return 'course saved sussesfuly';
       
-    }else{
-
-    console.log('ingreso a la segunda condicion');
+    }
+    else{
     const course = new Course(
             {
             name:req.name,
