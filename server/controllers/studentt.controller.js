@@ -26,7 +26,7 @@ studenttCtrl.createStudentt =  async(req,res)=>{
     const student = new Studentt(
             {
             name:req.name,
-            students:req.courses
+            courses:req.courses
             });
     await student.save();
     respuesta='student saved sussesfuly';

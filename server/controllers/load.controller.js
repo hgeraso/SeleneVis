@@ -32,6 +32,7 @@ const loadCtrl={}
 }
 loadCtrl.loadCollections = async  (req,res) => {
  // ############Inicio Seccion para hacer las consultas avanzadas y guardar el resultado de la promesa en los diferentes arreglos-----
+    const bdselene= await segui.find();
     const courses= await segui.distinct( "course"); //devuelve lista total de cursos unicos
     const students= await segui.distinct( "username");// devuelve lista total de estudiantes unicos
     const studentsOfCourse=await segui.aggregate([      //devulve lista completa de cursos con sus respectivos estudiantes.
@@ -76,11 +77,11 @@ loadCtrl.loadCollections = async  (req,res) => {
         
             const reqStudent={
                 "name" : register._id,
-                "students":register.courses
+                "courses":register.courses
             };
             console.log('viendo tipo de funcion guardar estudiante:',studenttCtrl.createStudentt(reqStudent).then(v=>{console.log('new student saved',v)}).catch(error=>{console.log('el errorrr es:',error);}))
         });
-    res.json (studentsOfCourse);
+    res.json (coursesOfStudents);
     
 }
 
