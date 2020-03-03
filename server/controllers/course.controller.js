@@ -7,14 +7,34 @@ courseCtrl.getCourses = async(req,res)=>{
     res.json(cursos);
 };
 
-courseCtrl.createCourse=  async(req,res)=>{
-       const course = new Course(
-    {
-        name:req.body.name,
-        students:req.body.students
-    });
-    course.save();
-    res.json({'status':'Course guardado'});
+courseCtrl.createCourse =  async(req,res)=>{
+    
+    if(req.body){ 
+        console.log('ingreso a la primera condicion');
+
+        course = new Course(
+            {
+            name:req.body.name,
+            students:req.body.students
+            });
+           
+        await course.save();
+        res.json('saved');
+        return 'course saved sussesfuly';
+      
+    }else{
+
+    console.log('ingreso a la segunda condicion');
+    const course = new Course(
+            {
+            name:req.name,
+            students:req.students
+            });
+    await course.save();
+    respuesta='course saved sussesfuly';
+    return respuesta;
+    
+    } 
 }
 
 courseCtrl.getCourse= async (req,res)=>{ 
