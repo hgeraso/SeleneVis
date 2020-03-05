@@ -1,7 +1,6 @@
 const seguimiento = require('../controllers/seguimiento.controller');
 const segui = require('../models/seguimiento');
 const stude = require('../models/studentt');
-const Course = require('../models/course');
 const courseCtrl= require('./course.controller');
 const studenttCtrl = require('./studentt.controller');
 const indicatorCtrl = require('./indicators.controller');

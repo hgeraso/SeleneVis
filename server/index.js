@@ -26,6 +26,7 @@ app.use('/api/seguimiento',require('./routes/seguimiento.routes'));
 app.use('/api/courses',require('./routes/course.routes'));
 app.use('/api/studentts',require('./routes/studentt.routes'));
 app.use('/api/indicators',require('./routes/indicator.routes'));
+app.use('/api/statistics',require('./routes/statistics.routes'));
 
 
 
