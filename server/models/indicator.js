@@ -8,7 +8,7 @@ const  indicatorSchema= new Schema({
     numExamenes: String,
     numSesiones: {type:String,required: true/*,unique:true*/},
     numVideos:String,
-    // numVideosDiferentes: String,
+    numVideosDiferentes: String,
     // numRespuestas: {type:String,required: true/*,unique:true*/},
 
     // timeContenido: {type:String,required: true/*,unique:true*/},

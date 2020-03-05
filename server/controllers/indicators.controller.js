@@ -20,8 +20,8 @@ indicatorCtrl.createIndicator =  async(req,res)=>{
                 numExamenes: req.body.numExamenes,
                 numSesiones: req.body.numSesiones,
                 numVideos:req.body.numVideos,
-               /*  numVideosDiferentes: req.body.numVideosDiferentes,
-                numRespuestas: req.body.numRespuestas,
+                numVideosDiferentes: req.body.numVideosDiferentes
+                /* numRespuestas: req.body.numRespuestas,
             
                 timeContenido: req.body.timeContenido,
                 timeForos:req.body.timeForos,
@@ -46,8 +46,8 @@ indicatorCtrl.createIndicator =  async(req,res)=>{
                 numExamenes: req.numExamenes,
                 numSesiones: req.numSesiones,
                 numVideos:req.numVideos,
-               /*  numVideosDiferentes: req.body.numVideosDiferentes,
-                numRespuestas: req.body.numRespuestas,
+                numVideosDiferentes: req.numVideosDiferentes
+                /*numRespuestas: req.body.numRespuestas,
             
                 timeContenido: req.body.timeContenido,
                 timeForos:req.body.timeForos,
