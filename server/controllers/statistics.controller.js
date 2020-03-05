@@ -6,7 +6,7 @@ statisticCtrl.getStatistics = async(req,res)=>{
     const numVideos= await seguimiento.find({ $and : [
         {"username":"Gustavo_Ramirez_Staff","course":"Unicauca+Intro_IoT+2019-II"},
         {$or:[{name:"play_video"},{name:"pause_video"},{name:"stop_video"}]}
-     ]})//.count();
+     ]}).count();
     const numContenido= await seguimiento.find( { $and : [
         { $or : [ { name : "nav_content" }, { name : "nav_content_click" },{ name : "nav_content_prev" },{ name : "nav_content_next" },{ name : "nav_content_tab" }] },
         {  "username":"Gustavo_Ramirez_Staff","course":"Unicauca+Intro_IoT+2019-II"}
