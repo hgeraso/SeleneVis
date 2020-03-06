@@ -3,7 +3,7 @@ const router =express.Router();
 const pruebaCtrl = require('../controllers/prueba.controller')
 
 
-router.get('/time', pruebaCtrl.getTime);
+router.get('/time', pruebaCtrl.getTime2);
 
 
 
