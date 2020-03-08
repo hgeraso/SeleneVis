@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Network, DataSet, Node, Edge, IdType } from 'vis';
+import { Network, DataSet, Node, Edge, IdType, Graph2d } from 'vis';
 
 @Component({
   selector: 'app-estadisticos',
@@ -14,13 +14,16 @@ export class EstadisticosComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-  
+
     this.createNetwork();
+    this.createStadistics();
 
   }
 
+  //create graphs
   createNetwork() {
-    var nodes = new DataSet([
+
+    const nodes = new DataSet([
       { id: 1, label: 'Node 1' },
       { id: 2, label: 'Node 2' },
       { id: 3, label: 'Node 3' },
@@ -28,7 +31,7 @@ export class EstadisticosComponent implements OnInit {
       { id: 5, label: 'Node 5' }
     ]);
     // create an array with edges
-    var edges = new DataSet([
+    const edges = new DataSet([
       { from: 1, to: 3 },
       { from: 1, to: 2 },
       { from: 2, to: 4 },
@@ -37,13 +40,65 @@ export class EstadisticosComponent implements OnInit {
     ]);
 
     // create a network
-    var container = document.getElementById('mynetwork');
-    var data = {
+    const container = document.getElementById('mynetwork');
+    const data = {
       nodes: nodes,
       edges: edges
     };
-    var options = {};
-    var network = new Network(container, data, options);
+    const options = {};
+
+    const network = new Network(container, data, options);
+
+  }
+
+  //create Stadistics
+  createStadistics() {
+
+    const items = [
+      { x: "2014-06-11", y: 10, group: 0 },
+      { x: "2014-06-12", y: 25, group: 0 },
+      { x: "2014-06-13", y: 30, group: 0 },
+      { x: "2014-06-14", y: 10, group: 0 },
+      { x: "2014-06-15", y: 15, group: 0 },
+      { x: "2014-06-16", y: 30, group: 0 },
+      { x: "2014-06-11", y: 12, group: 1 },
+      { x: "2014-06-12", y: 15, group: 1 },
+      { x: "2014-06-13", y: 34, group: 1 },
+      { x: "2014-06-14", y: 24, group: 1 },
+      { x: "2014-06-15", y: 5, group: 1 },
+      { x: "2014-06-16", y: 12, group: 1 },
+      { x: "2014-06-11", y: 22, group: 2 },
+      { x: "2014-06-12", y: 14, group: 2 },
+      { x: "2014-06-13", y: 24, group: 2 },
+      { x: "2014-06-14", y: 21, group: 2 },
+      { x: "2014-06-15", y: 30, group: 2 },
+      { x: "2014-06-16", y: 18, group: 2 }
+    ];
+
+    let groups = new DataSet();
+    groups.add({ id: 0, content: "group0" });
+    groups.add({ id: 1, content: "group1" });
+    groups.add({ id: 2, content: "group2" });
+
+    const container = document.getElementById("visualization");
+
+    const dataset = new DataSet(items);
+    const options = {
+      style: "bar",
+      stack: false,
+      barChart: { width: 50, align: "center", sideBySide: true }, // align: left, center, right
+      drawPoints: false,
+      dataAxis: {
+        icons: true
+      },
+      orientation: "top",
+      start: "2014-06-10",
+      end: "2014-06-18"
+    };
+
+    var graph2d = new Graph2d(container, items, groups, options);
+
+    graph2d.setOptions(options);
 
   }
 
