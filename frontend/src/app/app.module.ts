@@ -7,12 +7,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DocentesComponent } from './components/docentes/docentes.component';
 import { SummaryComponent } from './components/summary/summary.component';
+import { EstadisticosComponent } from './components/estadisticos/estadisticos.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DocentesComponent,
-    SummaryComponent
+    SummaryComponent,
+    EstadisticosComponent
   ],
   imports: [
     BrowserModule,
