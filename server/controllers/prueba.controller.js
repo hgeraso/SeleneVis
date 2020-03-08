@@ -122,7 +122,7 @@ pruebaCtrl.getTime2 = async(req,res)=>{
      console.log("es de tipo :",typeof(bdTimeVideo.length),bdTimeVideo.length);
 
     
-    
+   //probando 
    /*  const banderaDate=new Date(Date.UTC( (1900,00,01,00,00,00,00))); 
     console.log("banderaDate:",banderaDate)
     var sumTime=new Date(Date.UTC( 1970,00,01,00,00,00,00));
