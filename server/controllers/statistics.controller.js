@@ -6,7 +6,7 @@ statisticCtrl.getStatistics = async(req,res)=>{
     const numVideos= await seguimiento.find({ $and : [
         {"username":"Gustavo_Ramirez_Staff","course":"Unicauca+Intro_IoT+2019-II"},
         {$or:[{name:"play_video"},{name:"pause_video"},{name:"stop_video"}]}
-     ]})//.count();
+     ]}).count();
     const numContenido= await seguimiento.find( { $and : [
         { $or : [ { name : "nav_content" }, { name : "nav_content_click" },{ name : "nav_content_prev" },{ name : "nav_content_next" },{ name : "nav_content_tab" }] },
         {  "username":"Gustavo_Ramirez_Staff","course":"Unicauca+Intro_IoT+2019-II"}
@@ -82,7 +82,7 @@ statisticCtrl.getStatistics = async(req,res)=>{
          bdTimeVideo=[{name:"play_video", time:3},{name:"play_video", time:5},{name:"nav_content", time:7},{name:"play_video", time:8},{name:"play_video", time:9}
         ];
          bdTimeVideo.forEach(element => {
-             if(element.name=="play_video"||element.name=="pause_video"||element.name=="stop_video"){
+            if(element.name=="play_video"||element.name=="pause_video"||element.name=="stop_video"){
                 console.log("ingreso a la condicion de timevideo");
                 if(timeEnd==0){
                     console.log("no cumplio la primera condicion inicial");
@@ -95,7 +95,7 @@ statisticCtrl.getStatistics = async(req,res)=>{
                      timeEnd=timeInit;
                      console.log("la suma parcial es",sumTime);
                  }
-             }else{
+            }else{
                  console.log("ingreso a la condicion de navconntent");
                  if(timeEnd!==0){
                      timeInit=element.time;
@@ -104,7 +104,7 @@ statisticCtrl.getStatistics = async(req,res)=>{
                      timeEnd=0;
                      console.log("la suma con nav es:",sumTime);
                  }
-             }
+            }
              
          });
          res.json({time:sumTime});
