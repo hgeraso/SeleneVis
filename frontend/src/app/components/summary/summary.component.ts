@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Estudiante } from 'src/app/models/estudiante';
 import { Curso } from 'src/app/models/curso';
 import { NgForm } from '@angular/forms';
+import { StudentService } from '../../services/student.service';
 
 declare var M:any;
 
@@ -16,7 +17,9 @@ export class SummaryComponent implements OnInit {
   selectEstudiante:Estudiante=new Estudiante('','','');
   Cursos:Curso[]=[];
   selectCurso:Curso=new Curso();
-  constructor() { }
+
+
+  constructor( private servicefollow : StudentService ) { }
 
   ngOnInit(): void {
 

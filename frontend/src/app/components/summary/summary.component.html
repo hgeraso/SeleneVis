@@ -1,22 +1,25 @@
 <div class="row">
-    <form #studentOfCourseForm="ngForm" (ngsubmit)="ver(studentOfCourseForm)" id="formdocente" class="col s12">
-      <div class="row">
-       
-        <div class="input-field col s12" > 
-            <input disabled  id="student Select" type= "text"  name="selected"  placeholder="unassigned Students"   class="validate" >
-            <label for="student Select" class="active">student Select</label>
-        </div>
-        <div class="input-field col s12">
-          <select id="selectestudiant" name='selectStudent' required="" aria-required="true" [(ngModel)]="selectEstudiante"  >
-             <option value="" disabled selected>List Students</option>
-             <option  [ngValue]="estudi" *ngFor="let estudi of Estudiantes">{{estudi.name}} {{estudi._id}}</option>
+  <form #studentOfCourseForm="ngForm" (ngsubmit)="ver(studentOfCourseForm)" id="formdocente" class="col s12">
+    <div class="row">
 
-  </select>
-          <label> Select Students</label>
-        </div>
-        <div class="input-field col s12"> 
-          <button class="btn waves-effect waves-light" type="submit" name="action" (click)="ver(studentOfCourseForm)">Submit</button>
-        </div>
+      <div class="input-field col s12">
+        <input disabled id="student Select" type="text" name="selected" placeholder="unassigned Students"
+          class="validate">
+        <label for="student Select" class="active">student Select</label>
       </div>
-    </form>
-  </div>
+      <div class="input-field col s12">
+        <select id="selectestudiant" name='selectStudent' required="" aria-required="true"
+          [(ngModel)]="selectEstudiante">
+          <option value="" disabled selected>List Students</option>
+          <option [ngValue]="estudi" *ngFor="let estudi of Estudiantes">{{estudi.name}} {{estudi._id}}</option>
+
+        </select>
+        <label> Select Students</label>
+      </div>
+      <div class="input-field col s12">
+        <button class="btn waves-effect waves-light" type="submit" name="action"
+          (click)="ver(studentOfCourseForm)">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>
