@@ -59,7 +59,10 @@ statisticCtrl.getStatistics = async(req,res)=>{
         { $count :"numsesionesDifferents" }
     ]
     );
-
+    const timeVideo= await statisticCtrl.getTimeVideo();
+    console.log(timeVideo);
+   /*  .then(v=>{console.log("el valor de tiempo de video es",v); return v;}).catch(error=>{console.log('el errorrr es:',error)});
+    console.log("el valor de tiempo de video es",timeVideo); */
 
     res.json(
         {"numVideos":numVideos,
@@ -68,48 +71,47 @@ statisticCtrl.getStatistics = async(req,res)=>{
          "numExamenes":numExamenes,
          "numSesiones":numSesiones,
          "numVideosDiferentes":numVideosDiferentes[0].numVideosDifferents,
-         "numSesionesDiferentes":numSesionesDiferentes[0].numsesionesDifferents
+         "numSesionesDiferentes":numSesionesDiferentes[0].numsesionesDifferents,
+         "TimeVideo": timeVideo
         }
     );
 }
-    statisticCtrl.getTime = (req,res)=>{
-        sumTime=0;
-        timeEnd=0;
-        /* const bdTimeVideo= await seguimiento.find({ $and : [
-            {"username":"Gustavo_Ramirez_Staff","course":"Unicauca+Intro_IoT+2019-II"},
-            
-         ]}); */
-         bdTimeVideo=[{name:"play_video", time:3},{name:"play_video", time:5},{name:"nav_content", time:7},{name:"play_video", time:8},{name:"play_video", time:9}
-        ];
-         bdTimeVideo.forEach(element => {
-            if(element.name=="play_video"||element.name=="pause_video"||element.name=="stop_video"){
-                console.log("ingreso a la condicion de timevideo");
-                if(timeEnd==0){
-                    console.log("no cumplio la primera condicion inicial");
-                     timeEnd=element.time;
-                 }else{
-                     console.log("ingreso a la condicion de sumTime");
-                     timeInit=element.time;
-                     resTime= timeInit-timeEnd;
-                     sumTime=sumTime+ resTime;
-                     timeEnd=timeInit;
-                     console.log("la suma parcial es",sumTime);
-                 }
-            }else{
-                 console.log("ingreso a la condicion de navconntent");
-                 if(timeEnd!==0){
-                     timeInit=element.time;
-                     resTime= timeInit-timeEnd;
-                     sumTime=sumTime+resTime;
-                     timeEnd=0;
-                     console.log("la suma con nav es:",sumTime);
-                 }
-            }
-             
-         });
-         res.json({time:sumTime});
-    }
+    statisticCtrl.getTimeVideo = async function(){
 
+        const bdTimeVideo= await seguimiento.find({ $and : [
+         {"username":"Gustavo_Ramirez_Staff","course":"Unicauca+Intro_IoT+2019-II"},  
+         ]}).sort("time").sort("date");
+         sumTime=0; // en segundos 
+         for (let i = 0; i < bdTimeVideo.length-1; i++) {
+             //console.log(i+1);
+             console.log("entro al ciclo ",i);
+             if (bdTimeVideo[i].toObject().date==bdTimeVideo[i+1].toObject().date){
+                    if(bdTimeVideo[i].toObject().name=="play_video"){
+                        console.log("entro al play video");
+                        segTimeInit= (bdTimeVideo[i].toObject().time.substr(0,2)*3600)+bdTimeVideo[i].toObject().time.substr(3,2)*60 + (bdTimeVideo[i].toObject().time.substr(6,2)*1);     
+                        segTimeEnd= (bdTimeVideo[i+1].toObject().time.substr(0,2)*3600)+bdTimeVideo[i+1].toObject().time.substr(3,2)*60 + (bdTimeVideo[i+1].toObject().time.substr(6,2)*1);
+                        resTime=segTimeEnd-segTimeInit;
+                        console.log("el residuo es:",resTime);
+                            
+                        if (resTime<60*7){ 
+                            if(bdTimeVideo[i+1].toObject().name=="Signin"){
+                                console.log("se descarta por Signin");
+    
+                            }else{
+                                sumTime=sumTime+resTime;
+                                console.log("la suma parcial es:",sumTime);
+                            }
+                        }
+                    }
+            }    
+         } 
+         console.log("es de tipo :",typeof(bdTimeVideo.length),bdTimeVideo.length);
+         //res.json({"la suma total es": sumTime}); //tiempo en segundo de interaccion directa con el video
+         //res.json(bdTimeVideo);
+         return sumTime;
+    }
+    
+    
     
 
 

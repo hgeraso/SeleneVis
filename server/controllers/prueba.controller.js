@@ -17,7 +17,7 @@ pruebaCtrl.getTime2 = async(req,res)=>{
                     resTime=segTimeEnd-segTimeInit;
                     console.log("el residuo es:",resTime);
                         
-                    if (resTime<600*7){ 
+                    if (resTime<60*7){ 
                         if(bdTimeVideo[i+1].toObject().name=="Signin"){
                             console.log("se descarta por Signin");
 
@@ -30,8 +30,8 @@ pruebaCtrl.getTime2 = async(req,res)=>{
         }    
      } 
      console.log("es de tipo :",typeof(bdTimeVideo.length),bdTimeVideo.length);
-     //res.json({"la suma total es": sumTime});
-     res.json(bdTimeVideo);
+     res.json({"la suma total es": sumTime}); //tiempo en segundo de interaccion directa con el video
+     //res.json(bdTimeVideo);
 }
 
 
