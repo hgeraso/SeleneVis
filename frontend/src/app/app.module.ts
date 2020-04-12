@@ -8,19 +8,26 @@ import { AppComponent } from './app.component';
 import { DocentesComponent } from './components/docentes/docentes.component';
 import { SummaryComponent } from './components/summary/summary.component';
 import { EstadisticosComponent } from './components/estadisticos/estadisticos.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { NavbarComponent } from './components/shared/navbar/navbar.component'; 
+import { MaterialModule } from './material.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     DocentesComponent,
     SummaryComponent,
-    EstadisticosComponent
+    EstadisticosComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]

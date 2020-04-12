@@ -7,7 +7,8 @@ import { EstadisticosComponent } from './components/estadisticos/estadisticos.co
 const routes: Routes = [
 { path:'',component: DocentesComponent},
 { path: 'summary', component: SummaryComponent},
-{ path: 'estadisticos', component: EstadisticosComponent}
+{ path: 'estadisticos', component: EstadisticosComponent},
+{ path: "**", redirectTo: "summary", pathMatch: 'full' },
 
 ];
 

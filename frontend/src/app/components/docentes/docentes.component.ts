@@ -17,7 +17,6 @@ export class DocentesComponent implements OnInit {
   docente:Docente;
    
   
-
   constructor(public docenteService:DocenteService ) {
   
     
@@ -42,6 +41,7 @@ export class DocentesComponent implements OnInit {
   }
 
   addDocente(form:NgForm){ 
+    
     if(form.value._id){
       this.docenteService.putDocente(form.value)
       .subscribe(res=>{
