@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DocenteService } from '../../services/docente.service'
-import { NgForm, FormGroup, FormControl } from '@angular/forms';
+import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Docente } from 'src/app/models/docente';
 
 declare var M: any;
@@ -20,35 +20,40 @@ export class DocentesComponent implements OnInit {
   selected = "example1"
   teacherList: Docente[];
 
-  list = [{ name: "Oscar", course:"exploracion", id:"1059365214", profile:"Docente" }];
   columnsToDisplay = ['Nombre', 'Curso', 'Cedula', 'Perfil', 'operation'];
+
+  list = [{ name: "Oscar", course:"exploracion", cedula:"1059365214", profile:"Docente" }, 
+          { name: "Andres", course:"Agricultura", cedula:"1059365214", profile:"Admin" }];
 
   docenteForm: FormGroup;
 
   constructor(public docenteService: DocenteService) {
 
     this.docenteForm = new FormGroup({
-      'name': new FormControl('Aldair'),
-      'course': new FormControl(''),
-      'identification': new FormControl(''),
-      'profile': new FormControl(''),
-      'password': new FormControl(''),
-      'repeatPassword': new FormControl('')
+      'name': new FormControl('Aldair', Validators.required),
+      'course': new FormControl('', Validators.required),
+      'identification': new FormControl('', Validators.required),
+      'profile': new FormControl('', Validators.required),
+      'password': new FormControl('', Validators.required),
+      'repeatPassword': new FormControl('', Validators.required)
     })
+
+    // this.getDocentes();
 
   }
 
   ngOnInit(): void {
     this.getDocentes();
-    console.log(document.getElementById('selcredential'));
-    console.log("ya se cargo el ts");
-    //var instance = M.FormSelect.getInstance(document.getElementById('selcredential'));
-
-
+    
   }
 
-  saveDocent() {
-    console.log(this.docenteForm.value['profile']);
+  saveDocent(i?) {
+
+    if(i){
+      console.log(i);
+      
+    }
+    console.log(this.docenteForm.value);
 
   }
 
@@ -93,11 +98,13 @@ export class DocentesComponent implements OnInit {
   };
 
   getDocentes() {
+
     this.docenteService.getDocentes()
-      .subscribe(res => {
-        this.docenteService.docentes = res as Docente[];
-        console.log(res);
+      .subscribe((res:Docente[]) => {
+        this.teacherList = res;
+        console.log(this.teacherList);
       })
+
   }
 
   editDocente(docente: Docente) {
