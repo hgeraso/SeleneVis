@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { DocenteService } from '../../services/docente.service'
-import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Docente } from 'src/app/models/docente';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatDialog} from '@angular/material/dialog';
+import Swal from 'sweetalert2'
 
 declare var M: any;
 
@@ -22,18 +25,19 @@ export class DocentesComponent implements OnInit {
 
   columnsToDisplay = ['Nombre', 'Curso', 'Cedula', 'Perfil', 'operation'];
 
-  list = [{ name: "Oscar", course:"exploracion", cedula:"1059365214", profile:"Docente" }, 
-          { name: "Andres", course:"Agricultura", cedula:"1059365214", profile:"Admin" }];
+  list = [{ name: "Oscar", course: "exploracion", cedula: "1059365214", profile: "Docente" },
+  { name: "Andres", course: "Agricultura", cedula: "1059365214", profile: "Admin" }];
 
   docenteForm: FormGroup;
 
-  constructor(public docenteService: DocenteService) {
+  constructor(public docenteService: DocenteService, private toast: MatSnackBar, public dialog: MatDialog) {
 
     this.docenteForm = new FormGroup({
-      'name': new FormControl('Aldair', Validators.required),
+      '_id': new FormControl('', Validators.required),
+      'name': new FormControl('', Validators.required),
       'course': new FormControl('', Validators.required),
-      'identification': new FormControl('', Validators.required),
-      'profile': new FormControl('', Validators.required),
+      'cedula': new FormControl('', Validators.required),
+      'credencial': new FormControl('', Validators.required),
       'password': new FormControl('', Validators.required),
       'repeatPassword': new FormControl('', Validators.required)
     })
@@ -44,85 +48,89 @@ export class DocentesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDocentes();
-    
-  }
-
-  saveDocent(i?) {
-
-    if(i){
-      console.log(i);
-      
-    }
-    console.log(this.docenteForm.value);
 
   }
 
-  resetForm(form?: NgForm) {
-    if (form) {
-      M.updateTextFields();
-      form.reset();
-      this.docenteService.selectedDocente = new Docente();
-      M.FormSelect.init(document.getElementById('selcredential'));
-    }
+  resetForm() {
+    this.docenteForm.setValue({
+      "_id": "",
+      "name": "",
+      "course": "",
+      "cedula": "",
+      "credencial": "Seleccione un perfil",
+      "password": "",
+      "repeatPassword": ""
+    })
   }
 
-  addDocente(form: NgForm) {
+  addDocente() {
 
-    if (form.value._id) {
-      this.docenteService.putDocente(form.value)
-        .subscribe(res => {
-          this.resetForm(form);
-          M.toast({ html: 'User update successfuly!' });
-          this.getDocentes();
-          var instancee = M.FormSelect.getInstance(document.getElementById('selcredential'));
-          console.log("estos son los valores", instancee.getSelectedValues())
-          M.FormSelect.init(document.getElementById('selcredential'));
+    if (this.docenteForm.value._id) {
 
+      this.docenteService.putDocente(this.docenteForm.value).subscribe(res => {
 
+        this.resetForm();
+        this.getDocentes();
+        this.toast.open('información Guardada', 'Cerrar', { duration: 2500 });
 
-        })
+      })
+
     } else {
-      this.docenteService.postDocente(form.value)
-        .subscribe(res => {
-          this.resetForm(form);
+      this.docenteService.postDocente(this.docenteForm.value).subscribe(res => {
+        this.resetForm();
+        this.getDocentes();
+        this.toast.open('Docente creado', 'Cerrar', { duration: 2500 });
 
-          M.toast({ html: 'User saved successfuly!' });
-          this.getDocentes();
-          M.updateTextFields();
-
-        })
-      console.log(form.value);
+      })
     }
-
-
   };
 
   getDocentes() {
 
-    this.docenteService.getDocentes()
-      .subscribe((res:Docente[]) => {
-        this.teacherList = res;
-        console.log(this.teacherList);
-      })
+    this.docenteService.getDocentes().subscribe((res: Docente[]) => {
+      this.teacherList = res;
+    })
 
   }
 
-  editDocente(docente: Docente) {
-    this.docenteService.selectedDocente = docente;
+  editDocente(i: number) {
+
+    this.docenteForm.setValue({
+      "_id": this.teacherList[i]._id,
+      "name": this.teacherList[i].name,
+      "course": this.teacherList[i].course,
+      "cedula": this.teacherList[i].cedula,
+      "credencial": this.teacherList[i].credencial,
+      "password": this.teacherList[i].password,
+      "repeatPassword": this.teacherList[i].password
+    });
   }
 
 
   delDocente(_id: String) {
-    if (confirm('are you sure you want to delete it?')) {
-      this.docenteService.deleteDocente(_id)
-        .subscribe(res => {
-          this.getDocentes();
-          M.toast({ html: 'User deleted successfuly!' });
 
-        })
-    }
+    Swal.fire({
 
+      title: '¿Eliminar Docente?',
+      // text: mensaje,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#542b81',
+      cancelButtonColor: '#542b81',
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'No'
+
+    })
+      .then((result) => {
+
+        if (result.value) {
+          this.docenteService.deleteDocente(_id).subscribe(res => {
+            this.getDocentes();
+            this.toast.open('Docente Eliminado', 'Cerrar', { duration: 2500 });
+          })
+        }
+
+      })
   }
-
 
 }
