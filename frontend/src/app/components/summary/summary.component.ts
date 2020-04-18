@@ -3,8 +3,13 @@ import { Estudiante } from 'src/app/models/estudiante';
 import { Curso } from 'src/app/models/curso';
 import { NgForm } from '@angular/forms';
 import { StudentService } from '../../services/student.service';
+import { CourseFollowService } from 'src/app/services/course-follow.service';
 
-declare var M:any;
+declare var M: any;
+interface Food {
+  value: string;
+  viewValue: string;
+}
 
 @Component({
   selector: 'app-summary',
@@ -13,28 +18,39 @@ declare var M:any;
 })
 export class SummaryComponent implements OnInit {
 
-  Estudiantes:Estudiante[]=[];
-  selectEstudiante:Estudiante=new Estudiante('','','');
-  Cursos:Curso[]=[];
-  selectCurso:Curso=new Curso();
+  Students: string[] = [];
+  courses: string[];
+
+  foods: Food[] = [
+    { value: 'steak-0', viewValue: 'Steak' },
+    { value: 'pizza-1', viewValue: 'Pizza' },
+    { value: 'tacos-2', viewValue: 'Tacos' }
+  ];
 
 
-  constructor( private servicefollow : StudentService ) { }
+  constructor(private servicefollow: StudentService, private serviceCourse: CourseFollowService) {
 
-  ngOnInit(): void {
+    this.loadCourses();
 
-    this.Estudiantes.push(new Estudiante("1","Herman",'moviles'));
-    this.Estudiantes.push(new Estudiante("2","David",'moviles'));
-    this.Estudiantes.push(new Estudiante("3","Rafa",'moviles'));
-    console.log('valor estudiante',this.selectEstudiante);
-   
   }
-  //funcion temporal para revisar como va el codigo
-  ver(form:NgForm){
-    console.log(this.selectEstudiante);
-    form.reset();
-    this.selectEstudiante=new Estudiante('','','');
-    M.FormSelect.init(document.getElementById('selectestudiant'));
 
+  ngOnInit() { }
+
+
+  //funcion temporal para revisar como va el codigo
+  ver(form: NgForm) {
+    form.reset();
+    M.FormSelect.init(document.getElementById('selectestudiant'));
+  }
+
+  loadCourses() {
+    this.serviceCourse.getCourses().subscribe(coures => {
+      this.courses = coures;
+    })
+  }
+
+  loadStudentsByCourse(course:string){
+    this.servicefollow.getSrudentsBycourse(course).subscribe( students => this.Students = students );
+    
   }
 }

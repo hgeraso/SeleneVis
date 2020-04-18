@@ -1,4 +1,3 @@
-
 <!-- <div class="row">
   <form #studentOfCourseForm="ngForm" (ngsubmit)="ver(studentOfCourseForm)" id="formdocente" class="col s12">
     <div class="row">
@@ -24,3 +23,51 @@
     </div>
   </form>
 </div> -->
+<div class="main-container">
+
+    <mat-card class="form-card">
+        <mat-card-header>
+            <mat-card-title>Cursos</mat-card-title>
+        </mat-card-header>
+
+        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+        <mat-card-content>
+
+            <mat-form-field>
+                <mat-label>curso</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let course of courses" [value]="course" (click)="loadStudentsByCourse(course)">
+                        {{course}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </mat-card-content>
+
+    </mat-card>
+
+    <mat-card class="form-card">
+        <mat-card-header>
+            <mat-card-title>Estudiantes</mat-card-title>
+        </mat-card-header>
+
+        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+        <mat-card-content>
+
+            <mat-form-field>
+                <mat-label>estudiante</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let student of Students" [value]="student">
+                        {{student}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </mat-card-content>
+
+    </mat-card>
+
+    <div style="padding-top: 5rem;">
+        <button mat-raised-button color="primary">Consultar</button>
+    </div>
+</div>

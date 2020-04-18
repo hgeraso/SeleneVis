@@ -1,0 +1,8 @@
+@import '../docentes/docentes.component.css';
+.form-card {
+    max-width: 300px;
+}
+
+::ng-deep .mat-form-field-infix {
+    width: 280px !important;
+}
