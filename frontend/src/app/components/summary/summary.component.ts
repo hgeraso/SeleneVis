@@ -22,12 +22,7 @@ export class SummaryComponent implements OnInit {
   Students: string[] = [];
   courses: string[];
 
-  foods: Food[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos' }
-  ];
-
+  studentN:{course:string, student:string}={course:'', student:''};
 
   constructor(private servicefollow: StudentService, private serviceCourse: CourseFollowService, private statics: SeguimientoService) {
 
@@ -48,7 +43,5 @@ export class SummaryComponent implements OnInit {
     this.servicefollow.getSrudentsBycourse(course).subscribe(students => this.Students = students);
   }
 
-  loadStatics() {
-    this.statics.getGeneralStatics().subscribe(statics => console.log(statics))
-  }
+
 }

@@ -12,6 +12,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NavbarComponent } from './components/shared/navbar/navbar.component'; 
 import { MaterialModule } from './material.module';
+import { ChartsModule } from 'ng2-charts';
+import { BarsComponent } from './components/shared/bars/bars.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import { MaterialModule } from './material.module';
     DocentesComponent,
     SummaryComponent,
     EstadisticosComponent,
-    NavbarComponent
+    NavbarComponent,
+    BarsComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +31,8 @@ import { MaterialModule } from './material.module';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    ChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

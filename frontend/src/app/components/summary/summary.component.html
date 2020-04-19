@@ -35,7 +35,7 @@
 
             <mat-form-field>
                 <mat-label>curso</mat-label>
-                <mat-select>
+                <mat-select [(ngModel)]="studentN.course">
                     <mat-option *ngFor="let course of courses" [value]="course" (click)="loadStudentsByCourse(course)">
                         {{course}}
                     </mat-option>
@@ -56,7 +56,7 @@
 
             <mat-form-field>
                 <mat-label>estudiante</mat-label>
-                <mat-select>
+                <mat-select [(ngModel)]="studentN.student" >
                     <mat-option *ngFor="let student of Students" [value]="student">
                         {{student}}
                     </mat-option>
@@ -68,6 +68,16 @@
     </mat-card>
 
     <div style="padding-top: 5rem;">
-        <button mat-raised-button color="primary" (click)="loadStatics()" >Consultar</button>
+        <!-- <button mat-raised-button color="primary" (click)="loadStatics()" >Consultar</button> -->
     </div>
+</div>
+
+<div class="main-container">
+
+  <div class="chart">
+  
+    <app-bars [student]= "studentN"></app-bars>
+  
+  </div>
+
 </div>
