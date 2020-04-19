@@ -4,6 +4,7 @@ import { Curso } from 'src/app/models/curso';
 import { NgForm } from '@angular/forms';
 import { StudentService } from '../../services/student.service';
 import { CourseFollowService } from 'src/app/services/course-follow.service';
+import { SeguimientoService } from '../../services/seguimiento.service';
 
 declare var M: any;
 interface Food {
@@ -28,7 +29,7 @@ export class SummaryComponent implements OnInit {
   ];
 
 
-  constructor(private servicefollow: StudentService, private serviceCourse: CourseFollowService) {
+  constructor(private servicefollow: StudentService, private serviceCourse: CourseFollowService, private statics: SeguimientoService) {
 
     this.loadCourses();
 
@@ -37,20 +38,17 @@ export class SummaryComponent implements OnInit {
   ngOnInit() { }
 
 
-  //funcion temporal para revisar como va el codigo
-  ver(form: NgForm) {
-    form.reset();
-    M.FormSelect.init(document.getElementById('selectestudiant'));
-  }
-
   loadCourses() {
     this.serviceCourse.getCourses().subscribe(coures => {
       this.courses = coures;
     })
   }
 
-  loadStudentsByCourse(course:string){
-    this.servicefollow.getSrudentsBycourse(course).subscribe( students => this.Students = students );
-    
+  loadStudentsByCourse(course: string) {
+    this.servicefollow.getSrudentsBycourse(course).subscribe(students => this.Students = students);
+  }
+
+  loadStatics() {
+    this.statics.getGeneralStatics().subscribe(statics => console.log(statics))
   }
 }
