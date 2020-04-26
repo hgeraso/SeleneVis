@@ -3,11 +3,20 @@ const statisticCtrl = {}; //he definido un objeto para luego aplicar metodos.
 
 statisticCtrl.getStatistics = async (req, res) => {
 
+    console.log("request", req.body);
+    // var course = "Unicauca+Intro_IoT+2019-II";
+    // var student = "Gustavo_Ramirez_Staff";
+
+    // if (req.body.student){
+    var course = req.body.course;
+    var student = req.body.student;
+    // }
+
     //numero de videos en ese curso y eses estudiante
     const numVideos = await seguimiento.find(
         {
             $and: [
-                { "username": "Gustavo_Ramirez_Staff", "course": "Unicauca+Intro_IoT+2019-II" },
+                { "username": student, "course": course },
                 { $or: [{ name: "play_video" }, { name: "pause_video" }, { name: "stop_video" }] }
             ]
         }).count();
@@ -15,34 +24,34 @@ statisticCtrl.getStatistics = async (req, res) => {
     const numContenido = await seguimiento.find({
         $and: [
             { $or: [{ name: "nav_content" }, { name: "nav_content_click" }, { name: "nav_content_prev" }, { name: "nav_content_next" }, { name: "nav_content_tab" }] },
-            { "username": "Gustavo_Ramirez_Staff", "course": "Unicauca+Intro_IoT+2019-II" }
+            { "username": student, "course": course }
         ]
     }).count();
 
     const numForos = await seguimiento.find({
         $and: [
             { $or: [{ name: "edx.forum.comment.created" }, { name: "edx.forum.response.created" }, { name: "edx.forum.thread.created" }] },
-            { "username":/*"Gustavo_Ramirez_Staff"*/"Helberth_Medina_Sandoval", "course": "Unicauca+LeanStartUp+2019-II" }
+            { "username": student, "course": course }
+            // { "username":/*"student*/"Helberth_Medina_Sandoval", "course": "Unicauca+LeanStartUp+2019-II" }
         ]
     }).count();
 
     const numExamenes = await seguimiento.find({
         $and: [
             { $or: [{ name: "problem_check" },/*  { name : "problem_graded" } */] },
-            { "username": "Gustavo_Ramirez_Staff", "course": "Unicauca+Intro_IoT+2019-II" }
+            { "username": student, "course": course }
         ]
     }).count();
 
     const numSesiones = await seguimiento.find(
-        { "username": "Gustavo_Ramirez_Staff", "course": "Unicauca+Intro_IoT+2019-II", "name": "Signin" }
+        { "username": student, "course": course, "name": "Signin" }
     ).count();
 
     const numVideosDiferentes = await seguimiento.aggregate([
-
         {
             $match: {
                 $and: [
-                    { "username": "Gustavo_Ramirez_Staff", "course": "Unicauca+Intro_IoT+2019-II" },
+                    { "username": student, "course": course },
                     { $or: [{ name: "play_video" }, { name: "pause_video" }, { name: "stop_video" }] }
                 ]
             }
@@ -51,15 +60,15 @@ statisticCtrl.getStatistics = async (req, res) => {
             $group: { _id: "$answers" }
         },
         { $count: "numVideosDifferents" }
-    ]
-    );
+    ]);
+
     const numSesionesDiferentes = await seguimiento.aggregate([
 
         {
             $match:
 
             {
-                $and: [{ "username": "Gustavo_Ramirez_Staff", "course": "Unicauca+Intro_IoT+2019-II" }]
+                $and: [{ "username": student, "course": course }]
             }
         },
         {
@@ -69,11 +78,12 @@ statisticCtrl.getStatistics = async (req, res) => {
             }
         },
         { $count: "numsesionesDifferents" }
-    ]
-    );
-    const timeVideo = await statisticCtrl.getTimeVideo();
-    const timeExam = await statisticCtrl.getTimeExam();
-    const timeOthers = await statisticCtrl.getTimeOthers();
+    ]);
+
+    const timeVideo = await statisticCtrl.getTimeVideo(course, student);
+    const timeExam = await statisticCtrl.getTimeExam(course, student);
+    const timeOthers = await statisticCtrl.getTimeOthers(course, student);
+    
     res.json(
         {
             "numVideos": numVideos,
@@ -81,7 +91,7 @@ statisticCtrl.getStatistics = async (req, res) => {
             "numForos": numForos,
             "numExamenes": numExamenes,
             "numSesiones": numSesiones,
-            "numVideosDiferentes": numVideosDiferentes[0].numVideosDifferents,
+            "numVideosDiferentes": numVideosDiferentes.length > 0 ? numVideosDiferentes[0].numVideosDifferents : 0 ,
             "numSesionesDiferentes": numSesionesDiferentes[0].numsesionesDifferents,
             "TimeVideo": timeVideo,
             "TimeExam": timeExam,
@@ -90,11 +100,12 @@ statisticCtrl.getStatistics = async (req, res) => {
     );
 
 }
-statisticCtrl.getTimeVideo = async function () {
+
+statisticCtrl.getTimeVideo = async function (course, student) {
 
     const bdTimeVideo = await seguimiento.find({
         $and: [
-            { "username": "Gustavo_Ramirez_Staff", "course": "Unicauca+Intro_IoT+2019-II" },
+            { "username": student, "course": course },
         ]
     }).sort("time").sort("date");
     sumTime = 0; // en segundos 
@@ -127,12 +138,12 @@ statisticCtrl.getTimeVideo = async function () {
     return sumTime;
 }
 
-statisticCtrl.getTimeExam = async (req, res) => {
-
+statisticCtrl.getTimeExam = async (course, student) => {
 
     const bdTimeExam = await seguimiento.find({
         $and: [
-            { "username": "Karold_Ordonez_Ceron", "course": "Unicauca+LeanStartUp+2019-II" },
+            { "username": student, "course": course },
+            // { "username": "Karold_Ordonez_Ceron", "course": "Unicauca+LeanStartUp+2019-II" }, este estaba con un susario diferente, quiza era para probar
         ]
     }).sort("date").sort("time");
     sumTime = 0; // en segundos 
@@ -166,12 +177,12 @@ statisticCtrl.getTimeExam = async (req, res) => {
     return sumTime;
 }
 
-statisticCtrl.getTimeOthers = async (req, res) => {
+statisticCtrl.getTimeOthers = async (course, student) => {
 
 
     const bdTimeOthers = await seguimiento.find({
         $and: [
-            { "username": "Gustavo_Ramirez_Staff", "course": "Unicauca+Intro_IoT+2019-II" },
+            { "username": student, "course": course },
         ]
     }).sort("date").sort("time");
     sumTime = 0; // en segundos 

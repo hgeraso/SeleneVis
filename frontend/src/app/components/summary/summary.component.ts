@@ -22,7 +22,7 @@ export class SummaryComponent implements OnInit {
   Students: string[] = [];
   courses: string[];
 
-  studentN:{course:string, student:string}={course:'', student:''};
+  body:{course:string, student:string}={course:'', student:''};
 
   constructor(private servicefollow: StudentService, private serviceCourse: CourseFollowService, private statics: SeguimientoService) {
 
