@@ -14,4 +14,8 @@ export class SeguimientoService {
     return this.http.get<object>(environment.URL_BASE + "statistics");
   }
 
+  getGeneralStaticsByUser( username:string ): Observable<object> {
+    return this.http.get<object>(environment.URL_BASE + "statistics/" + username);
+  }
+
 }

@@ -3,6 +3,7 @@ import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 import { Label } from 'ng2-charts';
 import { SeguimientoService } from 'src/app/services/seguimiento.service';
+import { NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-bars',
@@ -11,7 +12,10 @@ import { SeguimientoService } from 'src/app/services/seguimiento.service';
 })
 export class BarsComponent implements OnInit, OnChanges {
 
-  @Input() student:any = {};
+  loading = false;
+  selectUser = false;
+
+  @Input() student: any = {};
 
   public barChartOptions: ChartOptions = {
     responsive: true,
@@ -25,26 +29,23 @@ export class BarsComponent implements OnInit, OnChanges {
     }
   };
 
-  public barChartLabels: Label[] = ['# videos','T. Examenes', 'T. otros', 'T. video', 'contenido', '# examenes', '# foros', '# sesiones', 'sesiones',  'videos'];
+  public barChartLabels: Label[] = ['# videos', 'T. Examenes', 'T. otros', 'T. video', 'contenido', '# examenes', '# foros', '# sesiones', 'sesiones', 'videos'];
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
   public barChartPlugins = [pluginDataLabels];
 
-  public barChartData: ChartDataSets[] = [
-    { data: [], label: '' },
-  ];
+  public barChartData: ChartDataSets[] = [];
 
   constructor(private staticsservice: SeguimientoService) {
 
-    this.loadStatics();
   }
 
   ngOnInit(): void {
   }
 
-  ngOnChanges(){
+  ngOnChanges() {
     console.log("change", this.student);
-    
+
   }
 
   public chartClicked({ event, active }: { event: MouseEvent, active: {}[] }): void {
@@ -70,17 +71,27 @@ export class BarsComponent implements OnInit, OnChanges {
 
 
   loadStatics() {
-    this.staticsservice.getGeneralStatics().subscribe(statics => {
+    
+    if (this.student.student) {
+      console.log(this.student);
 
-      console.log(statics)
+      this.loading = true;
+      this.selectUser = false;
+      this.staticsservice.getGeneralStatics().subscribe(statics => {
 
-      let dataset = { data: Object.values(statics), label: 'server' , backgroundColor: 'green'};
-      this.barChartData.push(dataset);
+        console.log(statics)
 
-      let keys = Object.keys(statics);
-      this.barChartLabels = keys;
+        let dataset = { data: Object.values(statics), label: 'server', backgroundColor: 'green' };
+        this.barChartData.push(dataset);
 
-    });
+        let keys = Object.keys(statics);
+        this.barChartLabels = keys;
+        this.loading = false;
+
+      });
+    } else {
+      this.selectUser = true;
+    }
   }
 
 }

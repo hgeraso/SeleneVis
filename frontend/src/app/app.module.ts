@@ -11,7 +11,7 @@ import { EstadisticosComponent } from './components/estadisticos/estadisticos.co
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NavbarComponent } from './components/shared/navbar/navbar.component'; 
-import { MaterialModule } from './material.module';
+import { MaterialModule } from './modules/material.module';
 import { ChartsModule } from 'ng2-charts';
 import { BarsComponent } from './components/shared/bars/bars.component';
 

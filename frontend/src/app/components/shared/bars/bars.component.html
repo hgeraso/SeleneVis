@@ -1,10 +1,19 @@
 <div>
     <div class="btn-load">
-        <button mat-raised-button color="primary" (click)="loadStatics()">Consultar</button>
+        <button mat-raised-button color="primary" type="button" (click)="loadStatics()" >Consultar</button>
+    </div>
+    <div *ngIf="selectUser" class="alert">
+        Selecciona un usuario
     </div>
 
     <div>
-        <div style="display: block">
+        <mat-card *ngIf="loading && student.student" >
+            <div class="center">
+                <mat-spinner></mat-spinner>
+            </div>
+        </mat-card>
+
+        <div *ngIf="!loading && barChartData.length"  style="display: block">
             <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
                 [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
             </canvas>
