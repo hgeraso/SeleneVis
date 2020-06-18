@@ -83,7 +83,7 @@ statisticCtrl.getStatistics = async (req, res) => {
     const timeVideo = await statisticCtrl.getTimeVideo(course, student);
     const timeExam = await statisticCtrl.getTimeExam(course, student);
     const timeOthers = await statisticCtrl.getTimeOthers(course, student);
-    
+
     res.json(
         {
             "numVideos": numVideos,
@@ -91,7 +91,7 @@ statisticCtrl.getStatistics = async (req, res) => {
             "numForos": numForos,
             "numExamenes": numExamenes,
             "numSesiones": numSesiones,
-            "numVideosDiferentes": numVideosDiferentes.length > 0 ? numVideosDiferentes[0].numVideosDifferents : 0 ,
+            "numVideosDiferentes": numVideosDiferentes.length > 0 ? numVideosDiferentes[0].numVideosDifferents : 0,
             "numSesionesDiferentes": numSesionesDiferentes[0].numsesionesDifferents,
             "TimeVideo": timeVideo,
             "TimeExam": timeExam,
@@ -138,6 +138,7 @@ statisticCtrl.getTimeVideo = async function (course, student) {
     return sumTime;
 }
 
+// return seconds
 statisticCtrl.getTimeExam = async (course, student) => {
 
     const bdTimeExam = await seguimiento.find({
@@ -177,6 +178,8 @@ statisticCtrl.getTimeExam = async (course, student) => {
     return sumTime;
 }
 
+// return seconds
+
 statisticCtrl.getTimeOthers = async (course, student) => {
 
 
@@ -189,8 +192,10 @@ statisticCtrl.getTimeOthers = async (course, student) => {
     for (let i = 0; i < bdTimeOthers.length - 1; i++) {
         //console.log(i+1);
         console.log("entro al ciclo ", i);
+
         if ([[bdTimeOthers[i + 1].toObject().date.substr(5, 2) * 30 * 24 * 60 * 60 + bdTimeOthers[i + 1].toObject().date.substr(8, 2) * 24 * 60 * 60]
             - [bdTimeOthers[i].toObject().date.substr(5, 2) * 30 * 24 * 60 * 60 + bdTimeOthers[i].toObject().date.substr(8, 2) * 24 * 60 * 60]] <= (3600 * 24)) {
+
             if (bdTimeOthers[i + 1].toObject().name == "Signin") {
                 console.log("el siguiente evento es  signin");
                 console.log("aplica el tiempo de otros");

@@ -79,10 +79,11 @@ export class BarsComponent implements OnInit, OnChanges {
       this.selectUser = false;
       this.staticsservice.getGeneralStaticsByUserAndCourse(this.body).subscribe(statics => {
 
+        // get name student, this body is received as params
         const student = this.body.student.split('_');
-        this.normalization(statics);
+        // this.normalization(statics);
 
-        let dataset = { data: this.normalization(statics), label: student[0] + ' ' + student[1], backgroundColor: '#' + this.randomColor() };
+        let dataset = { data: this.valuesStatics(statics), label: student[0] + ' ' + student[1], backgroundColor: '#' + this.randomColor() };
         this.barChartData.push(dataset);
 
         let keys = Object.keys(statics);
@@ -99,16 +100,20 @@ export class BarsComponent implements OnInit, OnChanges {
     }
   }
 
-
+// generate a color for each student
   randomColor(): string {
     return Math.floor(Math.random() * 16777215).toString(16);
   }
 
 
+  // normalize statics values an array
   normalization(statics: object):number[] {
 
+    // get all object values as array
     const values = Object.values(statics);
+
     // const values = [5,15,12,18,28];
+    // add all values an only variable
     const sumtotalValues = values.reduce((a: number, b: number) => a + b, 0);
     const media = sumtotalValues / values.length;
     const valuesSquare = [];
@@ -128,6 +133,19 @@ export class BarsComponent implements OnInit, OnChanges {
 
     // console.log(media, variance, valueNormalize);
     return valueNormalize;
+  }
+
+
+  // function to convert timeother on hours and return statics values as array
+
+  valuesStatics(statics:Object):number[]{
+    
+    // statics['TimeOthers'] = (parseInt(statics['TimeOthers']) /( 60 *60));
+    statics['TimeVideo'] = (parseInt(statics['TimeVideo']) /( 60 *60));
+    statics['TimeExam'] = (parseInt(statics['TimeExam']) /( 60 *60));
+
+    return Object.values(statics);
+
   }
 
 }
