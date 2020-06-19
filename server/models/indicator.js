@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
+const course = require('./course');
 const {Schema}= mongoose;
+
 const  indicatorSchema= new Schema({
+    
+    idCourseStudent:{type:String, unique:true},
     student:String,
     course:String,
-
     numVideos:String,
     numContenido:String,
     numForos:String,
@@ -11,9 +14,9 @@ const  indicatorSchema= new Schema({
     numSesiones: String,
     numSesionesDif: String,
     numVideosDiferentes: String,
-    timeExamenes: String,
+    timeExam: String,
     timeVideos:String,
-    timeOtros:String,
+    timeOthers:String,
     
     // timeForos:String,
     // numOtros:String

@@ -1,15 +1,16 @@
 const seguimiento = require('../models/seguimiento')
 const statisticCtrl = {}; //he definido un objeto para luego aplicar metodos.
+const indicatorController = require('./indicators.controller')
 
 statisticCtrl.getStatistics = async (req, res) => {
 
-    console.log("request", req.body);
+    // console.log("request", req.body);
     // var course = "Unicauca+Intro_IoT+2019-II";
     // var student = "Gustavo_Ramirez_Staff";
 
     // if (req.body.student){
-    var course = req.body.course;
-    var student = req.body.student;
+    var course = req.body ? req.body.course : req.course;
+    var student = req.body ? req.body.student : req.student;
     // }
 
     //numero de videos en ese curso y eses estudiante
@@ -83,21 +84,43 @@ statisticCtrl.getStatistics = async (req, res) => {
     const timeVideo = await statisticCtrl.getTimeVideo(course, student);
     const timeExam = await statisticCtrl.getTimeExam(course, student);
     const timeOthers = await statisticCtrl.getTimeOthers(course, student);
-    
-    res.json(
-        {
-            "numVideos": numVideos,
-            "numContenido": numContenido,
-            "numForos": numForos,
-            "numExamenes": numExamenes,
-            "numSesiones": numSesiones,
-            "numVideosDiferentes": numVideosDiferentes.length > 0 ? numVideosDiferentes[0].numVideosDifferents : 0 ,
-            "numSesionesDiferentes": numSesionesDiferentes[0].numsesionesDifferents,
-            "TimeVideo": timeVideo,
-            "TimeExam": timeExam,
-            "TimeOthers": timeOthers
+
+    var exist = false;
+
+    const staticsToSave = {
+        "numVideos": numVideos,
+        "numContenido": numContenido,
+        "numForos": numForos,
+        "numExamenes": numExamenes,
+        "numSesiones": numSesiones,
+        "numVideosDiferentes": numVideosDiferentes.length > 0 ? numVideosDiferentes[0].numVideosDifferents : 0,
+        "numSesionesDiferentes": numSesionesDiferentes[0].numsesionesDifferents,
+        "TimeVideos": timeVideo,
+        "TimeExam": timeExam,
+        "TimeOthers": timeOthers
+    }
+
+    await indicatorController.createIndicator({...staticsToSave, student, course})
+    .then( res => console.log("estuden saved", res) )
+    .catch( err => {
+        if (err.code == 11000){
+            console.log("el registro ya existe");
+            exist=true;
         }
-    );
+    } )
+
+    if(exist){
+        console.log("atualizar registro");
+        await indicatorController.UpdateIndicator({...staticsToSave, student, course})
+        .then( res => console.log("Actualizacion completa"))
+        .catch( err =>console.log("ocurrio un error actualizando", err) )
+        exist = false;
+    }
+
+    // res.json(
+    //     staticsToSave
+    // );
+    return staticsToSave
 
 }
 
@@ -149,28 +172,28 @@ statisticCtrl.getTimeExam = async (course, student) => {
     sumTime = 0; // en segundos 
     for (let i = 0; i < bdTimeExam.length - 1; i++) {
         //console.log(i+1);
-        console.log("entro al ciclo ", i);
+        // console.log("entro al ciclo ", i);
         if (bdTimeExam[i].toObject().date == bdTimeExam[i + 1].toObject().date) {
             if (bdTimeExam[i].toObject().name == "problem_check") {
                 console.log("entro al Time exam");
                 segTimeEnd = (bdTimeExam[i].toObject().time.substr(0, 2) * 3600) + bdTimeExam[i].toObject().time.substr(3, 2) * 60 + (bdTimeExam[i].toObject().time.substr(6, 2) * 1);
                 segTimeInit = (bdTimeExam[i - 1].toObject().time.substr(0, 2) * 3600) + bdTimeExam[i - 1].toObject().time.substr(3, 2) * 60 + (bdTimeExam[i - 1].toObject().time.substr(6, 2) * 1);
                 resTime = segTimeEnd - segTimeInit;
-                console.log("el residuo es:", resTime);
+                // console.log("el residuo es:", resTime);
 
 
                 if (bdTimeExam[i - 1].toObject().name == "Signin") {
-                    console.log("se descarta por Signin");
+                    // console.log("se descarta por Signin");
 
                 } else {
                     sumTime = sumTime + resTime;
-                    console.log("la suma parcial de Time exam es:", sumTime);
+                    // console.log("la suma parcial de Time exam es:", sumTime);
                 }
 
             }
         }
     }
-    console.log("es de tipo :", typeof (bdTimeExam.length), bdTimeExam.length);
+    // console.log("es de tipo :", typeof (bdTimeExam.length), bdTimeExam.length);
     console.log("la suma total de TimeExam es:", sumTime);
     //res.json({"la suma total es": sumTime}); //tiempo en segundo de interaccion directa con el video
     //res.json({ "time Exam":sumTime});

@@ -6,6 +6,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 //setting
 
+// script
+const script = require('./app/SaveAllRegisters');
+
 app.set('port',process.env.PORT || 4000);
 
 //Middlewares
@@ -34,5 +37,5 @@ app.use('/api/prueba',require('./routes/prueba.routes'));
 app.listen(app.get('port'),()=>{
 
     console.log('server on port:', app.get('port'))
-
+    script.getCourse()
 })
