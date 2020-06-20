@@ -1,14 +1,8 @@
 const seguimiento = require('../models/seguimiento')
 const statisticCtrl = {}; //he definido un objeto para luego aplicar metodos.
-const indicatorController = require('./indicators.controller')
 
 statisticCtrl.getStatistics = async (req, res) => {
 
-    // console.log("request", req.body);
-    // var course = "Unicauca+Intro_IoT+2019-II";
-    // var student = "Gustavo_Ramirez_Staff";
-
-    // if (req.body.student){
     var course = req.body ? req.body.course : req.course;
     var student = req.body ? req.body.student : req.student;
     // }
@@ -20,14 +14,14 @@ statisticCtrl.getStatistics = async (req, res) => {
                 { "username": student, "course": course },
                 { $or: [{ name: "play_video" }, { name: "pause_video" }, { name: "stop_video" }] }
             ]
-        }).count();
+        }).countDocuments();
 
     const numContenido = await seguimiento.find({
         $and: [
             { $or: [{ name: "nav_content" }, { name: "nav_content_click" }, { name: "nav_content_prev" }, { name: "nav_content_next" }, { name: "nav_content_tab" }] },
             { "username": student, "course": course }
         ]
-    }).count();
+    }).countDocuments();
 
     const numForos = await seguimiento.find({
         $and: [
@@ -35,18 +29,18 @@ statisticCtrl.getStatistics = async (req, res) => {
             { "username": student, "course": course }
             // { "username":/*"student*/"Helberth_Medina_Sandoval", "course": "Unicauca+LeanStartUp+2019-II" }
         ]
-    }).count();
+    }).countDocuments();
 
     const numExamenes = await seguimiento.find({
         $and: [
             { $or: [{ name: "problem_check" },/*  { name : "problem_graded" } */] },
             { "username": student, "course": course }
         ]
-    }).count();
+    }).countDocuments();
 
     const numSesiones = await seguimiento.find(
         { "username": student, "course": course, "name": "Signin" }
-    ).count();
+    ).countDocuments();
 
     const numVideosDiferentes = await seguimiento.aggregate([
         {
@@ -85,7 +79,6 @@ statisticCtrl.getStatistics = async (req, res) => {
     const timeExam = await statisticCtrl.getTimeExam(course, student);
     const timeOthers = await statisticCtrl.getTimeOthers(course, student);
 
-    var exist = false;
 
     const staticsToSave = {
         "numVideos": numVideos,
@@ -100,26 +93,7 @@ statisticCtrl.getStatistics = async (req, res) => {
         "TimeOthers": timeOthers
     }
 
-    await indicatorController.createIndicator({...staticsToSave, student, course})
-    .then( res => console.log("estuden saved", res) )
-    .catch( err => {
-        if (err.code == 11000){
-            console.log("el registro ya existe");
-            exist=true;
-        }
-    } )
-
-    if(exist){
-        console.log("atualizar registro");
-        await indicatorController.UpdateIndicator({...staticsToSave, student, course})
-        .then( res => console.log("Actualizacion completa"))
-        .catch( err =>console.log("ocurrio un error actualizando", err) )
-        exist = false;
-    }
-
-    res.json(
-        staticsToSave
-    );
+    return staticsToSave;
 
 }
 
@@ -131,27 +105,35 @@ statisticCtrl.getTimeVideo = async function (course, student) {
         ]
     }).sort("time").sort("date");
     sumTime = 0; // en segundos 
+
     for (let i = 0; i < bdTimeVideo.length - 1; i++) {
         //console.log(i+1);
+
         console.log("entro al ciclo ", i);
-        if (bdTimeVideo[i].toObject().date == bdTimeVideo[i + 1].toObject().date) {
-            if (bdTimeVideo[i].toObject().name == "play_video") {
-                console.log("entro al play video");
-                segTimeInit = (bdTimeVideo[i].toObject().time.substr(0, 2) * 3600) + bdTimeVideo[i].toObject().time.substr(3, 2) * 60 + (bdTimeVideo[i].toObject().time.substr(6, 2) * 1);
-                segTimeEnd = (bdTimeVideo[i + 1].toObject().time.substr(0, 2) * 3600) + bdTimeVideo[i + 1].toObject().time.substr(3, 2) * 60 + (bdTimeVideo[i + 1].toObject().time.substr(6, 2) * 1);
-                resTime = segTimeEnd - segTimeInit;
-                console.log("el residuo es:", resTime);
+        try {
+            if (bdTimeVideo[i].toObject().date == bdTimeVideo[i + 1].toObject().date) {
+                if (bdTimeVideo[i].toObject().name == "play_video") {
+                    console.log("entro al play video");
+                    segTimeInit = (bdTimeVideo[i].toObject().time.substr(0, 2) * 3600) + bdTimeVideo[i].toObject().time.substr(3, 2) * 60 + (bdTimeVideo[i].toObject().time.substr(6, 2) * 1);
+                    segTimeEnd = (bdTimeVideo[i + 1].toObject().time.substr(0, 2) * 3600) + bdTimeVideo[i + 1].toObject().time.substr(3, 2) * 60 + (bdTimeVideo[i + 1].toObject().time.substr(6, 2) * 1);
+                    resTime = segTimeEnd - segTimeInit;
+                    console.log("el residuo es:", resTime);
 
-                if (resTime < 60 * 7) {
-                    if (bdTimeVideo[i + 1].toObject().name == "Signin") {
-                        console.log("se descarta por Signin");
+                    if (resTime < 60 * 7) {
+                        if (bdTimeVideo[i + 1].toObject().name == "Signin") {
+                            console.log("se descarta por Signin");
 
-                    } else {
-                        sumTime = sumTime + resTime;
-                        console.log("la suma parcial es:", sumTime);
+                        } else {
+                            sumTime = sumTime + resTime;
+                            console.log("la suma parcial es:", sumTime);
+                        }
                     }
                 }
             }
+
+        } catch (error) {
+
+            console.log("error en el registro", bdTimeVideo[i])
         }
     }
     // console.log("es de tipo :", typeof (bdTimeVideo.length), bdTimeVideo.length);
@@ -169,13 +151,24 @@ statisticCtrl.getTimeExam = async (course, student) => {
         ]
     }).sort("date").sort("time");
     sumTime = 0; // en segundos 
+    console.log("entro al Time exam");
     for (let i = 0; i < bdTimeExam.length - 1; i++) {
-        //console.log(i+1);
-        // console.log("entro al ciclo ", i);
-        if (bdTimeExam[i].toObject().date == bdTimeExam[i + 1].toObject().date) {
-            if (bdTimeExam[i].toObject().name == "problem_check") {
-                console.log("entro al Time exam");
-                segTimeEnd = (bdTimeExam[i].toObject().time.substr(0, 2) * 3600) + bdTimeExam[i].toObject().time.substr(3, 2) * 60 + (bdTimeExam[i].toObject().time.substr(6, 2) * 1);
+    //console.log(i+1);
+    // console.log("entro al ciclo ", i);
+
+    try {
+        const obj = bdTimeExam[i].toObject();
+        const objNext = bdTimeExam[i + 1].toObject()
+        // console.log(obj.date, objNext.date)
+        // console.log(obj.name, objNext.name)
+        // console.log(obj.time, objNext.time)
+
+
+        if (obj.date == objNext.date) {
+
+            if (obj.name == "problem_check" && i > 0) {
+
+                segTimeEnd = (obj.time.substr(0, 2) * 3600) + obj.time.substr(3, 2) * 60 + (obj.time.substr(6, 2) * 1);
                 segTimeInit = (bdTimeExam[i - 1].toObject().time.substr(0, 2) * 3600) + bdTimeExam[i - 1].toObject().time.substr(3, 2) * 60 + (bdTimeExam[i - 1].toObject().time.substr(6, 2) * 1);
                 resTime = segTimeEnd - segTimeInit;
                 // console.log("el residuo es:", resTime);
@@ -191,6 +184,11 @@ statisticCtrl.getTimeExam = async (course, student) => {
 
             }
         }
+    } catch (error) {
+        console.log("error en el registro", bdTimeExam[i], bdTimeExam[i + 1])
+        console.log(i, i + 1)
+    }
+
     }
     // console.log("es de tipo :", typeof (bdTimeExam.length), bdTimeExam.length);
     console.log("la suma total de TimeExam es:", sumTime);
@@ -250,7 +248,6 @@ statisticCtrl.getTimeOthers = async (course, student) => {
     //res.json({"el valor de time others es: ":sumTime});
     //res.json(bdTimeOthers);
     return sumTime;
-
 
 }
 

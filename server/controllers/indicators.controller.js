@@ -76,9 +76,14 @@ indicatorCtrl.UpdateIndicator = async (req, res) => {
         { idCourseStudent: req.student + req.course },
         req, { new: true })
 
-    res.json({
-        status: "indicator update"
-    });
+    if (req.body) {
+
+        res.json({
+            status: "indicator update"
+        });
+    }else{
+        return 'Update Success'
+    }
 }
 
 
