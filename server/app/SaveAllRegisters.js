@@ -1,6 +1,7 @@
 const seguimiento = require('../models/seguimiento');;
 const statics = require('./GetStatics');
 const indicatorController = require('../controllers/indicators.controller');
+const studentt = require('../models/studentt');
 const SaveInfoDB = {};
 let staticsToSave = {};
 
@@ -10,16 +11,18 @@ SaveInfoDB.saveInfo = async () => {
     // get all courses :P
     const courses = await seguimiento.distinct("course");
     // const course = courses[2];
-    courses.forEach( async (course) => { 
+    courses.forEach(async (course) => {
 
+        // console.log("analizanfo el curso que no guarda nada", course)
         // flag is used to update if registre already exist
         var exist = false;
         // get student by courses :)
         // const student = students[3]
         const students = await seguimiento.find({ course: course }).distinct('username');
-        console.log("Init Update");
-        students.forEach( async (student) => {
+        // console.log("Init Update, estudiantes son", students);
 
+        students.forEach(async (student) => {
+            // console.log("analizando el estudiante", student)
             staticsToSave = await statics.getStatistics({ course: course, student: student })
 
             // intent save document
@@ -27,18 +30,21 @@ SaveInfoDB.saveInfo = async () => {
                 .then(res => console.log("estuden saved", res))
                 .catch(err => {
                     if (err.code == 11000) {
-                        console.log("el registro ya existe");
+                        console.log("el registro ya existe******");
                         exist = true;
                     }
                 })
 
             // intent update document
             if (exist) {
-                console.log("atualizar registro");
+                // console.log("atualizar registro");
                 await indicatorController.UpdateIndicator({ ...staticsToSave, student, course })
-                    .then(res => console.log("Actualizacion completa"))
+                    .then(res => {
+                        console.log("Actualizacion completa");
+                        exist = false;
+                    })
                     .catch(err => console.log("ocurrio un error actualizando", err))
-                exist = false;
+
             }
         })
         console.log("finished Update");

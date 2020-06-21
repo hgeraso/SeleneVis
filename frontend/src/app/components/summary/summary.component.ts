@@ -23,7 +23,7 @@ export class SummaryComponent implements OnInit {
 
   Students: string[] = [];
   courses: string[];
-  // indicators: Indicator[];
+  indicators: Indicator[];
 
   body: { course: string, student: string } = { course: '', student: '' };
 
@@ -44,14 +44,15 @@ export class SummaryComponent implements OnInit {
   }
 
   loadStudentsByCourse(course: string) {
+    this.body.student = '';
     this.servicefollow.getSrudentsBycourse(course).subscribe(students => this.Students = students);
     this.loadIndicatorsByCourse(course);
   }
 
   loadIndicatorsByCourse(course: string) {
     this.inicatorsCourseService.getIndicatorsByCourse(course).subscribe( indicators=>{
-      // this.indicators = indicators;
-      // console.log("llego los indicadores", this.indicators)
+      this.indicators = indicators;
+      console.log("llego los indicadores", this.indicators)
     } )
   }
 
