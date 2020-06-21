@@ -31,9 +31,6 @@ app.use('/api/prueba', require('./routes/prueba.routes'));
 
 
 
-
-
-
 app.listen(app.get('port'), () => {
 
     console.log('server on port:', app.get('port'))

@@ -5,6 +5,8 @@ import { NgForm } from '@angular/forms';
 import { StudentService } from '../../services/student.service';
 import { CourseFollowService } from 'src/app/services/course-follow.service';
 import { SeguimientoService } from '../../services/seguimiento.service';
+import { IndicatorsService } from 'src/app/services/indicators.service';
+import { Indicator } from 'src/app/models/indicators';
 
 declare var M: any;
 interface Food {
@@ -21,10 +23,12 @@ export class SummaryComponent implements OnInit {
 
   Students: string[] = [];
   courses: string[];
+  // indicators: Indicator[];
 
-  body:{course:string, student:string}={course:'', student:''};
+  body: { course: string, student: string } = { course: '', student: '' };
 
-  constructor(private servicefollow: StudentService, private serviceCourse: CourseFollowService, private statics: SeguimientoService) {
+  constructor(private servicefollow: StudentService, private serviceCourse: CourseFollowService, private statics: SeguimientoService,
+    private inicatorsCourseService: IndicatorsService) {
 
     this.loadCourses();
 
@@ -41,6 +45,14 @@ export class SummaryComponent implements OnInit {
 
   loadStudentsByCourse(course: string) {
     this.servicefollow.getSrudentsBycourse(course).subscribe(students => this.Students = students);
+    this.loadIndicatorsByCourse(course);
+  }
+
+  loadIndicatorsByCourse(course: string) {
+    this.inicatorsCourseService.getIndicatorsByCourse(course).subscribe( indicators=>{
+      // this.indicators = indicators;
+      // console.log("llego los indicadores", this.indicators)
+    } )
   }
 
 

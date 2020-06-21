@@ -80,9 +80,9 @@ export class BarsComponent implements OnInit, OnChanges {
       this.staticsservice.getGeneralStaticsByUserAndCourse(this.body).subscribe(statics => {
 
         const student = this.body.student.split('_');
-        this.normalization(statics);
+        // this.normalization(statics);
 
-        let dataset = { data: this.normalization(statics), label: student[0] + ' ' + student[1], backgroundColor: '#' + this.randomColor() };
+        let dataset = { data: Object.values(statics), label: student[0] + ' ' + student[1], backgroundColor: '#' + this.randomColor() };
         this.barChartData.push(dataset);
 
         let keys = Object.keys(statics);

@@ -1,0 +1,12 @@
+/* .list-card {
+  width: 100%;
+  flex: 2 1 auto;
+} */
+.list-card {
+  max-width: 1000px;
+  flex: 2 1 auto;
+}
+
+table {
+    width: 100%;
+ }

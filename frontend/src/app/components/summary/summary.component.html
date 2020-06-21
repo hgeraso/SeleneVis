@@ -25,59 +25,68 @@
 </div> -->
 <div class="main-container">
 
-    <mat-card class="form-card">
-        <mat-card-header>
-            <mat-card-title>Cursos</mat-card-title>
-        </mat-card-header>
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>Cursos</mat-card-title>
+    </mat-card-header>
 
-        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
-        <mat-card-content>
+    <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+    <mat-card-content>
 
-            <mat-form-field>
-                <mat-label>curso</mat-label>
-                <mat-select [(ngModel)]="body.course">
-                    <mat-option *ngFor="let course of courses" [value]="course" (click)="loadStudentsByCourse(course)">
-                        {{course}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+      <mat-form-field>
+        <mat-label>curso</mat-label>
+        <mat-select [(ngModel)]="body.course">
+          <mat-option *ngFor="let course of courses" [value]="course" (click)="loadStudentsByCourse(course)">
+            {{course}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-        </mat-card-content>
+    </mat-card-content>
 
-    </mat-card>
+  </mat-card>
 
-    <mat-card class="form-card">
-        <mat-card-header>
-            <mat-card-title>Estudiantes</mat-card-title>
-        </mat-card-header>
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>Estudiantes</mat-card-title>
+    </mat-card-header>
 
-        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
-        <mat-card-content>
+    <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+    <mat-card-content>
 
-            <mat-form-field>
-                <mat-label>estudiante</mat-label>
-                <mat-select [(ngModel)]="body.student" >
-                    <mat-option *ngFor="let student of Students" [value]="student">
-                        {{student}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+      <mat-form-field>
+        <mat-label>estudiante</mat-label>
+        <mat-select [(ngModel)]="body.student">
+          <mat-option *ngFor="let student of Students" [value]="student">
+            {{student}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-        </mat-card-content>
+    </mat-card-content>
 
-    </mat-card>
+  </mat-card>
 
-    <div style="padding-top: 5rem;">
-        <!-- <button mat-raised-button color="primary" (click)="loadStatics()" >Consultar</button> -->
-    </div>
+  <div style="padding-top: 5rem;">
+    <!-- <button mat-raised-button color="primary" (click)="loadStatics()" >Consultar</button> -->
+  </div>
 </div>
 
-<div class="main-container">
 
-  <div class="chart">
-  
-    <app-bars [body]= "body"></app-bars>
-  
-  </div>
+<div class="main-container">
+  <!-- [indicators]="indicators" -->
+
+  <!-- <div class="chart" style="width: 30%;"> -->
+  <mat-card class="form-card-chart">
+    <app-bars [body]="body"></app-bars>
+  </mat-card>
+
+  <!-- </div> -->
+  <mat-card class="list-card">
+
+    <!-- <div class="chart" style="width: 60%;"> -->
+    <app-table-stadistics></app-table-stadistics>
+    <!-- </div> -->
+  </mat-card>
 
 </div>

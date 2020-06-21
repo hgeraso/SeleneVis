@@ -86,5 +86,10 @@ indicatorCtrl.UpdateIndicator = async (req, res) => {
     }
 }
 
+indicatorCtrl.getIndicatorsByCourse = async (req, res)=>{
+    const indicatorsBycourse = await Indicator.find({ "course":req.body.course });
+    res.json(indicatorsBycourse)
+}
+
 
 module.exports = indicatorCtrl;
