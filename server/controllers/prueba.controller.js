@@ -2,14 +2,11 @@ const seguimiento = require('../models/seguimiento');
 pruebaCtrl={};
 pruebaCtrl.getTime2 = async(req,res)=>{
 
-     
+    const bd = await seguimiento.find({"name":"problem_check"});
     const bdTimeOthers= await seguimiento.find({ $and : [
-     {"username":"Gustavo_Ramirez_Staff","course":"Unicauca+Intro_IoT+2019-II"},  
+     {"username":"Cristian_Astaiza_Bolanos","course":"Unicauca+C_Enfermeria+2019-II"},  
      ]}).sort("date").sort("time");
      sumTime=0; // en segundos 
-
-    
-
      for (let i = 0; i < bdTimeOthers.length-1; i++) {
          //console.log(i+1);
          console.log("entro al ciclo ",i);
