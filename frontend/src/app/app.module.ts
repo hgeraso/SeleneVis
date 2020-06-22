@@ -14,6 +14,7 @@ import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { MaterialModule } from './modules/material.module';
 import { ChartsModule } from 'ng2-charts';
 import { BarsComponent } from './components/shared/bars/bars.component';
+import { TableStadisticsComponent } from './components/table-stadistics/table-stadistics.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { BarsComponent } from './components/shared/bars/bars.component';
     SummaryComponent,
     EstadisticosComponent,
     NavbarComponent,
-    BarsComponent
+    BarsComponent,
+    TableStadisticsComponent
   ],
   imports: [
     BrowserModule,

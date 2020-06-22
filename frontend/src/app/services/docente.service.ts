@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { Docente } from '../models/docente';
 import {DocentesComponent} from '../components/docentes/docentes.component';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -13,7 +14,8 @@ export class DocenteService {
   selectedDocente:Docente;
   docentes:Docente[];
 
-  readonly URL_API='http://localhost:4000/api/docentes';
+  // readonly URL_API='http://localhost:4000/api/docentes';
+  readonly URL_API = environment.URL_BASE + 'docentes';
 
   constructor(private http:HttpClient) {
     this.selectedDocente= new Docente();

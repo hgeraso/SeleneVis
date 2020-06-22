@@ -83,7 +83,7 @@ export class BarsComponent implements OnInit, OnChanges {
         const student = this.body.student.split('_');
         // this.normalization(statics);
 
-        let dataset = { data: this.valuesStatics(statics), label: student[0] + ' ' + student[1], backgroundColor: '#' + this.randomColor() };
+        let dataset = { data: Object.values(statics), label: student[0] + ' ' + student[1], backgroundColor: '#' + this.randomColor() };
         this.barChartData.push(dataset);
 
         let keys = Object.keys(statics);
