@@ -6,12 +6,12 @@ const SaveInfoDB = {};
 let staticsToSave = {};
 
 SaveInfoDB.saveInfo = async () => {
-    console.log("Estudiantes de Cursos")
+    // console.log("Estudiantes de Cursos")
 
     // get all courses :P
     const courses = await seguimiento.distinct("course");
     // const course = courses[2];
-    courses.forEach(async (course) => {
+    courses.forEach(async (course, index) => {
 
         // console.log("analizanfo el curso que no guarda nada", course)
         // flag is used to update if registre already exist
@@ -47,7 +47,9 @@ SaveInfoDB.saveInfo = async () => {
 
             }
         })
-        console.log("finished Update");
+        if (index === (courses.length - 1)) {
+            console.log("finished Update");
+        }
 
     })
 

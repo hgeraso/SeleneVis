@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Network, DataSet, Node, Edge, IdType, Graph2d } from 'vis';
+import { GrafosService } from 'src/app/services/grafos.service';
+import { Grafo } from 'src/app/models/grafos';
 
 @Component({
   selector: 'app-estadisticos',
@@ -11,33 +13,48 @@ export class EstadisticosComponent implements OnInit {
   public edges: Edge;
   public network: Network;
 
-  constructor() { }
+  grafoService: Grafo = { edges: [], nodes: [] };
+
+  constructor(private grafosService: GrafosService) {
+
+  }
 
   ngOnInit(): void {
 
-    this.createNetwork();
-    this.createStadistics();
+    this.grafosService.getGrafosStudent({ course: "Unicauca+Intro_IoT+2019-II", student: "Gustavo_Ramirez_Staff" })
+      .subscribe((grafo: Grafo) => {
+        console.log("llegan edges", grafo)
+
+        this.grafoService = grafo
+        this.createNetwork();
+
+      })
+
+    // this.createStadistics();
 
   }
 
   //create graphs
   createNetwork() {
 
-    const nodes = new DataSet([
-      { id: 1, label: 'Node 1' },
-      { id: 2, label: 'Node 2' },
-      { id: 3, label: 'Node 3' },
-      { id: 4, label: 'Node 4' },
-      { id: 5, label: 'Node 5' }
-    ]);
+    const nodes = new DataSet(this.grafoService.nodes)
+    // const nodes = new DataSet([
+    //   { id: 1, label: 'Node 1' },
+    //   { id: 2, label: 'Node 2' },
+    //   { id: 3, label: 'Node 3' },
+    //   { id: 4, label: 'Node 4' },
+    //   { id: 5, label: 'Node 5' }
+    // ]);
+
+    const edges = new DataSet(this.grafoService.edges[0].nodes)
     // create an array with edges
-    const edges = new DataSet([
-      { from: 1, to: 3 },
-      { from: 1, to: 2 },
-      { from: 2, to: 4 },
-      { from: 2, to: 5 },
-      { from: 3, to: 3 }
-    ]);
+    // const edges = new DataSet([
+    //   { from: 1, to: 3 },
+    //   { from: 1, to: 2 },
+    //   { from: 2, to: 4 },
+    //   { from: 2, to: 5 },
+    //   { from: 3, to: 3 }
+    // ]);
 
     // create a network
     const container = document.getElementById('mynetwork');
