@@ -6,54 +6,87 @@ grafosController.getdataStudent = async (req, res) => {
     var course = req.body ? req.body.course : req.course;
     var student = req.body ? req.body.student : req.student;
 
-    let activities = [];
+    // ===== activities =====
+    // getActivities(student, course).then(activitiesb => activities = activitiesb);
 
-    getActivities(student, course).then(activitiesb => activities = activitiesb);
+    // ===== nodes =====
+    // let nodes = await seguimiento.find({ "username": student, "course": course }).distinct('name');
+    // nodes = nodes.map((name, index) => {
+    //     return { id: index, label: name }
+    // })
+    // getAllNodes(student, course).then(nodesa => nodes = nodesa);
 
-    let nodes = await seguimiento.find({ "username": student, "course": course }).distinct('name');
-    nodes = nodes.map((name, index) => {
-        return { id: index, label: name }
+    Promise.all([
+        getActivities(student, course),
+        getAllNodes(student, course),
+        getDays(student, course)
+    ]).then(responses => {
+
+        const activities = responses[0];
+        const nodes = responses[1];
+        const days = responses[2]
+        buildEdges(activities, nodes, days).then(nodesTotal => {
+
+            res.json({ edges: nodesTotal, nodes })
+        })
+        // res.json({nodes})
     })
+    // ===== Days =====
+    // const days = await seguimiento.find({ "username": student, "course": course }).distinct('date');
 
-    const days = await seguimiento.find({ "username": student, "course": course }).distinct('date');
+    // ====== get nodes =====
+    // console.log("empezando a construir");
+    // buildEdges(activities, nodes, days).then(nodesTotal => {
 
-    // const activities = [{ username: "juan", name: "Signin" }, { username: "juan", name: "nav_content" }, { username: "juan", name: "play_video" }];
+    //     res.json({ edges: nodesTotal, nodes })
+    // })
+}
 
-    // for (let index = 0; index < activities.length; index++) {
+// ==== funtion get all activities =====
+function getActivities(student, course) {
+    return new Promise((resolve, reject) => {
+        seguimiento.find({ "username": student, "course": course }, 'name date time')
+            .sort('date')
+            .exec((err, activities) => {
 
-    //     if ((index + 1) <= (activities.length - 1) && nodes.length) {
-
-    //         const element = nodes.find( obj => obj.label === activities[index].name )
-    //         const elementnext = nodes.find( obj => obj.label === activities[index + 1].name )
-    //         const edges = {
-    //             to:element.id,
-    //             nameto:element.label,
-    //             from:elementnext.id,
-    //             namefrom: elementnext.label
-    //         }
-    //         console.log(edges)
-
-    //     }
-    // }
-    // res.json({ activities, nodes, days })
-    console.log("empezando a construir");
-
-    buildEdges(activities, nodes, days).then(nodesTotal => {
-
-        res.json({ edges: nodesTotal, nodes })
+                if (err) {
+                    reject("error", err);
+                } else {
+                    resolve(activities);
+                }
+            })
     })
 }
 
-function getActivities(student, course) {
+// ==== funtion get all diferents days =====
+function getDays(student, course) {
     return new Promise((resolve, reject) => {
-        seguimiento.find({ "username": student, "course": course }, 'name date time').exec((err, activities) => {
+        seguimiento.find({ "username": student, "course": course }).distinct('date')
+            .exec((err, days) => {
+                if (err) {
+                    reject("error", err);
+                } else {
+                    resolve(days);
+                }
+            })
+    })
+}
 
-            if (err) {
-                reject("error", err);
-            } else {
-                resolve(activities);
-            }
-        })
+// ==== funtion get all nodes =====
+function getAllNodes(student, course) {
+    return new Promise((resolve, reject) => {
+        seguimiento.find({ "username": student, "course": course }).distinct('name')
+            .exec((err, nodes) => {
+
+                if (err) {
+                    reject("error", err);
+                } else {
+                    nodes = nodes.map((name, index) => {
+                        return { id: index, label: name }
+                    })
+                    resolve(nodes);
+                }
+            })
     })
 }
 
@@ -61,31 +94,27 @@ function buildEdges(activities, nodes, days) {
 
     let nodesTotal = [];
     let countActivities = 0;
+
+    console.log("este es un nuevo nodo", nodes[0])
+    console.log("este es un nuevo nodo", nodes[0].label)
+    console.log("sus key",Object.keys(nodes[0]))
     return new Promise((resolve, reject) => {
+        // resolve("hola")
         days.forEach(async (day, indexDay) => {
 
             console.log("dia", day)
-            // console.log("un ejemplo de activities", activities[0]._doc.date)
-            // console.log("un ejemplo de activities", activities[0]._doc)
-            // console.log("string", JSON.stringify(activities[0]))
-            // console.log("json", JSON.parse(activities[0]))
-            // console.log("sus keys", Object.keys(activities[0]))
-            // console.log("tipo", typeof (activities[0]))
-            // console.log("un node", nodes[0])
-            // console.log("un node", Object.keys(nodes[0]))
+
             const activitiesbyDay = await activities.filter(activity => activity._doc.date === day);
             let nodesByDay = [];
             console.log("total actividades en ", day, activitiesbyDay.length);
-            // console.log("una ctividad", activitiesbyDay[0])
-            // console.log("una ctividad", Object.keys(activitiesbyDay[0]))
 
             if (activitiesbyDay.length) {
-                // resolve("hola")
+
                 for (let index = 0; index < activitiesbyDay.length; index++) {
                     countActivities++;
                     if ((index + 1) <= (activitiesbyDay.length - 1) && nodes.length) {
 
-                        const element = nodes.find(obj => obj.label === activitiesbyDay[index]._doc.name);
+                        const element = nodes.find(obj => obj.label=== activitiesbyDay[index]._doc.name);
                         const elementnext = nodes.find(obj => obj.label === activitiesbyDay[index + 1]._doc.name);
                         const edge = {
                             to: element.id,

@@ -62,7 +62,14 @@ export class EstadisticosComponent implements OnInit {
       nodes: nodes,
       edges: edges
     };
-    const options = {};
+    const options = {
+      edges:{arrows:'from'},
+      physics:{repulsion:{
+        nodeDistance:50
+      },
+      enabled:false
+    }
+    };
 
     const network = new Network(container, data, options);
 
