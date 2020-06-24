@@ -1,0 +1,26 @@
+.btn-load{
+    text-align: center;
+    width: 100%;
+    margin: 1rem;
+}
+
+.center{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.alert{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    color: red;
+    font-size: .8rem;
+    margin: 1rem;
+}
+
+.form-card {
+    max-width: 700px;
+    margin-right: .5rem;
+    flex: 1;
+  }

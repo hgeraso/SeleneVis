@@ -1,23 +1,29 @@
 const mongoose = require('mongoose');
+const course = require('./course');
 const {Schema}= mongoose;
+
 const  indicatorSchema= new Schema({
-    id_Student:String,
-    id_Course:String,
-    numContenido: {type:String,required: true/*,unique:true*/},
+    
+    idCourseStudent:{type:String, unique:true},
+    student:String,
+    course:String,
+    numVideos:String,
+    numContenido:String,
     numForos:String,
     numExamenes: String,
-    numSesiones: {type:String,required: true/*,unique:true*/},
-    numVideos:String,
+    numSesiones: String,
+    numSesionesDif: String,
     numVideosDiferentes: String,
-    // numRespuestas: {type:String,required: true/*,unique:true*/},
-
-    // timeContenido: {type:String,required: true/*,unique:true*/},
+    timeExam: String,
+    timeVideos:String,
+    timeOthers:String,
+    
     // timeForos:String,
-    // timeExamenes: String,
-    // timeSesiones: {type:String,required: true/*,unique:true*/},
-    // timeVideos:String,
-    // timeTotal: String,
     // numOtros:String
+    // timeContenido: {type:String,required: true/*,unique:true*/},
+    // timeSesiones: {type:String,required: true/*,unique:true*/},
+    // timeTotal: String,
+    // numRespuestas: {type:String,required: true/*,unique:true*/},
 }); 
 //CourseSchema.plugin(uniqueValidator);
 

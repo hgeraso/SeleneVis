@@ -1,0 +1,8 @@
+.space-icon {
+    padding: 0 14px;
+    cursor: pointer;
+  }
+  
+  .space-spacer {
+    flex: 1 1 auto;
+  }
