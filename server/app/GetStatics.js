@@ -150,53 +150,6 @@ statisticCtrl.getTimeExam = async (course, student) => {
             // { "username": "Karold_Ordonez_Ceron", "course": "Unicauca+LeanStartUp+2019-II" }, este estaba con un susario diferente, quiza era para probar
         ]
     }).sort("date").sort("time");
-<<<<<<< HEAD
-    sumTime = 0; // en segundos 
-    // console.log("entro al Time exam");
-    for (let i = 0; i < bdTimeExam.length - 1; i++) {
-    //console.log(i+1);
-    // console.log("entro al ciclo ", i);
-
-    try {
-        const obj = bdTimeExam[i].toObject();
-        const objNext = bdTimeExam[i + 1].toObject()
-        // console.log(obj.date, objNext.date)
-        // console.log(obj.name, objNext.name)
-        // console.log(obj.time, objNext.time)
-
-
-        if (obj.date == objNext.date) {
-
-            if (obj.name == "problem_check" && i > 0) {
-
-                segTimeEnd = (obj.time.substr(0, 2) * 3600) + obj.time.substr(3, 2) * 60 + (obj.time.substr(6, 2) * 1);
-                segTimeInit = (bdTimeExam[i - 1].toObject().time.substr(0, 2) * 3600) + bdTimeExam[i - 1].toObject().time.substr(3, 2) * 60 + (bdTimeExam[i - 1].toObject().time.substr(6, 2) * 1);
-                resTime = segTimeEnd - segTimeInit;
-                // console.log("el residuo es:", resTime);
-
-
-                if (bdTimeExam[i - 1].toObject().name == "Signin") {
-                    // console.log("se descarta por Signin");
-
-                } else {
-                    sumTime = sumTime + resTime;
-                    // console.log("la suma parcial de Time exam es:", sumTime);
-                }
-
-            }
-        }
-    } catch (error) {
-        console.log("error en el registro", bdTimeExam[i], bdTimeExam[i + 1])
-        console.log(i, i + 1)
-    }
-
-    }
-    // console.log("es de tipo :", typeof (bdTimeExam.length), bdTimeExam.length);
-    // console.log("la suma total de TimeExam es:", sumTime);
-    //res.json({"la suma total es": sumTime}); //tiempo en segundo de interaccion directa con el video
-    //res.json({ "time Exam":sumTime});
-    return sumTime;
-=======
    
     sumTime=0; // en segundos 
     for (let i = 1; i < bdTimeExam.length-1; i++) {
@@ -268,7 +221,6 @@ statisticCtrl.getTimeExam = async (course, student) => {
     //res.json(sumTime);
     return sumTime; //valor a retornar
 
->>>>>>> dev
 }
 
 statisticCtrl.getTimeOthers = async (course, student) => {
