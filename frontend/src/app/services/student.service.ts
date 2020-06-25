@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -7,12 +9,14 @@ import {HttpClient} from '@angular/common/http';
 })
 export class StudentService {
 
-  readonly URL_API='http://localhost:4000/api/seguimiento/students';
-
   constructor( private http: HttpClient) { }
 
   getstudents(){
-    return this.http.get(this.URL_API)
+    return this.http.get(environment.URL_BASE + "seguimiento/students")
+  }
+
+  getSrudentsBycourse(course:string):Observable<string[]> {
+    return this.http.get<string[]>( environment.URL_BASE + "seguimiento/studentsbycourse/" + course );
   }
 
 }

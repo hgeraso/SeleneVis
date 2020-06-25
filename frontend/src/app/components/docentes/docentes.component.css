@@ -1,0 +1,38 @@
+.form-card {
+    max-width: 400px;
+    margin-right: .5rem;
+    flex: 1;
+  }
+
+.list-card {
+    max-width: 1000px;
+    flex: 2 1 auto;
+  }
+  
+
+.example-form {
+    min-width: 150px;
+    max-width: 400px;
+    width: 100%;
+    font-size: 1rem;
+  }
+  
+.full-width {
+    width: 100%;
+}
+
+.content-center{
+    justify-content: center;
+}
+
+table {
+    width: 100%;
+  }
+
+@media ( max-width : 760px ){
+    .form-card{
+
+    margin-bottom: .5rem;
+
+    }
+}

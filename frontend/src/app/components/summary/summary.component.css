@@ -1,0 +1,21 @@
+@import '../docentes/docentes.component.css';
+.form-card {
+    max-width: 300px;
+}
+
+.form-card-chart {
+    max-width: 600px;
+    margin-right: .5rem;
+    flex: 1;
+  }
+
+::ng-deep .mat-form-field-infix {
+    width: 280px !important;
+}
+
+.chart{
+    width: 90%;
+    padding: 1.5rem;
+    /* display: flex;
+    justify-content: center; */
+}
