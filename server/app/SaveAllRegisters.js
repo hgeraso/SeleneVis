@@ -11,7 +11,11 @@ SaveInfoDB.saveInfo = async () => {
     // get all courses :P
     const courses = await seguimiento.distinct("course");
     // const course = courses[2];
+<<<<<<< HEAD
     courses.forEach(async (course) => {
+=======
+    courses.forEach(async (course,index) => {
+>>>>>>> dev
 
         // console.log("analizanfo el curso que no guarda nada", course)
         // flag is used to update if registre already exist
@@ -47,10 +51,19 @@ SaveInfoDB.saveInfo = async () => {
 
             }
         })
+<<<<<<< HEAD
         console.log("finished Update");
 
     })
 
+=======
+       if (index==(courses.length -1 )){
+        console.log("finished Update");
+       }
+
+    })
+ console.log("cierra funcion de obtener estadisticas");
+>>>>>>> dev
 }
 
 
