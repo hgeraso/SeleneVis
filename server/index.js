@@ -38,6 +38,6 @@ app.listen(app.get('port'), () => {
 
     console.log('server on port:', app.get('port'))
     // setInterval(function(){ toDb.saveInfo(); }, 10000);
-  //  toDb.saveInfo(); //lanza la funciòn save Info que recoge las estadisiticas del curso al guardar cambios.
+   toDb.saveInfo(); //lanza la funciòn save Info que recoge las estadisiticas del curso al guardar cambios.
     
 })
