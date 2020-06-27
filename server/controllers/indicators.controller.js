@@ -45,22 +45,6 @@ indicatorCtrl.createIndicator = async (req, res) => {
         } )
         return 'indicator saved sussesfuly';
 
-        // {
-        //     idCourseStudent: req.student + req.course,
-        //     student: req.student,
-        //     course: req.course,
-        //     numVideos: req.numVideos,
-        //     numContenido: req.numContenido,
-        //     numForos: req.numForos,
-        //     numExamenes: req.numExamenes,
-        //     numSesiones: req.numSesiones,
-        //     numSesionesDif: req.numSesiones,
-        //     numVideosDiferentes: req.numVideosDiferentes,
-        //     timeExam: req.TimeExam,
-        //     timeVideos: req.TimeVideos,
-        //     timeOthers: req.TimeOthers,
-
-
         //     /*numRespuestas: req.body.numRespuestas,            
         //     timeContenido: req.body.timeContenido,
         //     timeForos:req.body.timeForos,
@@ -70,25 +54,6 @@ indicatorCtrl.createIndicator = async (req, res) => {
         //     timeTotal: req.body.timeTotal */
         // }
     }
-
-}
-
-indicatorCtrl.UpdateIndicator = async (req, res) => {
-
-    await Indicator.updateOne({ idCourseStudent: req.idCourseStudent }, req, { new: true })
-        .then(res => {
-            if (req.body) {
-
-                res.json({
-                    status: "indicator update"
-                });
-            } else {
-                console.log("udate", req.idCourseStudent)
-                return 'Update Success'
-            }
-        })
-        .catch(err => console.log("error actualizando", req.idCourseStudent, req.student + req.course))
-
 
 }
 

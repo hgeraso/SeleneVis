@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Network, DataSet, Node, Edge, IdType, Graph2d } from 'vis';
 import { GrafosService } from 'src/app/services/grafos.service';
 import { Grafo } from 'src/app/models/grafos';
+import { studentCourse } from 'src/app/models/studentCourse';
 
 @Component({
   selector: 'app-estadisticos',
@@ -9,6 +10,7 @@ import { Grafo } from 'src/app/models/grafos';
   styleUrls: ['./estadisticos.component.css']
 })
 export class EstadisticosComponent implements OnInit {
+
   public nodes: Node;
   public edges: Edge;
   public network: Network;
@@ -16,10 +18,6 @@ export class EstadisticosComponent implements OnInit {
   grafoService: Grafo = { edges: [], nodes: [] };
 
   constructor(private grafosService: GrafosService) {
-
-  }
-
-  ngOnInit(): void {
 
     this.grafosService.getGrafosStudent({ course: "Unicauca+Intro_IoT+2019-II", student: "Gustavo_Ramirez_Staff" })
       .subscribe((grafo: Grafo) => {
@@ -29,6 +27,9 @@ export class EstadisticosComponent implements OnInit {
         this.createNetwork();
 
       })
+  }
+
+  ngOnInit(): void {
 
     // this.createStadistics();
 
@@ -64,11 +65,21 @@ export class EstadisticosComponent implements OnInit {
     };
     const options = {
       edges: { arrows: 'to' },
-      physics: { enabled: true,  } 
+      physics: { enabled: true, }
     };
 
     const network = new Network(container, data, options);
 
+  }
+
+  getGrafos(body:studentCourse){
+
+    this.grafosService.getGrafosStudent(body) .subscribe((grafo: Grafo) => {
+
+      this.grafoService = grafo
+      this.createNetwork();
+
+    })
   }
 
   //create Stadistics

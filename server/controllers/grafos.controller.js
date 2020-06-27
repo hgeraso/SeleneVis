@@ -26,8 +26,9 @@ grafosController.getdataStudent = async (req, res) => {
 
 // ==== funtion get all activities =====
 function getActivities(student, course) {
+
     return new Promise((resolve, reject) => {
-        seguimiento.find({ "username": student, "course": course }, 'name date time')
+        seguimiento.find({ "username": student, "course": course }, 'session name date time')
             .sort('date')
             .exec((err, activities) => {
 
@@ -35,7 +36,6 @@ function getActivities(student, course) {
                     reject("error", err);
                 } else {
                     agrupingActivities(activities).then(() => {
-                        console.log(activities[0], activities[1])
                         resolve(activities)
                     })
                 }
@@ -45,6 +45,7 @@ function getActivities(student, course) {
 
 // ==== funtion get all diferents days =====
 function getDays(student, course) {
+
     return new Promise((resolve, reject) => {
         seguimiento.find({ "username": student, "course": course }).distinct('date')
             .exec((err, days) => {
@@ -59,6 +60,7 @@ function getDays(student, course) {
 
 // ==== funtion get all nodes =====
 function getAllNodes(student, course) {
+
     return new Promise((resolve, reject) => {
         seguimiento.find({ "username": student, "course": course }).distinct('name')
             .exec((err, nodes) => {
@@ -66,9 +68,7 @@ function getAllNodes(student, course) {
                 if (err) {
                     reject("error", err);
                 } else {
-
-                    agoupingNodes(nodes).then((newNodes) => resolve(newNodes))
-
+                    agoupingNodes(nodes).then((newNodes) => resolve(newNodes));
                 }
             })
     })
@@ -82,12 +82,22 @@ function agrupingActivities(activities) {
         for (let activity of activities) {
             // activity = {name date time}
             count++;
-            if (activity._doc.name === "nav_content" || activity._doc.name === "nav_content_prev" || activity._doc.name === "nav_content_click" || activity._doc.name === "nav_content_next") {
-                activity._doc.name = 'content'
+            if (activity._doc.name === "nav_content" || activity._doc.name === "nav_content_prev" || activity._doc.name === "nav_content_click"
+                || activity._doc.name === "nav_content_next" || activity._doc.name === "nav_content_tab") {
+                activity._doc.name = 'contenidos'
+
             } else if (activity._doc.name === "stop_video" || activity._doc.name === "pause_video" || activity._doc.name === "play_video") {
-                activity._doc.name = 'video';
+                activity._doc.name = 'videos';
+
             } else if (activity._doc.name === "Signin") {
                 activity._doc.name = 'Home';
+
+            } else if (activity._doc.name === "problem_graded" || activity._doc.name === "problem_check") {
+                activity._doc.name = "examenes";
+
+            } else if (activity._doc.name === "edx.forum.comment.created" || activity._doc.name === "edx.forum.response.created" || activity._doc.name === "edx.forum.thread.created") {
+                activity._doc.name = 'foros';
+
             }
 
             // newArrayActivities.push(activity)
@@ -106,13 +116,21 @@ function agoupingNodes(nodes) {
 
         nodes = nodes.map((name) => {
             // return { id: index, label: name }
-            if (name === "nav_content" || name === "nav_content_prev" || name === "nav_content_click" || name === "nav_content_next") {
-                name = 'content';
+            if (name === "nav_content" || name === "nav_content_prev" || name === "nav_content_click" || name === "nav_content_next"|| name === "nav_content_tab") {
+                name = 'contenidos';
             } else if (name === "stop_video" || name === "pause_video" || name === "play_video") {
-                name = 'video';
+                name = 'videos';
             } else if (name === 'Signin') {
                 name = 'Home'
+
+            }else if (name === "problem_graded" || name === "problem_check") {
+                name = "examenes";
+
+            } else if (name === "edx.forum.comment.created" || name === "edx.forum.response.created" || name === "edx.forum.thread.created") {
+                name = 'foros';
+
             }
+
             count++;
             return name;
         })
@@ -141,14 +159,10 @@ function buildEdges(activities, nodes, days) {
     let nodesTotal = [];
     let countActivities = 0;
 
-    // console.log("este es un nuevo nodo", nodes[0])
-    // console.log("este es un nuevo nodo", nodes[0].label)
-    // console.log("sus key", Object.keys(nodes[0]))
     return new Promise((resolve, reject) => {
-        // resolve("hola")
+
         days.forEach(async (day, indexDay) => {
 
-            console.log("dia", day)
             // console.log("este es una actividad", activities[1], Object.keys(activities[1]))
             const activitiesbyDay = await activities.filter(activity => activity._doc.date === day);
 
@@ -158,10 +172,9 @@ function buildEdges(activities, nodes, days) {
                 nameto: 'home',
                 from: -1,
                 namefrom: 'login',
-                label: '1',
                 visits: 1
             }];
-            console.log("total actividades en ", day, activitiesbyDay.length);
+            // console.log("total actividades en ", day, activitiesbyDay.length);
 
             if (activitiesbyDay.length) {
 
@@ -183,26 +196,22 @@ function buildEdges(activities, nodes, days) {
                         }
 
                         if (!nodeWasAdded(edge.id, nodesByDay)) {
-
                             nodesByDay.push(edge);
                         }
 
                     }
                     if (index === (activitiesbyDay.length - 1)) {
                         const length = nodesByDay.length - 1;
-                        console.log("nodo en la ultima posicion", nodesByDay[length])
                         const objedge = {
                             id: '-2',
                             to: -2,
                             nameto: 'logOut',
                             from: nodesByDay[length].from,
                             namefrom: nodesByDay[length].namefrom,
-                            label: '1',
                             visits: 1
                         }
                         nodesByDay.push(objedge);
 
-                        console.log({ day: day })
                         nodesTotal.push({ day: day, nodes: nodesByDay })
                     }
 

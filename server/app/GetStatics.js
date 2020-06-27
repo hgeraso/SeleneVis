@@ -110,9 +110,7 @@ statisticCtrl.getTimeVideo = async function (course, student) {
     sumTime = 0; // en segundos 
 
     for (let i = 0; i < bdTimeVideo.length - 1; i++) {
-        //console.log(i+1);
 
-        // console.log("entro al ciclo ", i);
         try {
             if (bdTimeVideo[i].toObject().date == bdTimeVideo[i + 1].toObject().date) {
                 if (bdTimeVideo[i].toObject().name == "play_video") {
