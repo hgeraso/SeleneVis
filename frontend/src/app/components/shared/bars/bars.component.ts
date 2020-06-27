@@ -5,6 +5,8 @@ import { Label } from 'ng2-charts';
 import { SeguimientoService } from 'src/app/services/seguimiento.service';
 import { NgModel } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { Indicator } from 'src/app/models/indicators';
+import { studentCourse } from 'src/app/models/studentCourse';
 
 @Component({
   selector: 'app-bars',
@@ -15,8 +17,10 @@ export class BarsComponent implements OnInit, OnChanges {
 
   loading = false;
   selectUser = false;
+  localLabel = '';
 
-  @Input() body: any = {};
+  @Input() labelTitle: string = '';
+  @Input() stadistics: object;
 
   public barChartOptions: ChartOptions = {
     responsive: true,
@@ -37,16 +41,18 @@ export class BarsComponent implements OnInit, OnChanges {
 
   public barChartData: ChartDataSets[] = [];
 
-  constructor(private staticsservice: SeguimientoService) {
 
-  }
+  constructor(private staticsservice: SeguimientoService) { }
 
   ngOnInit(): void {
   }
 
   ngOnChanges() {
-    console.log("change", this.body);
 
+    if (this.labelTitle && Object.values(this.stadistics).length) {
+      this.localLabel = this.labelTitle;
+      this.loadStatics()
+    }
   }
 
   public chartClicked({ event, active }: { event: MouseEvent, active: {}[] }): void {
@@ -57,46 +63,22 @@ export class BarsComponent implements OnInit, OnChanges {
     console.log(event, active);
   }
 
-  // public randomize(): void {
-  //   // Only Change 3 values
-  //   const data = [
-  //     Math.round(Math.random() * 100),
-  //     59,
-  //     80,
-  //     (Math.random() * 100),
-  //     56,
-  //     (Math.random() * 100),
-  //     40];
-  //   this.barChartData[0].data = data;
-  // }
-
 
   loadStatics() {
+    console.log("en bars statdisctics", this.stadistics)
 
-    if (this.body.student) {
+    let dataset = { data: Object.values(this.stadistics), label: this.labelTitle, backgroundColor: '#' + this.randomColor() };
+    this.barChartData.push(dataset);
 
-      this.loading = true;
-      this.selectUser = false;
-      this.staticsservice.getGeneralStaticsByUserAndCourse(this.body).subscribe(statics => {
+    let keys = Object.keys(this.stadistics);
+    this.barChartLabels = keys;
+    this.stadistics = {}
+  }
 
-        const student = this.body.student.split('_');
-        // this.normalization(statics);
-
-        let dataset = { data: Object.values(statics), label: student[0] + ' ' + student[1], backgroundColor: '#' + this.randomColor() };
-        this.barChartData.push(dataset);
-
-        let keys = Object.keys(statics);
-        this.barChartLabels = keys;
-        this.loading = false;
-
-      }, error => {
-        this.loading = false;
-        Swal.fire("no se puede realizar la consulta");
-      })
-
-    } else {
-      this.selectUser = true;
-    }
+  clear() {
+    this.barChartData = [];
+    this.stadistics = {};
+    this.localLabel = '';
   }
 
 
@@ -105,29 +87,29 @@ export class BarsComponent implements OnInit, OnChanges {
   }
 
 
-  normalization(statics: object):number[] {
+  // normalization(statics: object):number[] {
 
-    const values = Object.values(statics);
-    // const values = [5,15,12,18,28];
-    const sumtotalValues = values.reduce((a: number, b: number) => a + b, 0);
-    const media = sumtotalValues / values.length;
-    const valuesSquare = [];
-    const valueNormalize = [];
+  //   const values = Object.values(statics);
+  //   // const values = [5,15,12,18,28];
+  //   const sumtotalValues = values.reduce((a: number, b: number) => a + b, 0);
+  //   const media = sumtotalValues / values.length;
+  //   const valuesSquare = [];
+  //   const valueNormalize = [];
 
-    values.forEach(value => {
-      valuesSquare.push(Math.pow((value - media), 2))
-    })
+  //   values.forEach(value => {
+  //     valuesSquare.push(Math.pow((value - media), 2))
+  //   })
 
-    const variance = Math.sqrt( (valuesSquare.reduce( (a: number, b: number) => a + b, 0)/ (values.length -1)) );
+  //   const variance = Math.sqrt( (valuesSquare.reduce( (a: number, b: number) => a + b, 0)/ (values.length -1)) );
 
-    values.forEach( x =>{
-      let valueN = ( (x-media)/variance ) > 0 ? ( (x-media)/variance ) : 0;
+  //   values.forEach( x =>{
+  //     let valueN = ( (x-media)/variance ) > 0 ? ( (x-media)/variance ) : 0;
 
-      valueNormalize.push(valueN );
-    })
+  //     valueNormalize.push(valueN );
+  //   })
 
-    // console.log(media, variance, valueNormalize);
-    return valueNormalize;
-  }
+  //   // console.log(media, variance, valueNormalize);
+  //   return valueNormalize;
+  // }
 
 }

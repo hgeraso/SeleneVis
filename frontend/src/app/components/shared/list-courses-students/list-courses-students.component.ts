@@ -11,10 +11,12 @@ import { studentCourse } from 'src/app/models/studentCourse';
 export class ListCoursesStudentsComponent implements OnInit {
 
   @Output() sendbody = new EventEmitter<studentCourse>();
+  @Output() sendcourse = new EventEmitter<string>();
 
-  body:studentCourse = { course: '', student: '' }
+  body: studentCourse = { course: '', student: '' }
   courses = [];
   Students = [];
+  selectUser = false;
 
   constructor(private serviceCourse: CourseFollowService, private servicefollow: StudentService) {
     this.loadCourses()
@@ -30,13 +32,26 @@ export class ListCoursesStudentsComponent implements OnInit {
   }
 
   loadStudentsByCourse(course: string) {
+    this.sendCourse();
     this.body.student = '';
     this.servicefollow.getSrudentsBycourse(course).subscribe(students => this.Students = students);
     // this.loadIndicatorsByCourse(course);
   }
 
-  sendBody(){
-    this.sendbody.emit(this.body);
+  sendBody() {
+    if(this.body.student){
+
+      this.selectUser = false;
+      this.sendbody.emit(this.body);
+      
+    }else{
+      this.selectUser = true;
+    }
+  }
+
+  sendCourse() {
+    console.log("enviar curso", this.body.course)
+    this.sendcourse.emit(this.body.course);
   }
 
 }

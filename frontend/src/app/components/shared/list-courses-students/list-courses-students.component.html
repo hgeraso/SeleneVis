@@ -40,4 +40,7 @@
 </div>
 <div class="btn-load">
     <button mat-raised-button color="primary" type="button" (click)="sendBody()">Consultar</button>
+    <mat-error *ngIf="selectUser">
+        Seleccione un estudiante
+    </mat-error>
 </div>
