@@ -23,6 +23,8 @@ export class SummaryComponent implements OnInit {
   body: studentCourse = { course: '', student: '' };
   labelTable: string;
   course: string;
+  loading=false;
+  loadingIndicators=false;
 
   constructor(private inicatorsCourseService: IndicatorsService, private staticsservice: SeguimientoService) {
   }
@@ -30,9 +32,14 @@ export class SummaryComponent implements OnInit {
   ngOnInit() { }
 
   loadIndicatorsByCourse(course: string) {
+    this.loadingIndicators = true;
     this.course = course;
     this.inicatorsCourseService.getIndicatorsByCourse(course).subscribe(indicators => {
+      this.loadingIndicators = false;
       this.indicators = indicators;
+    }, err => {
+      this.loadingIndicators=false;
+      console.log(err);
     })
   }
 
@@ -44,7 +51,15 @@ export class SummaryComponent implements OnInit {
   }
 
   loadStadisticStudent() {
-    this.staticsservice.getGeneralStaticsByUserAndCourse(this.body).subscribe(stadistics => this.stadistics = stadistics)
+    this.loading=true;
+    this.staticsservice.getGeneralStaticsByUserAndCourse(this.body).subscribe(stadistics => {
+      this.loading = false;
+      this.stadistics = stadistics})
+  }
+
+  clear(event){
+    console.log("limpiar data", event);
+    this.stadistics = null;
   }
 
 

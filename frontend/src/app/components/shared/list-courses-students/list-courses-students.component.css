@@ -5,3 +5,8 @@
     width: 100%;
     margin: 1rem;
 }
+
+.card-consult{
+    display: flex;
+    flex-wrap: wrap;
+}

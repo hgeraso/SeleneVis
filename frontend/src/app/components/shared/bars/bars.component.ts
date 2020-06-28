@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 import { Label } from 'ng2-charts';
@@ -21,6 +21,7 @@ export class BarsComponent implements OnInit, OnChanges {
 
   @Input() labelTitle: string = '';
   @Input() stadistics: object;
+  @Output() clearData = new EventEmitter<string>();
 
   public barChartOptions: ChartOptions = {
     responsive: true,
@@ -79,6 +80,7 @@ export class BarsComponent implements OnInit, OnChanges {
     this.barChartData = [];
     this.stadistics = {};
     this.localLabel = '';
+    this.clearData.emit('clear');
   }
 
 

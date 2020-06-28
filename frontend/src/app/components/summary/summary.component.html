@@ -1,9 +1,19 @@
-<list-courses-students (sendbody)="setBody($event)" (sendcourse)="loadIndicatorsByCourse($event)" ></list-courses-students>
+<div class="head-consult">
 
-<app-table-stadistics [indicators]="indicators" [course]="course"></app-table-stadistics>
+  <div style="margin-right: 2rem;">
+    <list-courses-students (sendbody)="setBody($event)" (sendcourse)="loadIndicatorsByCourse($event)">
+    </list-courses-students>
+  </div>
 
-<div *ngIf="stadistics" class="main-container">
-  <mat-card class="form-card-chart">
-    <app-bars [labelTitle]="labelTable" [stadistics]="stadistics"></app-bars>
+  <!-- <div *ngIf="stadistics" > -->
+  <mat-card *ngIf="stadistics" class="form-card-chart">
+    <app-bars [labelTitle]="labelTable" [stadistics]="stadistics" (clearData)="clear($event)"></app-bars>
   </mat-card>
+  <!-- </div> -->
+  
 </div>
+
+<div *ngIf="loadingIndicators" class="main-container" style="margin-top: 3rem;">
+  <mat-spinner></mat-spinner>
+</div>
+<app-table-stadistics *ngIf="indicators" [indicators]="indicators" [course]="course"></app-table-stadistics>

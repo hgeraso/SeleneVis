@@ -30,7 +30,8 @@ export class TableStadisticsComponent implements OnInit, OnChanges {
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 25, this.pageSizeIndicators];
 
-  stadistics = {};
+  stadistics:object;
+  loading=false;
 
   constructor() { }
 
@@ -46,17 +47,25 @@ export class TableStadisticsComponent implements OnInit, OnChanges {
 
   }
 
+  clear(){
+    this.stadistics = null;
+  }
+
   buildGraps() {
 
+    this.loading = true;
     this.dataSource = new MatTableDataSource<Indicator>(this.indicators);
     this.dataSource.paginator = this.paginator;
 
-    this.getStadisticsByIndicators().then(stadiscticsbycourse => {
+    this.getStadisticsByIndicators().then((stadiscticsbycourse:object) => {
 
+      this.loading = false;
       this.stadistics = stadiscticsbycourse;
       this.indicators = [];
 
-    }).catch(err => console.log(err))
+    }).catch(err => {
+      this.loading =false;
+      console.log(err)})
   }
 
   getStadisticsByIndicators() {

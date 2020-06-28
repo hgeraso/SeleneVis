@@ -1,4 +1,4 @@
-<div class="main-container">
+<div class="card-consult">
 
     <mat-card class="form-card">
         <mat-card-header>
@@ -38,7 +38,7 @@
     </mat-card>
 
 </div>
-<div class="btn-load">
+<div *ngIf="body.student" class="btn-load">
     <button mat-raised-button color="primary" type="button" (click)="sendBody()">Consultar</button>
     <mat-error *ngIf="selectUser">
         Seleccione un estudiante
