@@ -1,7 +1,5 @@
-/* .list-card {
-  width: 100%;
-  flex: 2 1 auto;
-} */
+@import '../summary/summary.component.css';
+
 .list-card {
   max-width: 1000px;
   flex: 2 1 auto;

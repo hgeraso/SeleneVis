@@ -81,16 +81,19 @@ statisticCtrl.getStatistics = async (req, res) => {
 
 
     const staticsToSave = {
-        "numVideos": numVideos,
-        "numContenido": numContenido,
-        "numForos": numForos,
-        "numExamenes": numExamenes,
-        "numSesiones": numSesiones,
-        "numVideosDiferentes": numVideosDiferentes.length > 0 ? numVideosDiferentes[0].numVideosDifferents : 0,
-        "numSesionesDiferentes": numSesionesDiferentes[0].numsesionesDifferents,
-        "TimeVideos": timeVideo,
-        "TimeExam": timeExam,
-        "TimeOthers": timeOthers
+        idCourseStudent: student + course,
+        numVideos,
+        numContenido,
+        numForos,
+        numExamenes,
+        numSesiones,
+        numVideosDiferentes: numVideosDiferentes.length > 0 ? numVideosDiferentes[0].numVideosDifferents : 0,
+        numSesionesDiferentes: numSesionesDiferentes[0].numsesionesDifferents,
+        TimeVideos: timeVideo,
+        TimeExam: timeExam,
+        TimeOthers: timeOthers,
+        course,
+        student,
     }
 
     return staticsToSave;
@@ -107,9 +110,7 @@ statisticCtrl.getTimeVideo = async function (course, student) {
     sumTime = 0; // en segundos 
 
     for (let i = 0; i < bdTimeVideo.length - 1; i++) {
-        //console.log(i+1);
 
-        // console.log("entro al ciclo ", i);
         try {
             if (bdTimeVideo[i].toObject().date == bdTimeVideo[i + 1].toObject().date) {
                 if (bdTimeVideo[i].toObject().name == "play_video") {
@@ -153,41 +154,41 @@ statisticCtrl.getTimeExam = async (course, student) => {
     sumTime = 0; // en segundos 
     // console.log("entro al Time exam");
     for (let i = 0; i < bdTimeExam.length - 1; i++) {
-    //console.log(i+1);
-    // console.log("entro al ciclo ", i);
+        //console.log(i+1);
+        // console.log("entro al ciclo ", i);
 
-    try {
-        const obj = bdTimeExam[i].toObject();
-        const objNext = bdTimeExam[i + 1].toObject()
-        // console.log(obj.date, objNext.date)
-        // console.log(obj.name, objNext.name)
-        // console.log(obj.time, objNext.time)
-
-
-        if (obj.date == objNext.date) {
-
-            if (obj.name == "problem_check" && i > 0) {
-
-                segTimeEnd = (obj.time.substr(0, 2) * 3600) + obj.time.substr(3, 2) * 60 + (obj.time.substr(6, 2) * 1);
-                segTimeInit = (bdTimeExam[i - 1].toObject().time.substr(0, 2) * 3600) + bdTimeExam[i - 1].toObject().time.substr(3, 2) * 60 + (bdTimeExam[i - 1].toObject().time.substr(6, 2) * 1);
-                resTime = segTimeEnd - segTimeInit;
-                // console.log("el residuo es:", resTime);
+        try {
+            const obj = bdTimeExam[i].toObject();
+            const objNext = bdTimeExam[i + 1].toObject()
+            // console.log(obj.date, objNext.date)
+            // console.log(obj.name, objNext.name)
+            // console.log(obj.time, objNext.time)
 
 
-                if (bdTimeExam[i - 1].toObject().name == "Signin") {
-                    // console.log("se descarta por Signin");
+            if (obj.date == objNext.date) {
 
-                } else {
-                    sumTime = sumTime + resTime;
-                    // console.log("la suma parcial de Time exam es:", sumTime);
+                if (obj.name == "problem_check" && i > 0) {
+
+                    segTimeEnd = (obj.time.substr(0, 2) * 3600) + obj.time.substr(3, 2) * 60 + (obj.time.substr(6, 2) * 1);
+                    segTimeInit = (bdTimeExam[i - 1].toObject().time.substr(0, 2) * 3600) + bdTimeExam[i - 1].toObject().time.substr(3, 2) * 60 + (bdTimeExam[i - 1].toObject().time.substr(6, 2) * 1);
+                    resTime = segTimeEnd - segTimeInit;
+                    // console.log("el residuo es:", resTime);
+
+
+                    if (bdTimeExam[i - 1].toObject().name == "Signin") {
+                        // console.log("se descarta por Signin");
+
+                    } else {
+                        sumTime = sumTime + resTime;
+                        // console.log("la suma parcial de Time exam es:", sumTime);
+                    }
+
                 }
-
             }
+        } catch (error) {
+            console.log("error en el registro", bdTimeExam[i], bdTimeExam[i + 1])
+            console.log(i, i + 1)
         }
-    } catch (error) {
-        console.log("error en el registro", bdTimeExam[i], bdTimeExam[i + 1])
-        console.log(i, i + 1)
-    }
 
     }
     // console.log("es de tipo :", typeof (bdTimeExam.length), bdTimeExam.length);

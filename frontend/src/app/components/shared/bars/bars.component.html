@@ -1,23 +1,17 @@
-<div class="form-card">
-    <div class="btn-load">
-        <button mat-raised-button color="primary" type="button" (click)="loadStatics()" >Consultar</button>
-    </div>
-    <div *ngIf="selectUser" class="alert">
-        Selecciona un usuario
-    </div>
+<div *ngIf="barChartData.length" class="form-card">
 
     <div>
-        <mat-card *ngIf="loading && body.student" >
-            <div class="center">
-                <mat-spinner></mat-spinner>
-            </div>
-        </mat-card>
-
-        <div *ngIf="!loading && barChartData.length"  style="display: block">
+        <div *ngIf="!loading && barChartData.length" style="display: block">
             <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
                 [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
             </canvas>
         </div>
-        <!-- <button mat-button mat-raised-button color="primary" (click)="randomize()">Update</button> -->
+    </div>
+    <div class="btn-load">
+        <!-- <button mat-raised-button color="primary" type="button" (click)="clear()">Limpiar</button> -->
+        <button mat-stroked-button color="warn" type="button" (click)="clear()">Limpiar</button>
+    </div>
+    <div *ngIf="selectUser" class="alert">
+        Selecciona un usuario
     </div>
 </div>
