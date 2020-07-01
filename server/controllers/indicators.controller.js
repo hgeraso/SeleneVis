@@ -37,12 +37,10 @@ indicatorCtrl.createIndicator = async (req, res) => {
         return 'indicator saved sussesfuly';
     }
     else {
-        // indicator = new Indicator(req);
+        indicator = new Indicator(req);
 
         // await indicator.update();
-        await Indicator.updateOne( { idCourseStudent: req.idCourseStudent }, req, {
-            upsert: true
-        } )
+        await indicator.save()
         return 'indicator saved sussesfuly';
 
         //     /*numRespuestas: req.body.numRespuestas,            

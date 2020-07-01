@@ -57,22 +57,18 @@ statisticCtrl.getStatistics = async (req, res) => {
         { $count: "numVideosDifferents" }
     ]);
 
-    const numSesionesDiferentes = await seguimiento.aggregate([
-
+    const numSesionesDiferentes = await seguimiento.aggregate([{
+        $match: {
+            $and: [{ "username": student, "course": course }]
+        }
+    },
+    {
+        $group:
         {
-            $match:
-
-            {
-                $and: [{ "username": student, "course": course }]
-            }
-        },
-        {
-            $group:
-            {
-                _id: "$session"
-            }
-        },
-        { $count: "numsesionesDifferents" }
+            _id: "$session"
+        }
+    },
+    { $count: "numsesionesDifferents" }
     ]);
 
     const timeVideo = await statisticCtrl.getTimeVideo(course, student);
@@ -88,10 +84,10 @@ statisticCtrl.getStatistics = async (req, res) => {
         numExamenes,
         numSesiones,
         numVideosDiferentes: numVideosDiferentes.length > 0 ? numVideosDiferentes[0].numVideosDifferents : 0,
-        numSesionesDiferentes: numSesionesDiferentes[0].numsesionesDifferents,
-        TimeVideos: timeVideo,
-        TimeExam: timeExam,
-        TimeOthers: timeOthers,
+        numSesionesDif: numSesionesDiferentes[0].numsesionesDifferents,
+        timeVideos: timeVideo,
+        timeExam,
+        timeOthers,
         course,
         student,
     }
