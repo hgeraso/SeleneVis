@@ -29,6 +29,7 @@ app.use('/api/indicators', require('./routes/indicator.routes'));
 app.use('/api/statistics', require('./routes/statistics.routes'));
 app.use('/api/prueba', require('./routes/prueba.routes'));
 app.use('/api/grafos', require('./routes/grafos.routes'));
+app.use('/api/course-stadistics', require('./routes/course-stadistics.routes'));
 
 
 

@@ -28,3 +28,17 @@
     flex-wrap: wrap;
     align-items: center;
 }
+
+.custom-style1 {
+    fill: #f2ea00;
+    fill-opacity: 0;
+    stroke-width: 2px;
+    stroke: #b3ab00;
+  }
+  
+  .custom-style2 {
+    fill: #00a0f2;
+    fill-opacity: 0;
+    stroke-width: 2px;
+    stroke: #050092;
+  }

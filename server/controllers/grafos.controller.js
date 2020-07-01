@@ -1,7 +1,7 @@
 const seguimiento = require('../models/seguimiento');
 const grafosController = {};
 
-grafosController.getdataStudent = async (req, res) => {
+grafosController.getGrafosStudentByDay = async (req, res) => {
 
     var course = req.body ? req.body.course : req.course;
     var student = req.body ? req.body.student : req.student;
@@ -14,10 +14,33 @@ grafosController.getdataStudent = async (req, res) => {
 
         const activities = responses[0];
         const nodes = responses[1];
-        const days = responses[2]
-        buildEdges(activities, nodes, days).then(nodesTotal => {
+        const days = responses[2];
+        buildEdges(activities, nodes, days, 'day').then(nodesTotal => {
 
-            res.json({ edges: nodesTotal, nodes })
+            res.json({ edges: nodesTotal, nodes, options:days })
+        })
+        // res.json({nodes})
+    })
+
+}
+// ===== grafos by sessions ========
+grafosController.getGrafosStudentBySession = async (req, res) => {
+
+    var course = req.body ? req.body.course : req.course;
+    var student = req.body ? req.body.student : req.student;
+
+    Promise.all([
+        getActivities(student, course),
+        getAllNodes(student, course),
+        getSessions(student, course)
+    ]).then(responses => {
+
+        const activities = responses[0];
+        const nodes = responses[1];
+        const days = responses[2];
+        buildEdges(activities, nodes, days, 'session').then(nodesTotal => {
+
+            res.json({ edges: nodesTotal, nodes, options:days })
         })
         // res.json({nodes})
     })
@@ -54,6 +77,19 @@ function getDays(student, course) {
                 } else {
                     resolve(days);
                 }
+            })
+    })
+}
+
+// ===== function get all sessions =====}
+function getSessions(student, course) {
+
+    return new Promise((resolve, reject) => {
+        seguimiento.find({ course: course, username: student }).distinct('session')
+            .exec((err, sessions) => {
+
+                if (err) reject("error", err);
+                else resolve(sessions);
             })
     })
 }
@@ -110,23 +146,35 @@ function agrupingActivities(activities) {
 
 function agoupingNodes(nodes) {
     let count = 0;
+    let activityByNode = {
+        contenidos: [],
+        videos: [],
+        Home: [],
+        examenes: [],
+        foros: []
+    }
     return new Promise((resolve, reject) => {
 
         nodes = nodes.filter((el, index) => nodes.indexOf(el) === index);
 
         nodes = nodes.map((name) => {
             // return { id: index, label: name }
-            if (name === "nav_content" || name === "nav_content_prev" || name === "nav_content_click" || name === "nav_content_next"|| name === "nav_content_tab") {
+            if (name === "nav_content" || name === "nav_content_prev" || name === "nav_content_click" || name === "nav_content_next" || name === "nav_content_tab") {
+                activityByNode.contenidos.push(name);
                 name = 'contenidos';
             } else if (name === "stop_video" || name === "pause_video" || name === "play_video") {
+                activityByNode.videos.push(name);
                 name = 'videos';
             } else if (name === 'Signin') {
+                activityByNode.Home.push(name);
                 name = 'Home'
 
-            }else if (name === "problem_graded" || name === "problem_check") {
+            } else if (name === "problem_graded" || name === "problem_check") {
+                activityByNode.examenes.push(name);
                 name = "examenes";
 
             } else if (name === "edx.forum.comment.created" || name === "edx.forum.response.created" || name === "edx.forum.thread.created") {
+                activityByNode.foros.push(name);
                 name = 'foros';
 
             }
@@ -141,9 +189,10 @@ function agoupingNodes(nodes) {
             let count2 = 0;
             let newNodes = [{ id: -1, label: 'login' }]
             for (let name of nodes) {
-
+                activityByNode[name] = activityByNode[name].filter((el, index) => activityByNode[name].indexOf(el) === index);
+                const title = activityByNode[name].join(', ')
                 count2++;
-                newNodes.push({ id: count2, label: name })
+                newNodes.push({ id: count2, label: name, title: title })
             }
 
             if (count2 == nodes.length) {
@@ -154,7 +203,7 @@ function agoupingNodes(nodes) {
     })
 }
 
-function buildEdges(activities, nodes, days) {
+function buildEdges(activities, nodes, days, control) {
 
     let nodesTotal = [];
     let countActivities = 0;
@@ -164,7 +213,13 @@ function buildEdges(activities, nodes, days) {
         days.forEach(async (day, indexDay) => {
 
             // console.log("este es una actividad", activities[1], Object.keys(activities[1]))
-            const activitiesbyDay = await activities.filter(activity => activity._doc.date === day);
+            let activitiesByControl = [];
+            if (control === 'day') {
+
+                activitiesByControl = await activities.filter(activity => activity._doc.date === day);
+            } else {
+                activitiesByControl = await activities.filter(activity => activity._doc.session === day);
+            }
 
             let nodesByDay = [{
                 id: '-11',
@@ -176,14 +231,14 @@ function buildEdges(activities, nodes, days) {
             }];
             // console.log("total actividades en ", day, activitiesbyDay.length);
 
-            if (activitiesbyDay.length) {
+            if (activitiesByControl.length) {
 
-                for (let index = 0; index < activitiesbyDay.length; index++) {
+                for (let index = 0; index < activitiesByControl.length; index++) {
                     countActivities++;
-                    if ((index + 1) <= (activitiesbyDay.length - 1) && nodes.length) {
+                    if ((index + 1) <= (activitiesByControl.length - 1) && nodes.length) {
 
-                        const element = nodes.find(obj => obj.label === activitiesbyDay[index]._doc.name);
-                        const elementnext = nodes.find(obj => obj.label === activitiesbyDay[index + 1]._doc.name);
+                        const element = nodes.find(obj => obj.label === activitiesByControl[index]._doc.name);
+                        const elementnext = nodes.find(obj => obj.label === activitiesByControl[index + 1]._doc.name);
                         const edge = {
 
                             id: `${element.id}${elementnext.id}`,
@@ -200,14 +255,14 @@ function buildEdges(activities, nodes, days) {
                         }
 
                     }
-                    if (index === (activitiesbyDay.length - 1)) {
+                    if (index === (activitiesByControl.length - 1)) {
                         const length = nodesByDay.length - 1;
                         const objedge = {
                             id: '-2',
                             to: -2,
                             nameto: 'logOut',
-                            from: nodesByDay[length].from,
-                            namefrom: nodesByDay[length].namefrom,
+                            from: nodesByDay[length].to,
+                            namefrom: nodesByDay[length].nameto,
                             visits: 1
                         }
                         nodesByDay.push(objedge);
