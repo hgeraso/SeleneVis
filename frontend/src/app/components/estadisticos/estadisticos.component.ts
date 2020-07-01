@@ -3,6 +3,8 @@ import { Network, DataSet, Node, Edge, IdType, Graph2d } from 'vis';
 import { GrafosService } from 'src/app/services/grafos.service';
 import { Grafo, item } from 'src/app/models/grafos';
 import { studentCourse } from 'src/app/models/studentCourse';
+import { IndicatorsService } from 'src/app/services/indicators.service';
+import { StadiscticGraph } from 'src/app/models/stadistics-graphs';
 
 @Component({
   selector: 'app-estadisticos',
@@ -18,7 +20,7 @@ export class EstadisticosComponent implements OnInit {
   body:studentCourse = {course:'', student:''};
   grafoService: Grafo = { edges: [], nodes: [], options:[] };
 
-  constructor(private grafosService: GrafosService) {
+  constructor(private grafosService: GrafosService, private servicesStadistics: IndicatorsService) {
 
     // this.grafosService.getGrafosStudent({ course: "Unicauca+Intro_IoT+2019-II", student: "Gustavo_Ramirez_Staff" })
     //   .subscribe((grafo: Grafo) => {
@@ -91,6 +93,8 @@ export class EstadisticosComponent implements OnInit {
       this.createNetwork(grafo.edges[0]);
 
     })
+    this.loadStadistics()
+
   }
 
   // === when select another option ===
@@ -113,29 +117,35 @@ export class EstadisticosComponent implements OnInit {
       this.createNetwork(grafo.edges[0]);
     })
   }
-  //create Stadistics
-  createStadistics() {
 
-    const items = [
-      { x: "2014-06-11", y: 10, group: 0 },
-      { x: "2014-06-12", y: 25, group: 0 },
-      { x: "2014-06-13", y: 30, group: 0 },
-      { x: "2014-06-14", y: 10, group: 0 },
-      { x: "2014-06-15", y: 15, group: 0 },
-      { x: "2014-06-16", y: 30, group: 0 },
-      { x: "2014-06-11", y: 12, group: 1 },
-      { x: "2014-06-12", y: 15, group: 1 },
-      { x: "2014-06-13", y: 34, group: 1 },
-      { x: "2014-06-14", y: 24, group: 1 },
-      { x: "2014-06-15", y: 5, group: 1 },
-      { x: "2014-06-16", y: 12, group: 1 },
-      { x: "2014-06-11", y: 22, group: 2 },
-      { x: "2014-06-12", y: 14, group: 2 },
-      { x: "2014-06-13", y: 24, group: 2 },
-      { x: "2014-06-14", y: 21, group: 2 },
-      { x: "2014-06-15", y: 30, group: 2 },
-      { x: "2014-06-16", y: 18, group: 2 }
-    ];
+  loadStadistics(){
+    
+    this.servicesStadistics.getStadisticsByCourse(this.body.course).subscribe( stadistics => this.createStadistics( stadistics ) )
+  }
+  //create Stadistics
+  createStadistics( vectors:StadiscticGraph[] ) {
+
+    const items = vectors;
+    // [
+    //   { x: "2014-06-11", y: 10, group: 0 },
+    //   { x: "2014-06-12", y: 25, group: 0 },
+    //   { x: "2014-06-13", y: 30, group: 0 },
+    //   { x: "2014-06-14", y: 10, group: 0 },
+    //   { x: "2014-06-15", y: 15, group: 0 },
+    //   { x: "2014-06-16", y: 30, group: 0 },
+    //   { x: "2014-06-11", y: 12, group: 1 },
+    //   { x: "2014-06-12", y: 15, group: 1 },
+    //   { x: "2014-06-13", y: 34, group: 1 },
+    //   { x: "2014-06-14", y: 24, group: 1 },
+    //   { x: "2014-06-15", y: 5, group: 1 },
+    //   { x: "2014-06-16", y: 12, group: 1 },
+    //   { x: "2014-06-11", y: 22, group: 2 },
+    //   { x: "2014-06-12", y: 14, group: 2 },
+    //   { x: "2014-06-13", y: 24, group: 2 },
+    //   { x: "2014-06-14", y: 21, group: 2 },
+    //   { x: "2014-06-15", y: 30, group: 2 },
+    //   { x: "2014-06-16", y: 18, group: 2 }
+    // ];
 
     let groups = new DataSet();
     groups.add({ id: 0, content: "group0" });
@@ -154,8 +164,8 @@ export class EstadisticosComponent implements OnInit {
         icons: true
       },
       orientation: "top",
-      start: "2014-06-10",
-      end: "2014-06-18"
+      start: vectors[0].x,
+      end: vectors[(vectors.length-1)].x
     };
 
     var graph2d = new Graph2d(container, items, groups, options);

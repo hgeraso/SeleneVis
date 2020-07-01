@@ -66,7 +66,6 @@ export class BarsComponent implements OnInit, OnChanges {
 
 
   loadStatics() {
-    console.log("en bars statdisctics", this.stadistics)
 
     let dataset = { data: Object.values(this.stadistics), label: this.labelTitle, backgroundColor: '#' + this.randomColor() };
     this.barChartData.push(dataset);
