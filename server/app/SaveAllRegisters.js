@@ -38,9 +38,8 @@ SaveInfoDB.saveInfo = async () => {
             }
         })
 
-
     })
-
+ console.log("cierra funcion de obtener estadisticas");
 }
 
 

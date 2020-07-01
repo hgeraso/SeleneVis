@@ -82,7 +82,7 @@ export class BarsComponent implements OnInit, OnChanges {
     this.clearData.emit('clear');
   }
 
-
+// generate a color for each student
   randomColor(): string {
     return Math.floor(Math.random() * 16777215).toString(16);
   }
@@ -112,5 +112,18 @@ export class BarsComponent implements OnInit, OnChanges {
   //   // console.log(media, variance, valueNormalize);
   //   return valueNormalize;
   // }
+
+
+  // function to convert timeother on hours and return statics values as array
+
+  valuesStatics(statics:Object):number[]{
+    
+    // statics['TimeOthers'] = (parseInt(statics['TimeOthers']) /( 60 *60));
+    statics['TimeVideo'] = (parseInt(statics['TimeVideo']) /( 60 *60));
+    statics['TimeExam'] = (parseInt(statics['TimeExam']) /( 60 *60));
+
+    return Object.values(statics);
+
+  }
 
 }
