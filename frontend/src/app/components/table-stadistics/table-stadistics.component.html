@@ -1,58 +1,67 @@
-<!-- <mat-card class="list-card"> -->
-<div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="Estudiante">
-            <th mat-header-cell *matHeaderCellDef> Estudiante </th>
-            <td mat-cell *matCellDef="let indicator"> {{indicator.student}} </td>
-        </ng-container>
-        <ng-container matColumnDef="#Videos">
-            <th mat-header-cell *matHeaderCellDef> #Videos </th>
-            <td mat-cell *matCellDef="let indicator"> {{indicator.numVideos}} </td>
-        </ng-container>
-        <ng-container matColumnDef="#Contenidos">
-            <th mat-header-cell *matHeaderCellDef> #Contenidos </th>
-            <td mat-cell *matCellDef="let indicator"> {{indicator.numContenido}} </td>
-        </ng-container>
-        <ng-container matColumnDef="#Foros">
-            <th mat-header-cell *matHeaderCellDef> #Foros </th>
-            <td mat-cell *matCellDef="let indicator"> {{indicator.numForos}} </td>
-        </ng-container>
-        <ng-container matColumnDef="#Examanes">
-            <th mat-header-cell *matHeaderCellDef> #Examanes </th>
-            <td mat-cell *matCellDef="let indicator"> {{indicator.numExamenes}} </td>
-        </ng-container>
-        <ng-container matColumnDef="#Sesiones">
-            <th mat-header-cell *matHeaderCellDef> #Sesiones </th>
-            <td mat-cell *matCellDef="let indicator"> {{indicator.numSesiones}} </td>
-        </ng-container>
-        <ng-container matColumnDef="#SesionesDif">
-            <th mat-header-cell *matHeaderCellDef> #SesionesDif </th>
-            <td mat-cell *matCellDef="let indicator"> {{indicator.numSesionesDif}} </td>
-        </ng-container>
-        <ng-container matColumnDef="#VideosDif">
-            <th mat-header-cell *matHeaderCellDef> #VideosDif </th>
-            <td mat-cell *matCellDef="let indicator"> {{indicator.numVideosDiferentes}} </td>
-        </ng-container>
-        <ng-container matColumnDef="T. Examen">
-            <th mat-header-cell *matHeaderCellDef> T. Examen </th>
-            <td mat-cell *matCellDef="let indicator"> {{indicator.timeExam}} </td>
-        </ng-container>
-        <ng-container matColumnDef="T. Videos">
-            <th mat-header-cell *matHeaderCellDef> "T. Videos" </th>
-            <td mat-cell *matCellDef="let indicator"> {{indicator.timeVideos}} </td>
-        </ng-container>
-        <ng-container matColumnDef="T. Otros">
-            <th mat-header-cell *matHeaderCellDef> T. Otros </th>
-            <td mat-cell *matCellDef="let indicator"> {{indicator.timeOthers}} </td>
-        </ng-container>
+<div class="main-container">
 
-        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-        <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
+    <mat-card class="form-card-chart" *ngIf="stadistics">
+        <app-bars [labelTitle]="course" [stadistics]="stadistics" (clearData)="clear()"></app-bars>
+    </mat-card>
 
-    </table>
+    <mat-card class="list-card">
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-    </mat-paginator>
+        <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="Estudiante">
+                <th mat-header-cell *matHeaderCellDef> Estudiante </th>
+                <td mat-cell *matCellDef="let indicator"> {{indicator.student}} </td>
+            </ng-container>
+            <ng-container matColumnDef="#Videos">
+                <th mat-header-cell *matHeaderCellDef> #Videos </th>
+                <td mat-cell *matCellDef="let indicator"> {{indicator.numVideos}} </td>
+            </ng-container>
+            <ng-container matColumnDef="#Contenidos">
+                <th mat-header-cell *matHeaderCellDef> #Contenidos </th>
+                <td mat-cell *matCellDef="let indicator"> {{indicator.numContenido}} </td>
+            </ng-container>
+            <ng-container matColumnDef="#Foros">
+                <th mat-header-cell *matHeaderCellDef> #Foros </th>
+                <td mat-cell *matCellDef="let indicator"> {{indicator.numForos}} </td>
+            </ng-container>
+            <ng-container matColumnDef="#Examanes">
+                <th mat-header-cell *matHeaderCellDef> #Examanes </th>
+                <td mat-cell *matCellDef="let indicator"> {{indicator.numExamenes}} </td>
+            </ng-container>
+            <ng-container matColumnDef="#Sesiones">
+                <th mat-header-cell *matHeaderCellDef> #Sesiones </th>
+                <td mat-cell *matCellDef="let indicator"> {{indicator.numSesiones}} </td>
+            </ng-container>
+            <ng-container matColumnDef="#SesionesDif">
+                <th mat-header-cell *matHeaderCellDef> #SesionesDif </th>
+                <td mat-cell *matCellDef="let indicator"> {{indicator.numSesionesDif}} </td>
+            </ng-container>
+            <ng-container matColumnDef="#VideosDif">
+                <th mat-header-cell *matHeaderCellDef> #VideosDif </th>
+                <td mat-cell *matCellDef="let indicator"> {{indicator.numVideosDiferentes}} </td>
+            </ng-container>
+            <ng-container matColumnDef="T. Examen">
+                <th mat-header-cell *matHeaderCellDef> T. Examen </th>
+                <td mat-cell *matCellDef="let indicator"> {{indicator.timeExam}} </td>
+            </ng-container>
+            <ng-container matColumnDef="T. Videos">
+                <th mat-header-cell *matHeaderCellDef> "T. Videos" </th>
+                <td mat-cell *matCellDef="let indicator"> {{indicator.timeVideos}} </td>
+            </ng-container>
+            <ng-container matColumnDef="T. Otros">
+                <th mat-header-cell *matHeaderCellDef> T. Otros </th>
+                <td mat-cell *matCellDef="let indicator"> {{indicator.timeOthers}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+            <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
+
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+        </mat-paginator>
+    </mat-card>
 </div>
-
 <!-- </mat-card> -->
+<div *ngIf="loading" class="main-container" style="margin-top: 3rem;">
+    <mat-spinner></mat-spinner>
+  </div>

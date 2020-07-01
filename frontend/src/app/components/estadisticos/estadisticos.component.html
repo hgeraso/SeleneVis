@@ -1,3 +1,32 @@
-<p>estadisticos works!</p>
-<div class="container" id="mynetwork" ></div>
-<div class="container" id="visualization" ></div>
+<div class="main-container">
+    <list-courses-students (sendbody)="getGrafos($event)"></list-courses-students>
+</div>
+
+
+<div class="goup-grafos" *ngIf="body.student" >
+
+    <div class="mat-elevation-z8">
+        <div class="option-consult" >            
+            <button mat-stroked-button color="primary" (click)="getGrafosByDay()">Consulta por día</button>
+            <button mat-stroked-button color="accent" (click)="getGrafosBySession()">Consulta por Sesión</button>
+        </div>
+
+        <mat-card>
+            <mat-form-field>
+                <mat-label>Opciones</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let option of grafoService.options" [value]="option"
+                        (click)="getGrafoByOption(option)">
+                        {{option}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-card>
+    </div>
+
+    <div class="grafo mat-elevation-z8" id="mynetwork"></div>
+    <!-- <pre id="eventSpan"></pre> -->
+    <!-- <div class="grafo mat-elevation-z8" id="mynetwork"></div> -->
+</div>
+
+<div class="container" id="visualization"></div>

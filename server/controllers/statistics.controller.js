@@ -102,23 +102,6 @@ statisticCtrl.getStatistics = async (req, res) => {
         "TimeOthers": timeOthers
     }
 
-    // await indicatorController.createIndicator({...staticsToSave, student, course})
-    // .then( res => console.log("estuden saved", res) )
-    // .catch( err => {
-    //     if (err.code == 11000){
-    //         console.log("el registro ya existe");
-    //         exist=true;
-    //     }
-    // } )
-
-    // if(exist){
-    //     console.log("atualizar registro");
-    //     await indicatorController.UpdateIndicator({...staticsToSave, student, course})
-    //     .then( res => console.log("Actualizacion completa"))
-    //     .catch( err =>console.log("ocurrio un error actualizando", err) )
-    //     exist = false;
-    // }
-
     res.json(
         staticsToSave
     );

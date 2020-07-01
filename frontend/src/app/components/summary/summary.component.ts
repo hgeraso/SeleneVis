@@ -7,54 +7,130 @@ import { CourseFollowService } from 'src/app/services/course-follow.service';
 import { SeguimientoService } from '../../services/seguimiento.service';
 import { IndicatorsService } from 'src/app/services/indicators.service';
 import { Indicator } from 'src/app/models/indicators';
+import { studentCourse } from 'src/app/models/studentCourse';
+import { StadiscticGraph } from 'src/app/models/stadistics-graphs';
+import { Network, DataSet, Node, Edge, IdType, Graph2d } from 'vis';
 
-declare var M: any;
-interface Food {
-  value: string;
-  viewValue: string;
-}
 
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.css']
 })
+
 export class SummaryComponent implements OnInit {
 
-  Students: string[] = [];
-  courses: string[];
   indicators: Indicator[];
+  stadistics: object;
+  body: studentCourse = { course: '', student: '' };
+  labelTable: string;
+  course: string;
+  loading = false;
+  loadingIndicators = false;
 
-  body: { course: string, student: string } = { course: '', student: '' };
-
-  constructor(private servicefollow: StudentService, private serviceCourse: CourseFollowService, private statics: SeguimientoService,
-    private inicatorsCourseService: IndicatorsService) {
-
-    this.loadCourses();
-
+  constructor(private inicatorsCourseService: IndicatorsService, private staticsservice: SeguimientoService) {
   }
 
   ngOnInit() { }
 
+  loadIndicatorsByCourse(course: string) {
+    this.loadingIndicators = true;
+    this.course = course;
+    this.inicatorsCourseService.getIndicatorsByCourse(course).subscribe(indicators => {
+      this.loadingIndicators = false;
+      this.indicators = indicators;
+    }, err => {
+      this.loadingIndicators = false;
+      console.log(err);
+    })
 
-  loadCourses() {
-    this.serviceCourse.getCourses().subscribe(coures => {
-      this.courses = coures;
+    this.loadStadisticsByCourse();
+  }
+
+  setBody(body: studentCourse) {
+    this.body = body;
+    this.loadStadisticStudent();
+    const student = this.body.student.split('_');
+    this.labelTable = student[0] + ' ' + student[1]
+  }
+
+  loadStadisticStudent() {
+    this.loading = true;
+    this.staticsservice.getGeneralStaticsByUserAndCourse(this.body).subscribe(stadistics => {
+      this.loading = false;
+      this.stadistics = stadistics
     })
   }
 
-  loadStudentsByCourse(course: string) {
-    this.body.student = '';
-    this.servicefollow.getSrudentsBycourse(course).subscribe(students => this.Students = students);
-    this.loadIndicatorsByCourse(course);
+  clear(event) {
+    console.log("limpiar data", event);
+    this.stadistics = null;
   }
 
-  loadIndicatorsByCourse(course: string) {
-    this.inicatorsCourseService.getIndicatorsByCourse(course).subscribe( indicators=>{
-      this.indicators = indicators;
-      console.log("llego los indicadores", this.indicators)
-    } )
+  loadStadisticsByCourse() {
+    this.inicatorsCourseService.getStadisticsByCourse(this.course).subscribe( data => this.createStadisticsCourse(data) )
   }
 
+  createStadisticsCourse(vectors: StadiscticGraph[]) {
+
+    let names = ["name1", "name2", "name3"];
+    let groups = new DataSet();
+
+    groups.add({
+      id: 0,
+      content: names[0],
+      className: "custom-style1",
+      options: {
+        drawPoints: {
+          style: "square", // square, circle
+        },
+        shaded: {
+          orientation: "bottom", // top, bottom
+        },
+      },
+    });
+
+    groups.add({
+      id: 1,
+      content: names[1],
+      className: "custom-style2",
+      options: {
+        style: "bar",
+        drawPoints: { style: "circle", size: 10 },
+      },
+    });
+
+    groups.add({
+      id: 2,
+      content: names[2],
+      options: {
+        yAxisOrientation: "right", // right, left
+        drawPoints: false,
+      },
+    });
+
+    let container = document.getElementById("visualization");
+    let items = vectors;
+
+    let dataset = new DataSet(items);
+
+    let options = {
+      defaultGroup: "",
+      dataAxis: {
+        showMinorLabels: true,
+        right: {
+          title: {
+            text: "Title (right axis)",
+          },
+        },
+      },
+      legend: { left: { position: "bottom-left" } },
+      start: vectors[0].x,
+      end: vectors[(vectors.length - 1)].x
+    };
+
+    let graph2d = new Graph2d(container, items, groups, options);
+
+  }
 
 }

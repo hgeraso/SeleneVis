@@ -81,16 +81,19 @@ statisticCtrl.getStatistics = async (req, res) => {
 
 
     const staticsToSave = {
-        "numVideos": numVideos,
-        "numContenido": numContenido,
-        "numForos": numForos,
-        "numExamenes": numExamenes,
-        "numSesiones": numSesiones,
-        "numVideosDiferentes": numVideosDiferentes.length > 0 ? numVideosDiferentes[0].numVideosDifferents : 0,
-        "numSesionesDiferentes": numSesionesDiferentes[0].numsesionesDifferents,
-        "TimeVideos": timeVideo,
-        "TimeExam": timeExam,
-        "TimeOthers": timeOthers
+        idCourseStudent: student + course,
+        numVideos,
+        numContenido,
+        numForos,
+        numExamenes,
+        numSesiones,
+        numVideosDiferentes: numVideosDiferentes.length > 0 ? numVideosDiferentes[0].numVideosDifferents : 0,
+        numSesionesDiferentes: numSesionesDiferentes[0].numsesionesDifferents,
+        TimeVideos: timeVideo,
+        TimeExam: timeExam,
+        TimeOthers: timeOthers,
+        course,
+        student,
     }
 
     return staticsToSave;
@@ -107,9 +110,7 @@ statisticCtrl.getTimeVideo = async function (course, student) {
     sumTime = 0; // en segundos 
 
     for (let i = 0; i < bdTimeVideo.length - 1; i++) {
-        //console.log(i+1);
 
-        // console.log("entro al ciclo ", i);
         try {
             if (bdTimeVideo[i].toObject().date == bdTimeVideo[i + 1].toObject().date) {
                 if (bdTimeVideo[i].toObject().name == "play_video") {

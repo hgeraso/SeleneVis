@@ -28,6 +28,8 @@ app.use('/api/studentts', require('./routes/studentt.routes'));
 app.use('/api/indicators', require('./routes/indicator.routes'));
 app.use('/api/statistics', require('./routes/statistics.routes'));
 app.use('/api/prueba', require('./routes/prueba.routes'));
+app.use('/api/grafos', require('./routes/grafos.routes'));
+app.use('/api/course-stadistics', require('./routes/course-stadistics.routes'));
 
 
 
@@ -38,6 +40,6 @@ app.listen(app.get('port'), () => {
 
     console.log('server on port:', app.get('port'))
     // setInterval(function(){ toDb.saveInfo(); }, 10000);
-   toDb.saveInfo(); //lanza la funciòn save Info que recoge las estadisiticas del curso al guardar cambios.
+    toDb.saveInfo();
     
 })
