@@ -117,7 +117,7 @@ export class SummaryComponent implements OnInit {
     let options = {
       defaultGroup: "",
       dataAxis: {
-        showMinorLabels: false,
+        showMinorLabels: true,
         right: {
           title: {
             text: "Title (right axis)",
