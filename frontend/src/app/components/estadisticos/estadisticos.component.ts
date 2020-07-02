@@ -17,8 +17,8 @@ export class EstadisticosComponent implements OnInit {
   public edges: Edge;
   public network: Network;
 
-  body:studentCourse = {course:'', student:''};
-  grafoService: Grafo = { edges: [], nodes: [], options:[] };
+  body: studentCourse = { course: '', student: '' };
+  grafoService: Grafo = { edges: [], nodes: [], options: [] };
 
   constructor(private grafosService: GrafosService, private servicesStadistics: IndicatorsService) {
 
@@ -38,7 +38,7 @@ export class EstadisticosComponent implements OnInit {
   }
 
   //create graphs
-  createNetwork(nodesOnOptions:item) {
+  createNetwork(nodesOnOptions: item) {
 
     const nodes = new DataSet(this.grafoService.nodes)
     // const nodes = new DataSet([
@@ -93,37 +93,37 @@ export class EstadisticosComponent implements OnInit {
       this.createNetwork(grafo.edges[0]);
 
     })
-    this.loadStadistics()
+    // this.loadStadistics()
 
   }
 
   // === when select another option ===
-  getGrafoByOption(option){
-    const nodeOnOption = this.grafoService.edges.find( objedge => objedge.day === option );
+  getGrafoByOption(option) {
+    const nodeOnOption = this.grafoService.edges.find(objedge => objedge.day === option);
     this.createNetwork(nodeOnOption);
   }
 
   // === By session ===
-  getGrafosBySession(){
+  getGrafosBySession() {
     this.grafosService.getGrafosBySession(this.body).subscribe((grafo: Grafo) => {
       this.grafoService = grafo
       this.createNetwork(grafo.edges[0]);
     })
   }
   // === By Day ===
-  getGrafosByDay(){
+  getGrafosByDay() {
     this.grafosService.getGrafosByDay(this.body).subscribe((grafo: Grafo) => {
       this.grafoService = grafo
       this.createNetwork(grafo.edges[0]);
     })
   }
 
-  loadStadistics(){
-    
-    this.servicesStadistics.getStadisticsByCourse(this.body.course).subscribe( stadistics => this.createStadistics( stadistics ) )
+  loadStadistics() {
+
+    this.servicesStadistics.getStadisticsByCourse(this.body.course).subscribe(stadistics => this.createStadistics(stadistics))
   }
   //create Stadistics
-  createStadistics( vectors:StadiscticGraph[] ) {
+  createStadistics(vectors: StadiscticGraph[]) {
 
     const items = vectors;
     // [
@@ -165,7 +165,7 @@ export class EstadisticosComponent implements OnInit {
       },
       orientation: "top",
       start: vectors[0].x,
-      end: vectors[(vectors.length-1)].x
+      end: vectors[(vectors.length - 1)].x
     };
 
     var graph2d = new Graph2d(container, items, groups, options);
