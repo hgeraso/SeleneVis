@@ -72,6 +72,23 @@ function numContentByCourseDate(course, date) {
     })
 
 }
+// ==== get all exament data =====
+function numExamenByCourseDate(course, date) {
+
+    return new Promise((resolve, reject) => {
+        seguimiento.find({
+            $and: [
+                { "course": course, 'date': date },
+                { $or: [{ name: "problem_graded" }, { name: "problem_check" }] }
+            ]
+        }).countDocuments()
+            .exec((err, numContent) => {
+                if (err) reject("error on consult", err)
+                else resolve({ x: date, y: numContent, group: 'Examenes' })
+            })
+    })
+
+}
 
 
 function buildStadisticsOfCourse(course) {
@@ -85,12 +102,17 @@ function buildStadisticsOfCourse(course) {
             let count = 0;
 
             for (const day of days) {
-                Promise.all([numVideosByCourseDate(course, day), numContentByCourseDate(course, day), numForosByCourseDate(course, day)])
-                    .then(result => {
-                        generalData.push(result[0], result[1], result[2]);
+
+                Promise.all([
+                    numVideosByCourseDate(course, day),
+                    numContentByCourseDate(course, day),
+                    numForosByCourseDate(course, day),
+                    numExamenByCourseDate(course, day)
+                ]).then(result => {
+
+                        generalData.push(result[0], result[1], result[2], result[3]);
                         count++;
 
-                        console.log(day);
                         if (count === days.length) {
                             console.log('Fisnish');
                             resolve(generalData);

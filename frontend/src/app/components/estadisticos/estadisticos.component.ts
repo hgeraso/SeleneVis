@@ -19,7 +19,7 @@ export class EstadisticosComponent implements OnInit {
 
   body:studentCourse = {course:'', student:''};
   grafoService: Grafo = { edges: [], nodes: [], options:[] };
-
+  optionSelected = '';
   constructor(private grafosService: GrafosService, private servicesStadistics: IndicatorsService) {
 
     // this.grafosService.getGrafosStudent({ course: "Unicauca+Intro_IoT+2019-II", student: "Gustavo_Ramirez_Staff" })
@@ -39,6 +39,8 @@ export class EstadisticosComponent implements OnInit {
 
   //create graphs
   createNetwork(nodesOnOptions:item) {
+
+    this.optionSelected = this.grafoService.options[0];
 
     const nodes = new DataSet(this.grafoService.nodes)
     // const nodes = new DataSet([
@@ -90,7 +92,7 @@ export class EstadisticosComponent implements OnInit {
     this.grafosService.getGrafosByDay(body).subscribe((grafo: Grafo) => {
       console.log("grafos", grafo)
       this.grafoService = grafo
-      // this.createNetwork(grafo.edges[0]);
+      this.createNetwork(grafo.edges[0]);
     })
     // this.loadStadistics()
 

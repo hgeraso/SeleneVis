@@ -1,7 +1,7 @@
 export interface Grafo {
     edges:item[],
     nodes:object[],
-    options:[]
+    options:string[]
 }
 
 export interface item{

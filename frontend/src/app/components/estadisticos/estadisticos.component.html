@@ -1,4 +1,4 @@
-<div class="main-container">
+<div class="head-consult">
     <list-courses-students (sendbody)="getGrafos($event)"></list-courses-students>
 </div>
 
@@ -14,7 +14,7 @@
         <mat-card>
             <mat-form-field>
                 <mat-label>Opciones</mat-label>
-                <mat-select>
+                <mat-select [(ngModel)]="optionSelected" >
                     <mat-option *ngFor="let option of grafoService.options" [value]="option"
                         (click)="getGrafoByOption(option)">
                         {{option}}

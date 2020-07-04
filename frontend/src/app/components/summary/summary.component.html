@@ -5,12 +5,12 @@
     </list-courses-students>
   </div>
 
-  <!-- <div *ngIf="stadistics" > -->
+</div>
+
+<div *ngIf="stadistics" style="display: flex; justify-content: center;">
   <mat-card *ngIf="stadistics" class="form-card-chart">
     <app-bars [labelTitle]="labelTable" [stadistics]="stadistics" (clearData)="clear($event)"></app-bars>
   </mat-card>
-  <!-- </div> -->
-  
 </div>
 
 <div *ngIf="loadingIndicators" class="main-container" style="margin-top: 3rem;">
@@ -18,4 +18,4 @@
 </div>
 <app-table-stadistics *ngIf="indicators" [indicators]="indicators" [course]="course"></app-table-stadistics>
 
-<div class="container" id="visualization"></div>
+<div class="stadistic-course" id="visualization"></div>
