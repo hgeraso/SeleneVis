@@ -5,6 +5,19 @@ grafosController.getGrafosStudentByDay = async (req, res) => {
 
     var course = req.body ? req.body.course : req.course;
     var student = req.body ? req.body.student : req.student;
+    // res.json({ student, course })
+    // let datas = []
+    // getActivities(student, course).then( (data) => {
+    //     data.map( (obj, index) => {
+
+    //         if(obj._doc.name === 'Signin'){
+    //             datas.push(obj)
+    //             datas.push(data[index+1])
+    //         }
+    //         if(index === (data.length-1))res.json(data)
+    //     } )
+
+    // })
 
     Promise.all([
         getActivities(student, course),
@@ -15,9 +28,10 @@ grafosController.getGrafosStudentByDay = async (req, res) => {
         const activities = responses[0];
         const nodes = responses[1];
         const days = responses[2];
+
         buildEdges(activities, nodes, days, 'day').then(nodesTotal => {
 
-            res.json({ edges: nodesTotal, nodes, options:days })
+            res.json({ edges: nodesTotal, nodes, options: days })
         })
         // res.json({nodes})
     })
@@ -40,9 +54,8 @@ grafosController.getGrafosStudentBySession = async (req, res) => {
         const days = responses[2];
         buildEdges(activities, nodes, days, 'session').then(nodesTotal => {
 
-            res.json({ edges: nodesTotal, nodes, options:days })
+            res.json({ edges: nodesTotal, nodes, options: days })
         })
-        // res.json({nodes})
     })
 
 }
@@ -113,6 +126,9 @@ function getAllNodes(student, course) {
 function agrupingActivities(activities) {
 
     return new Promise((resolve, reject) => {
+
+        if (!activities.length) resolve();
+
         let count = 0;
         let newArrayActivities = [];
         for (let activity of activities) {
@@ -145,6 +161,7 @@ function agrupingActivities(activities) {
 }
 
 function agoupingNodes(nodes) {
+
     let count = 0;
     let activityByNode = {
         contenidos: [],
@@ -155,50 +172,57 @@ function agoupingNodes(nodes) {
     }
     return new Promise((resolve, reject) => {
 
-        nodes = nodes.filter((el, index) => nodes.indexOf(el) === index);
+        if (nodes.length) {
 
-        nodes = nodes.map((name) => {
-            // return { id: index, label: name }
-            if (name === "nav_content" || name === "nav_content_prev" || name === "nav_content_click" || name === "nav_content_next" || name === "nav_content_tab") {
-                activityByNode.contenidos.push(name);
-                name = 'contenidos';
-            } else if (name === "stop_video" || name === "pause_video" || name === "play_video") {
-                activityByNode.videos.push(name);
-                name = 'videos';
-            } else if (name === 'Signin') {
-                activityByNode.Home.push(name);
-                name = 'Home'
+            // nodes = nodes.filter((el, index) => nodes.indexOf(el) === index);
 
-            } else if (name === "problem_graded" || name === "problem_check") {
-                activityByNode.examenes.push(name);
-                name = "examenes";
+            nodes = nodes.map((name) => {
+                // return { id: index, label: name }
+                if (name === "nav_content" || name === "nav_content_prev" || name === "nav_content_click" || name === "nav_content_next" || name === "nav_content_tab") {
+                    activityByNode.contenidos.push(name);
+                    name = 'contenidos';
+                } else if (name === "stop_video" || name === "pause_video" || name === "play_video") {
+                    activityByNode.videos.push(name);
+                    name = 'videos';
+                } else if (name === 'Signin') {
+                    activityByNode.Home.push(name);
+                    name = 'Home'
 
-            } else if (name === "edx.forum.comment.created" || name === "edx.forum.response.created" || name === "edx.forum.thread.created") {
-                activityByNode.foros.push(name);
-                name = 'foros';
+                } else if (name === "problem_graded" || name === "problem_check") {
+                    activityByNode.examenes.push(name);
+                    name = "examenes";
 
+                } else if (name === "edx.forum.comment.created" || name === "edx.forum.response.created" || name === "edx.forum.thread.created") {
+                    activityByNode.foros.push(name);
+                    name = 'foros';
+
+                }
+
+                count++;
+                return name;
+            })
+
+            if (count == nodes.length) {
+                console.log(nodes)
+
+                nodes = nodes.filter((el, index) => nodes.indexOf(el) === index);
+                let count2 = 0;
+                let newNodes = [{ id: -1, label: 'login' }]
+
+                for (let name of nodes) {
+                    activityByNode[name] = activityByNode[name].filter((el, index) => activityByNode[name].indexOf(el) === index);
+                    const title = activityByNode[name].join(', ')
+                    count2++;
+                    newNodes.push({ id: count2, label: name, title: title })
+                }
+
+                if (count2 == nodes.length) {
+                    newNodes.push({ id: -2, label: 'logOut' });
+                    resolve(newNodes);;
+                }
             }
-
-            count++;
-            return name;
-        })
-
-        if (count == nodes.length) {
-
-            nodes = nodes.filter((el, index) => nodes.indexOf(el) === index);
-            let count2 = 0;
-            let newNodes = [{ id: -1, label: 'login' }]
-            for (let name of nodes) {
-                activityByNode[name] = activityByNode[name].filter((el, index) => activityByNode[name].indexOf(el) === index);
-                const title = activityByNode[name].join(', ')
-                count2++;
-                newNodes.push({ id: count2, label: name, title: title })
-            }
-
-            if (count2 == nodes.length) {
-                newNodes.push({ id: -2, label: 'logOut' });
-                resolve(newNodes);;
-            }
+        } else {
+            resolve([])
         }
     })
 }
@@ -207,37 +231,45 @@ function buildEdges(activities, nodes, days, control) {
 
     let nodesTotal = [];
     let countActivities = 0;
+    console.log("contruyendo grafo...", control)
 
     return new Promise((resolve, reject) => {
+        if (!activities.length) resolve([]);
 
         days.forEach(async (day, indexDay) => {
 
             // console.log("este es una actividad", activities[1], Object.keys(activities[1]))
             let activitiesByControl = [];
             if (control === 'day') {
-
                 activitiesByControl = await activities.filter(activity => activity._doc.date === day);
             } else {
                 activitiesByControl = await activities.filter(activity => activity._doc.session === day);
             }
 
-            let nodesByDay = [{
-                id: '-11',
-                to: 1,
-                nameto: 'home',
-                from: -1,
-                namefrom: 'login',
-                visits: 1
-            }];
-            // console.log("total actividades en ", day, activitiesbyDay.length);
-
+            let nodesByDay = [];
+            console.log("total actividades en ", day, activitiesByControl.length);
+            let countOrder = 1;
             if (activitiesByControl.length) {
 
                 for (let index = 0; index < activitiesByControl.length; index++) {
+
                     countActivities++;
+                    const element = nodes.find(obj => obj.label === activitiesByControl[index]._doc.name);
+
+                    // if exist more than one register
+                    if (!nodesByDay.length) {
+                        nodesByDay.push({
+                            id: '-11',
+                            to: element.id,
+                            nameto: element.label,
+                            from: -1,
+                            namefrom: 'login',
+                            label: countOrder.toString(),
+                            visits: countOrder
+                        })
+                    }
                     if ((index + 1) <= (activitiesByControl.length - 1) && nodes.length) {
 
-                        const element = nodes.find(obj => obj.label === activitiesByControl[index]._doc.name);
                         const elementnext = nodes.find(obj => obj.label === activitiesByControl[index + 1]._doc.name);
                         const edge = {
 
@@ -246,37 +278,59 @@ function buildEdges(activities, nodes, days, control) {
                             nameto: elementnext.label,
                             from: element.id,
                             namefrom: element.label,
-                            label: '1',
-                            visits: 1
+                            label: (countOrder + 1).toString(),
+                            visits: countOrder + 1
                         }
 
                         if (!nodeWasAdded(edge.id, nodesByDay)) {
+
+                            countOrder++;
                             nodesByDay.push(edge);
                         }
 
-                    }
-                    if (index === (activitiesByControl.length - 1)) {
-                        const length = nodesByDay.length - 1;
-                        const objedge = {
-                            id: '-2',
+                    } else {
+
+                        const edge = {
+
+                            id: `${element.id}-2`,
                             to: -2,
                             nameto: 'logOut',
-                            from: nodesByDay[length].to,
-                            namefrom: nodesByDay[length].nameto,
-                            visits: 1
+                            from: element.id,
+                            namefrom: element.label,
+                            label: (countOrder + 1).toString(),
+                            visits: countOrder + 1
                         }
-                        nodesByDay.push(objedge);
+                        nodesByDay.push(edge)
+
+                    }
+                    if (index === (activitiesByControl.length - 1)) {
+
+                        // if (nodesByDay.length > 1) {
+
+                        //     const length = nodesByDay.length - 1;
+                        //     console.log(nodesByDay[length], "ultima posiscion", length, nodesByDay)
+                        //     // const objedge = {
+                        //     //     id: '-2',
+                        //     //     to: -2,
+                        //     //     nameto: 'logOut',
+                        //     //     from: nodesByDay[length].to,
+                        //     //     namefrom: nodesByDay[length].nameto,
+                        //     //     visits: 1
+                        //     // }
+                        //     // nodesByDay.push(objedge);
+                        // }
 
                         nodesTotal.push({ day: day, nodes: nodesByDay })
                     }
 
-                    if (indexDay === (days.length - 1) && countActivities === (activities.length - 1)) {
-                        // console.log("se reaolvio", indexDay, "num avtivities", countActivities);
+                    // console.log("se reaolvio", indexDay, days.length,  "num avtivities", countActivities, activities.length);
+                    if (indexDay === (days.length - 1) && countActivities === (activities.length)) {
                         resolve(nodesTotal);
                     }
                 }
             } else {
-                resolve(nodesTotal);
+                if (indexDay === (days.length - 1))
+                    resolve(nodesTotal);
             }
         });
     })
@@ -287,8 +341,8 @@ function nodeWasAdded(idnode, nodes) {
 
     const itemOnArray = nodes.find(node => node.id === idnode);
     if (itemOnArray) {
-        itemOnArray.visits += 1;
-        itemOnArray.label = (parseInt(itemOnArray.label) + 1).toString();
+        // itemOnArray.visits += 1;
+        // itemOnArray.label = (parseInt(itemOnArray.label) + 1).toString();
         return true;
     } else {
         return false;

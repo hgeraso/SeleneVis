@@ -88,10 +88,9 @@ export class EstadisticosComponent implements OnInit {
   getGrafos(body: studentCourse) {
     this.body = body;
     this.grafosService.getGrafosByDay(body).subscribe((grafo: Grafo) => {
-
+      console.log("grafos", grafo)
       this.grafoService = grafo
-      this.createNetwork(grafo.edges[0]);
-
+      // this.createNetwork(grafo.edges[0]);
     })
     // this.loadStadistics()
 
@@ -106,6 +105,8 @@ export class EstadisticosComponent implements OnInit {
   // === By session ===
   getGrafosBySession() {
     this.grafosService.getGrafosBySession(this.body).subscribe((grafo: Grafo) => {
+      console.log("grafos por session", grafo)
+
       this.grafoService = grafo
       this.createNetwork(grafo.edges[0]);
     })
@@ -113,6 +114,7 @@ export class EstadisticosComponent implements OnInit {
   // === By Day ===
   getGrafosByDay() {
     this.grafosService.getGrafosByDay(this.body).subscribe((grafo: Grafo) => {
+      console.log("grafos por dia", grafo)
       this.grafoService = grafo
       this.createNetwork(grafo.edges[0]);
     })
