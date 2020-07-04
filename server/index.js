@@ -40,6 +40,6 @@ app.listen(app.get('port'), () => {
 
     console.log('server on port:', app.get('port'))
     // setInterval(function(){ toDb.saveInfo(); }, 10000);
-    // toDb.saveInfo();
+    toDb.saveInfo();
     
 })

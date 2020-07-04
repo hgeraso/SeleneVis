@@ -4,7 +4,8 @@ const {Schema}= mongoose;
 
 const  indicatorSchema= new Schema({
     
-    idCourseStudent:String,
+    // idCourseStudent:String,
+    _id: String,
     student:String,
     course:String,
     numVideos:String,

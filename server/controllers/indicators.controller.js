@@ -37,10 +37,13 @@ indicatorCtrl.createIndicator = async (req, res) => {
         return 'indicator saved sussesfuly';
     }
     else {
-        indicator = new Indicator(req);
+        // const indicator = new Indicator(req);
+        const conditions = { _id: req._id }
+            , update = req
+            , options = { multi: true, upsert: true };
 
-        // await indicator.update();
-        await indicator.save()
+        await Indicator.updateOne(conditions,update, options);
+        // await Indicator.save(req)
         return 'indicator saved sussesfuly';
 
         //     /*numRespuestas: req.body.numRespuestas,            
