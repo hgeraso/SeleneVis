@@ -98,7 +98,7 @@ function getDays(student, course) {
 function getSessions(student, course) {
 
     return new Promise((resolve, reject) => {
-        seguimiento.find({ course: course, username: student }).distinct('session')
+        seguimiento.find({ "course": course, "username": student }).distinct('session')
             .exec((err, sessions) => {
 
                 if (err) reject("error", err);
@@ -207,7 +207,7 @@ function agoupingNodes(nodes) {
 
                 nodes = nodes.filter((el, index) => nodes.indexOf(el) === index);
                 let count2 = 0;
-                let newNodes = [{ id: -1, label: 'login' }]
+                let newNodes = [{ id: -1, label: 'Inicio' }]
 
                 for (let name of nodes) {
                     activityByNode[name] = activityByNode[name].filter((el, index) => activityByNode[name].indexOf(el) === index);
@@ -217,7 +217,7 @@ function agoupingNodes(nodes) {
                 }
 
                 if (count2 == nodes.length) {
-                    newNodes.push({ id: -2, label: 'logOut' });
+                    newNodes.push({ id: -2, label: 'Fin' });
                     resolve(newNodes);;
                 }
             }
@@ -247,8 +247,10 @@ function buildEdges(activities, nodes, days, control) {
             }
 
             let nodesByDay = [];
+            let nodesByDayOrder = [];
             console.log("total actividades en ", day, activitiesByControl.length);
             let countOrder = 1;
+
             if (activitiesByControl.length) {
 
                 for (let index = 0; index < activitiesByControl.length; index++) {
@@ -258,15 +260,26 @@ function buildEdges(activities, nodes, days, control) {
 
                     // if exist more than one register
                     if (!nodesByDay.length) {
+
                         nodesByDay.push({
                             id: '-11',
                             to: element.id,
                             nameto: element.label,
                             from: -1,
-                            namefrom: 'login',
+                            namefrom: 'Inicio',
+                            label: '1',
+                            visits: 1
+                        })
+
+                        nodesByDayOrder.push( {
+                            id: '-11',
+                            to: element.id,
+                            nameto: element.label,
+                            from: -1,
+                            namefrom: 'Inicio',
                             label: countOrder.toString(),
                             visits: countOrder
-                        })
+                        } )
                     }
                     if ((index + 1) <= (activitiesByControl.length - 1) && nodes.length) {
 
@@ -278,15 +291,31 @@ function buildEdges(activities, nodes, days, control) {
                             nameto: elementnext.label,
                             from: element.id,
                             namefrom: element.label,
-                            label: (countOrder + 1).toString(),
+                            label: '1',
+                            visits: 1
+                        }
+                        const edgeOrder = {
+
+                            id: `${element.id}${elementnext.id}`,
+                            to: elementnext.id,
+                            nameto: elementnext.label,
+                            from: element.id,
+                            namefrom: element.label,
+                            label: (countOrder+1).toString(),
                             visits: countOrder + 1
                         }
 
                         if (!nodeWasAdded(edge.id, nodesByDay)) {
 
-                            countOrder++;
                             nodesByDay.push(edge);
                         }
+                        if (!nodeWasAddedOrder(edgeOrder.id, nodesByDayOrder)) {
+
+                            nodesByDayOrder.push(edgeOrder);
+                            countOrder++;
+                        }
+
+
 
                     } else {
 
@@ -294,33 +323,30 @@ function buildEdges(activities, nodes, days, control) {
 
                             id: `${element.id}-2`,
                             to: -2,
-                            nameto: 'logOut',
+                            nameto: 'Fin',
                             from: element.id,
                             namefrom: element.label,
-                            label: (countOrder + 1).toString(),
+                            label: '1',
+                            visits: 1
+                        }
+
+                        const edgeOrder = {
+
+                            id: `${element.id}-2`,
+                            to: -2,
+                            nameto: 'Fin',
+                            from: element.id,
+                            namefrom: element.label,
+                            label: (countOrder+1).toString(),
                             visits: countOrder + 1
                         }
-                        nodesByDay.push(edge)
+                        nodesByDay.push(edge);
+                        nodesByDayOrder.push(edgeOrder);
 
                     }
                     if (index === (activitiesByControl.length - 1)) {
 
-                        // if (nodesByDay.length > 1) {
-
-                        //     const length = nodesByDay.length - 1;
-                        //     console.log(nodesByDay[length], "ultima posiscion", length, nodesByDay)
-                        //     // const objedge = {
-                        //     //     id: '-2',
-                        //     //     to: -2,
-                        //     //     nameto: 'logOut',
-                        //     //     from: nodesByDay[length].to,
-                        //     //     namefrom: nodesByDay[length].nameto,
-                        //     //     visits: 1
-                        //     // }
-                        //     // nodesByDay.push(objedge);
-                        // }
-
-                        nodesTotal.push({ day: day, nodes: nodesByDay })
+                        nodesTotal.push({ day: day, nodes: nodesByDay, nodesOrder: nodesByDayOrder })
                     }
 
                     // console.log("se reaolvio", indexDay, days.length,  "num avtivities", countActivities, activities.length);
@@ -341,8 +367,18 @@ function nodeWasAdded(idnode, nodes) {
 
     const itemOnArray = nodes.find(node => node.id === idnode);
     if (itemOnArray) {
-        // itemOnArray.visits += 1;
-        // itemOnArray.label = (parseInt(itemOnArray.label) + 1).toString();
+        itemOnArray.visits += 1;
+        itemOnArray.label = (parseInt(itemOnArray.label) + 1).toString();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function nodeWasAddedOrder(idnode, nodes) {
+
+    const itemOnArray = nodes.find(node => node.id === idnode);
+    if (itemOnArray) {
         return true;
     } else {
         return false;

@@ -160,8 +160,6 @@ export class SummaryComponent implements OnInit {
       graph2d.redraw()
     });
     
-    setTimeout( ()=>{this.loadingIndicators = false}, 5000 )
-
   }
 
 }

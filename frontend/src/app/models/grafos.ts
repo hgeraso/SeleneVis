@@ -6,5 +6,6 @@ export interface Grafo {
 
 export interface item{
     day:string,
-    nodes:object[]
+    nodes:object[],
+    nodesOrder:object[],
 }
