@@ -28,6 +28,7 @@ export class SummaryComponent implements OnInit {
   course: string;
   loading = false;
   loadingIndicators = false;
+  cleanByRound= true;
 
   existGraph = false;
   constructor(private inicatorsCourseService: IndicatorsService, private staticsservice: SeguimientoService) {

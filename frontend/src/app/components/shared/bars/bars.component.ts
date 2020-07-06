@@ -21,6 +21,7 @@ export class BarsComponent implements OnInit, OnChanges {
 
   @Input() labelTitle: string = '';
   @Input() stadistics: object;
+  @Input() clearByRound: boolean;
   @Output() clearData = new EventEmitter<string>();
 
   public barChartOptions: ChartOptions = {
@@ -66,6 +67,10 @@ export class BarsComponent implements OnInit, OnChanges {
 
 
   loadStatics() {
+
+    if(this.clearByRound && this.barChartData.length){
+      this.barChartData = [];
+    }
 
     let dataset = { data: Object.values(this.stadistics), label: this.labelTitle, backgroundColor: '#' + this.randomColor() };
     this.barChartData.push(dataset);

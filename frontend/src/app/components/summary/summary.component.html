@@ -9,7 +9,7 @@
 
 <div *ngIf="stadistics" style="display: flex; justify-content: center;">
   <mat-card *ngIf="stadistics" class="form-card-chart">
-    <app-bars [labelTitle]="labelTable" [stadistics]="stadistics" (clearData)="clear($event)"></app-bars>
+    <app-bars [labelTitle]="labelTable" [stadistics]="stadistics" (clearData)="clear($event)" [clearByRound]="cleanByRound" ></app-bars>
   </mat-card>
 </div>
 

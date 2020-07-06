@@ -25,6 +25,9 @@ export class EstadisticosComponent implements OnInit {
   stadisticsGeneral: StadisticByControl[];
   stadisticSelected = {};
 
+  labelTable: string;
+  stadistics: object;
+  cleanByRound = true;
   constructor(private grafosService: GrafosService, private servicesStadistics: IndicatorsService) {
   }
 
@@ -34,8 +37,11 @@ export class EstadisticosComponent implements OnInit {
   getGrafos(body: studentCourse) {
 
     this.body = body;
+    const student = this.body.student.split('_');
+    this.labelTable = student[0] + ' ' + student[1]
+
     this.getGrafosByDay();
-    
+
   }
 
   // === when select another option ===
@@ -56,13 +62,14 @@ export class EstadisticosComponent implements OnInit {
 
     this.servicesStadistics.getStadisticBySession(this.body).subscribe(data => {
       this.stadisticsGeneral = data;
-      this.createStadistics(data[0])
+      this.createStadistics(data.find( obj => obj.control === this.optionSelected ))
     })
 
   }
 
   // === By Day ===
   getGrafosByDay() {
+    this.clear('clear');
     this.grafosService.getGrafosByDay(this.body).subscribe((grafo: Grafo) => {
       this.grafoService = grafo
       this.createNetwork(grafo.edges[0]);
@@ -70,13 +77,19 @@ export class EstadisticosComponent implements OnInit {
 
     this.servicesStadistics.getStadisticByDay(this.body).subscribe(data => {
       this.stadisticsGeneral = data;
-      this.createStadistics(data[0]);
+      this.createStadistics(data.find( obj => obj.control === this.optionSelected ));
     })
   }
 
 
-  createStadistics(stadisticsByControl) {
+  createStadistics(stadisticsByControl: StadisticByControl) {
     console.log(stadisticsByControl);
+    this.stadistics = stadisticsByControl.data;
+  }
+
+  clear(event) {
+    console.log("limpiar data", event);
+    this.stadistics = null;
   }
 
   //create graphs

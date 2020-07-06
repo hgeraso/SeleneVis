@@ -3,10 +3,10 @@
 </div>
 
 
-<div class="goup-grafos" *ngIf="body.student" >
+<div class="goup-grafos" *ngIf="body.student">
 
     <div class="mat-elevation-z8">
-        <div class="option-consult" >            
+        <div class="option-consult">
             <button mat-stroked-button color="primary" (click)="getGrafosByDay()">Consulta por día</button>
             <button mat-stroked-button color="accent" (click)="getGrafosBySession()">Consulta por Sesión</button>
         </div>
@@ -14,7 +14,7 @@
         <mat-card>
             <mat-form-field>
                 <mat-label>Opciones</mat-label>
-                <mat-select [(ngModel)]="optionSelected" >
+                <mat-select [(ngModel)]="optionSelected">
                     <mat-option *ngFor="let option of grafoService.options" [value]="option"
                         (click)="getGrafoByOption(option)">
                         {{option}}
@@ -24,10 +24,13 @@
         </mat-card>
     </div>
 
-    <div class="grafo mat-elevation-z8" id="mynetwork"></div>
     <div class="grafo mat-elevation-z8" id="mynetwork2"></div>
+    <div class="grafo mat-elevation-z8" *ngIf="stadistics" >
+        <app-bars [labelTitle]="labelTable" [stadistics]="stadistics" (clearData)="clear($event)" [clearByRound]="cleanByRound"></app-bars>
+    </div>
+    <div class="grafo mat-elevation-z8" id="mynetwork"></div>
     <!-- <pre id="eventSpan"></pre> -->
     <!-- <div class="grafo mat-elevation-z8" id="mynetwork"></div> -->
 </div>
 
-<div class="container" id="visualization"></div>
+<!-- <div class="container" id="visualization"></div> -->
