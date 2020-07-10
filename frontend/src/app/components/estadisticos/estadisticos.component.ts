@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Network, DataSet, Node, Edge, IdType, Graph2d } from 'vis';
+import { Network, DataSet, Node, Edge } from 'vis';
 import { GrafosService } from 'src/app/services/grafos.service';
 import { Grafo, item } from 'src/app/models/grafos';
 import { studentCourse } from 'src/app/models/studentCourse';
@@ -17,17 +17,18 @@ export class EstadisticosComponent implements OnInit {
 
   public nodes: Node;
   public edges: Edge;
-  public network: Network;
+  public GrafoSec: Network;
+  public GrafoInt: Network;
 
   body: studentCourse = { course: '', student: '' };
   grafoService: Grafo = { edges: [], nodes: [], options: [] };
   optionSelected = '';
   stadisticsGeneral: StadisticByControl[];
-  stadisticSelected = {};
 
   labelTable: string;
   stadistics: object;
   cleanByRound = true;
+
   constructor(private grafosService: GrafosService, private servicesStadistics: IndicatorsService) {
   }
 
@@ -36,6 +37,7 @@ export class EstadisticosComponent implements OnInit {
   // === get grafos general ===
   getGrafos(body: studentCourse) {
 
+    this.clearallGraphics()
     this.body = body;
     const student = this.body.student.split('_');
     this.labelTable = student[0] + ' ' + student[1]
@@ -62,33 +64,53 @@ export class EstadisticosComponent implements OnInit {
 
     this.servicesStadistics.getStadisticBySession(this.body).subscribe(data => {
       this.stadisticsGeneral = data;
-      this.createStadistics(data.find( obj => obj.control === this.optionSelected ))
+      this.createStadistics(data.find(obj => obj.control === this.optionSelected))
     })
 
   }
 
+  veropcion(event) {
+    console.log(event)
+  }
+
   // === By Day ===
   getGrafosByDay() {
-    this.clear('clear');
+    // console.log(stadisticsByControl);
+
     this.grafosService.getGrafosByDay(this.body).subscribe((grafo: Grafo) => {
-      this.grafoService = grafo
+      this.grafoService = grafo;
       this.createNetwork(grafo.edges[0]);
     })
 
     this.servicesStadistics.getStadisticByDay(this.body).subscribe(data => {
       this.stadisticsGeneral = data;
-      this.createStadistics(data.find( obj => obj.control === this.optionSelected ));
+      this.createStadistics(data.find(obj => obj.control === this.optionSelected));
     })
   }
 
 
   createStadistics(stadisticsByControl: StadisticByControl) {
-    console.log(stadisticsByControl);
     this.stadistics = stadisticsByControl.data;
   }
 
-  clear(event) {
-    console.log("limpiar data", event);
+  clear() {
+
+    this.stadistics = null;
+    this.body.student = '';
+    this.stadisticsGeneral = [];
+    this.optionSelected = '';
+
+    this.clearallGraphics();
+  }
+
+  clearallGraphics() {
+    if (this.GrafoSec) {
+      this.GrafoSec.destroy();
+      this.GrafoInt.destroy();
+    }
+  }
+
+  clearStadistic() {
     this.stadistics = null;
   }
 
@@ -110,8 +132,8 @@ export class EstadisticosComponent implements OnInit {
     // ]);
 
     // create a network
-    const container = document.getElementById('mynetwork');
-    const container2 = document.getElementById('mynetwork2');
+    const container2 = document.getElementById('mynetwork');
+    const container = document.getElementById('mynetwork2');
 
     const data = {
       nodes: nodes,
@@ -124,9 +146,43 @@ export class EstadisticosComponent implements OnInit {
     };
 
     const options = {
+      nodes: {
+        shape: "circle",
+        font: {
+          size: 20,
+          color: "#6e6e6e",
+          strokeColor: '#ffffff',
+          strokeWidth: 4
+        }
+      },
       interaction: { hover: true },
-      edges: { arrows: 'to' },
-      physics: { enabled: true, }
+      edges: {
+        arrows: 'to',
+        font: {
+          color: '#000',
+          size: 20,
+          strokeColor: '#ffffff',
+        },
+        shadow: {
+          enabled: false,
+          color: 'rgba(0,0,0,0.5)',
+          size: 10,
+          x: 5,
+          y: 5
+        },
+      },
+      physics: {
+        forceAtlas2Based: {
+          gravitationalConstant: -26,
+          centralGravity: 0.005,
+          springLength: 230,
+          springConstant: 0.18
+        },
+        maxVelocity: 146,
+        solver: "forceAtlas2Based",
+        timestep: 0.35,
+        stabilization: { iterations: 10 }
+      }
     };
 
     const options2 = {
@@ -135,8 +191,9 @@ export class EstadisticosComponent implements OnInit {
       physics: { enabled: false, }
     };
 
-    const network = new Network(container, data, options);
-    const network2 = new Network(container2, data2, options);
+    this.GrafoSec = new Network(container, data, options);
+    this.GrafoInt = new Network(container2, data2, options);
+
   }
 
 }

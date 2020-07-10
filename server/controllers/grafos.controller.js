@@ -1,4 +1,5 @@
 const seguimiento = require('../models/seguimiento');
+const { count } = require('../models/seguimiento');
 const grafosController = {};
 
 grafosController.getGrafosStudentByDay = async (req, res) => {
@@ -207,17 +208,17 @@ function agoupingNodes(nodes) {
 
                 nodes = nodes.filter((el, index) => nodes.indexOf(el) === index);
                 let count2 = 0;
-                let newNodes = [{ id: -1, label: 'Inicio' }]
+                let newNodes = [{ id: -1, label: 'Inicio', color:`#${randomColor()}` }]
 
                 for (let name of nodes) {
                     activityByNode[name] = activityByNode[name].filter((el, index) => activityByNode[name].indexOf(el) === index);
                     const title = activityByNode[name].join(', ')
                     count2++;
-                    newNodes.push({ id: count2, label: name, title: title })
+                    newNodes.push({ id: count2, label: name, title: title, color:`#${randomColor()}` })
                 }
 
                 if (count2 == nodes.length) {
-                    newNodes.push({ id: -2, label: 'Fin' });
+                    newNodes.push({ id: -2, label: '  Fin  ', color:`#${randomColor()}` });
                     resolve(newNodes);;
                 }
             }
@@ -250,6 +251,7 @@ function buildEdges(activities, nodes, days, control) {
             let nodesByDayOrder = [];
             console.log("total actividades en ", day, activitiesByControl.length);
             let countOrder = 1;
+            let secRepeat = false;
 
             if (activitiesByControl.length) {
 
@@ -271,7 +273,7 @@ function buildEdges(activities, nodes, days, control) {
                             visits: 1
                         })
 
-                        nodesByDayOrder.push( {
+                        nodesByDayOrder.push({
                             id: '-11',
                             to: element.id,
                             nameto: element.label,
@@ -279,7 +281,7 @@ function buildEdges(activities, nodes, days, control) {
                             namefrom: 'Inicio',
                             label: countOrder.toString(),
                             visits: countOrder
-                        } )
+                        })
                     }
                     if ((index + 1) <= (activitiesByControl.length - 1) && nodes.length) {
 
@@ -297,11 +299,12 @@ function buildEdges(activities, nodes, days, control) {
                         const edgeOrder = {
 
                             id: `${element.id}${elementnext.id}`,
+                            idOrder: `${element.id}${elementnext.id}`,
                             to: elementnext.id,
                             nameto: elementnext.label,
                             from: element.id,
                             namefrom: element.label,
-                            label: (countOrder+1).toString(),
+                            label: (countOrder + 1).toString(),
                             visits: countOrder + 1
                         }
 
@@ -309,13 +312,66 @@ function buildEdges(activities, nodes, days, control) {
 
                             nodesByDay.push(edge);
                         }
-                        if (!nodeWasAddedOrder(edgeOrder.id, nodesByDayOrder)) {
 
+                        if (!nodeWasAddedOrder(edgeOrder, nodesByDayOrder)) {
+                            edgeOrder.id = edgeOrder.id + countOrder;
                             nodesByDayOrder.push(edgeOrder);
                             countOrder++;
+                        } else {
+
+                            nodesByDayOrder.map(objNode => {
+
+                                if (objNode.idOrder === edgeOrder.idOrder) {
+
+
+                                    const lastElement = (objNode.label.split(',')[objNode.label.split(',').length - 1]).trim();
+
+                                    if (parseInt(edgeOrder.label) != (parseInt(lastElement) + 1)) {
+                                        objNode.label = objNode.label + ', ' + edgeOrder.label;
+                                        countOrder++;
+                                        return
+                                    } else {
+                                        console.log("consecutivos", lastElement + 1, "label node", edgeOrder.label);
+                                        return
+                                    }
+
+                                }
+                            })
+                            // nodesByDayOrder.map((objnode, index) => {
+
+                            //     if (objnode.idOrder == edgeOrder.idOrder) {
+                            //         if (nodesByDayOrder[(nodesByDayOrder.length - 1)].idOrder === edgeOrder.idOrder) {
+                            //             return
+                            //         } else {
+                            //             if (edgeOrder.to === edgeOrder.from) {
+                            //                 const lastElement = (objnode.label.split(',')[objnode.label.split(',').length - 1]).trim();
+                            //                 console.log(parseInt(lastElement + 1), edgeOrder.label)
+                            //                 if (parseInt(lastElement) + 1 != edgeOrder.label) {
+                            //                     objnode.label = objnode.label + ', ' + edgeOrder.label;
+                            //                     countOrder++;
+                            //                 } else {
+                            //                     secRepeat = true;
+                            //                 }
+                            //             } else {
+                            //                 if (secRepeat) {
+                            //                     countOrder++;
+                            //                     edgeOrder.label = (countOrder).toString();
+                            //                     edgeOrder.id = edgeOrder.id + countOrder;
+                            //                     nodesByDayOrder.push(edgeOrder);
+                            //                     // objnode.label = objnode.label + ', ' + edgeOrder.label;
+                            //                     secRepeat = false;
+
+                            //                 } else {
+                            //                     edgeOrder.id = edgeOrder.id + countOrder;
+                            //                     // nodesByDayOrder.push(edgeOrder);
+                            //                     objnode.label = objnode.label + ', ' + edgeOrder.label;
+                            //                     countOrder++;
+                            //                 }
+                            //             }
+                            //         }
+                            //     }
+                            // })
                         }
-
-
 
                     } else {
 
@@ -333,11 +389,12 @@ function buildEdges(activities, nodes, days, control) {
                         const edgeOrder = {
 
                             id: `${element.id}-2`,
+                            idOrder: `${element.id}-2`,
                             to: -2,
                             nameto: 'Fin',
                             from: element.id,
                             namefrom: element.label,
-                            label: (countOrder+1).toString(),
+                            label: (countOrder + 1).toString(),
                             visits: countOrder + 1
                         }
                         nodesByDay.push(edge);
@@ -375,11 +432,51 @@ function nodeWasAdded(idnode, nodes) {
     }
 }
 
-function nodeWasAddedOrder(idnode, nodes) {
+// generate a color for each student
+function randomColor(){
+    return Math.floor(Math.random() * 16777215).toString(16);
+}
 
-    const itemOnArray = nodes.find(node => node.id === idnode);
-    if (itemOnArray) {
-        return true;
+// function nodeWasAddedOrder(idnode, nodes) {
+function nodeWasAddedOrder(node, nodes) {
+
+    const lengthnodes = nodes.length - 1;
+
+    // console.log(lengthnodes, nodes)
+    if (lengthnodes) {
+
+        const itemOnArray = nodes.find(nodese => nodese.idOrder === node.idOrder);
+        const itemOnArraysec = nodes[lengthnodes].idOrder === node.idOrder ? true : false;
+        if (itemOnArray) {
+            return true;
+        } else {
+
+            // if (itemOnArray) {
+            //     node.label = itemOnArray.label + ', ' + node.label+ 'agrega';
+            //     nodes = nodes.filter(nodese => nodese.idOrder !== itemOnArray.idOrder)
+            //     // return false to increment count
+            //     return false;
+            // }
+
+            return false
+
+        }
+        // if (itemOnArray) {
+
+        //     if (itemOnArraysec) {
+        //         nodes[lengthnodes].label = nodes[lengthnodes].label + ', ' + node.label;
+        //         // itemOnArray.label = itemOnArray.label + ', ' + node.label;
+        //     } else {
+        //         console.log("nodo", itemOnArray.label,"agregar", node )
+        //         itemOnArray.label = itemOnArray.label + ', ' + node.label;
+        //     }
+        //     return true;
+        // } else {
+        //     if (lengthnodes) {
+        //         node.label = (parseInt(nodes[lengthnodes].label) + 1).toString();
+        //     }
+        //     return false;
+        // }
     } else {
         return false;
     }
