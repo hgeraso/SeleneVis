@@ -1,9 +1,10 @@
 <mat-toolbar color="primary" class="fix-bar">
     <mat-toolbar-row>
+        <mat-icon matSuffix>scatter_plot</mat-icon>
         <span>SeleneVis</span>
         <span class="space-spacer"></span>
-        <a class="space-icon" mat-button [routerLink]="[ '']" >Admin</a>
-        <a class="space-icon" mat-button [routerLink]="[ '/summary' ]" >Estadisticas</a>
-        <a class="space-icon" mat-button [routerLink]="[ 'estadisticos']">Comportamientos</a>
+        <a class="space-icon active" mat-button [routerLink]="[ '']" routerLinkActive="active" >Admin</a>
+        <a class="space-icon" mat-button [routerLink]="[ '/summary' ]" routerLinkActive="active">Estadisticas</a>
+        <a class="space-icon" mat-button [routerLink]="[ 'estadisticos']" routerLinkActive="active">Comportamientos</a>
     </mat-toolbar-row>
 </mat-toolbar>

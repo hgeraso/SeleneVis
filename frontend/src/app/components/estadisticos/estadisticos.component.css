@@ -1,14 +1,28 @@
 @import '../summary/summary.component.css';
 
 .grafo{
-    width: 35%;
+    width: 55%;
     height: 600px;
+    margin: .5rem;
+    margin-bottom: 2rem;
+}
+
+.main-control{
+    width: 35%;
+    margin:.5rem;
+    margin-bottom: 2rem;
+}
+.control-panel{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
     margin: .5rem;
 }
 
-.control-panel{
-    height: 500px;
-    margin: .5rem;
+.bars-control{
+    width: 100%;
+    min-height: 200px;
+    max-height: 450px;
 }
 
 .goup-grafos{
@@ -21,7 +35,7 @@
 }
 
 .option-consult{
-    margin:1rem;
+    margin-bottom:.5rem;
 }
 
 .stadistic{

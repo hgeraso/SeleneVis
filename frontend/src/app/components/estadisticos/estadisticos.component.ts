@@ -18,7 +18,7 @@ export class EstadisticosComponent implements OnInit {
   public nodes: Node;
   public edges: Edge;
   public GrafoSec: Network;
-  public GrafoInt: Network;
+  // public GrafoInt: Network;
 
   body: studentCourse = { course: '', student: '' };
   grafoService: Grafo = { edges: [], nodes: [], options: [] };
@@ -106,7 +106,7 @@ export class EstadisticosComponent implements OnInit {
   clearallGraphics() {
     if (this.GrafoSec) {
       this.GrafoSec.destroy();
-      this.GrafoInt.destroy();
+      // this.GrafoInt.destroy();
     }
   }
 
@@ -132,8 +132,8 @@ export class EstadisticosComponent implements OnInit {
     // ]);
 
     // create a network
-    const container2 = document.getElementById('mynetwork');
-    const container = document.getElementById('mynetwork2');
+    // const container2 = document.getElementById('mynetwork');
+    const container = document.getElementById('mynetwork');
 
     const data = {
       nodes: nodes,
@@ -160,11 +160,12 @@ export class EstadisticosComponent implements OnInit {
         arrows: 'to',
         font: {
           color: '#000',
-          size: 20,
+          size: 15,
           strokeColor: '#ffffff',
+          align:'horizontal'
         },
         shadow: {
-          enabled: false,
+          enabled: true,
           color: 'rgba(0,0,0,0.5)',
           size: 10,
           x: 5,
@@ -191,8 +192,8 @@ export class EstadisticosComponent implements OnInit {
       physics: { enabled: false, }
     };
 
-    this.GrafoSec = new Network(container, data, options);
-    this.GrafoInt = new Network(container2, data2, options);
+    this.GrafoSec = new Network(container, data2, options);
+    // this.GrafoInt = new Network(container2, data2, options);
 
   }
 

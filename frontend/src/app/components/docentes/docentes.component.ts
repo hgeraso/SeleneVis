@@ -33,7 +33,7 @@ export class DocentesComponent implements OnInit {
   constructor(public docenteService: DocenteService, private toast: MatSnackBar, public dialog: MatDialog) {
 
     this.docenteForm = new FormGroup({
-      '_id': new FormControl('', Validators.required),
+      '_id': new FormControl(''),
       'name': new FormControl('', Validators.required),
       'course': new FormControl('', Validators.required),
       'cedula': new FormControl('', Validators.required),
@@ -65,24 +65,29 @@ export class DocentesComponent implements OnInit {
 
   addDocente() {
 
-    if (this.docenteForm.value._id) {
-
-      this.docenteService.putDocente(this.docenteForm.value).subscribe(res => {
-
-        this.resetForm();
-        this.getDocentes();
-        this.toast.open('información Guardada', 'Cerrar', { duration: 2500 });
-
-      })
-
-    } else {
-      this.docenteService.postDocente(this.docenteForm.value).subscribe(res => {
-        this.resetForm();
-        this.getDocentes();
-        this.toast.open('Docente creado', 'Cerrar', { duration: 2500 });
-
-      })
+    if(this.docenteForm.controls.password.value !== this.docenteForm.controls.repeatPassword.value){
+      console.log("las contraseñas no coimciden")
+      return;
     }
+
+    // if (this.docenteForm.value._id) {
+
+    //   this.docenteService.putDocente(this.docenteForm.value).subscribe(res => {
+
+    //     this.resetForm();
+    //     this.getDocentes();
+    //     this.toast.open('información Guardada', 'Cerrar', { duration: 2500 });
+
+    //   })
+
+    // } else {
+    //   this.docenteService.postDocente(this.docenteForm.value).subscribe(res => {
+    //     this.resetForm();
+    //     this.getDocentes();
+    //     this.toast.open('Docente creado', 'Cerrar', { duration: 2500 });
+
+    //   })
+    // }
   };
 
   getDocentes() {
