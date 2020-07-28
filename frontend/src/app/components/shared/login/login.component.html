@@ -1,0 +1,25 @@
+<div class="login-box">
+    <mat-card class="container-card">
+
+        <div class="title">
+            <h1>Login SeleneVis</h1>
+        </div>
+        <form class="items-form" [formGroup]="loginForm" (ngSubmit)="login()" novalidate="novalidate">
+            <mat-form-field  appearance='outline'>
+                <mat-label>Correo electrónico</mat-label>
+                <input matInput placeholder="" formControlName = 'email'>
+                <mat-error *ngIf="loginForm.controls.email.errors?.email">Correo invalido</mat-error>
+                <mat-error *ngIf="loginForm.controls.email.errors?.required">este campo es requerido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance='outline'>
+                <mat-label>Contrseña</mat-label>
+                <input matInput type="password" placeholder="" formControlName ='password'>
+                <mat-error *ngIf="loginForm.controls.password.errors?.required">este campo es requerido</mat-error>
+            </mat-form-field>
+
+            <button [disabled]="loginForm.invalid" mat-raised-button type="submit" color="primary" class="btn-login" >Iniciar sesión</button>
+        </form>
+
+    </mat-card>
+</div>

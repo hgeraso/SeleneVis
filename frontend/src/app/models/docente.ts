@@ -4,7 +4,7 @@ export class Docente {
     _id: String;
     name:String;
     course:String;
-    cedula: Number;
+    correo: string;
     password:String; 
     credencial: String;
 
@@ -13,7 +13,7 @@ export class Docente {
         this._id ='';
         this.name= '';
         this.course='';
-        this.cedula=0;
+        this.correo='';
         this.password='';
         this.credencial='';
 
