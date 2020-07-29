@@ -5,6 +5,7 @@ import { Docente } from 'src/app/models/docente';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {MatDialog} from '@angular/material/dialog';
 import Swal from 'sweetalert2'
+import { CourseFollowService } from 'src/app/services/course-follow.service';
 
 declare var M: any;
 
@@ -22,6 +23,7 @@ export class DocentesComponent implements OnInit {
   docente: Docente;
   selected = "example1"
   teacherList: Docente[];
+  listCourses:string[];
 
   columnsToDisplay = ['Nombre', 'Curso', 'Correo', 'Perfil', 'operation'];
 
@@ -30,7 +32,7 @@ export class DocentesComponent implements OnInit {
 
   docenteForm: FormGroup;
 
-  constructor(public docenteService: DocenteService, private toast: MatSnackBar, public dialog: MatDialog) {
+  constructor(public docenteService: DocenteService, private toast: MatSnackBar, public dialog: MatDialog, private courses: CourseFollowService) {
 
     this.docenteForm = new FormGroup({
       '_id': new FormControl(''),
@@ -48,7 +50,7 @@ export class DocentesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDocentes();
-
+    this.getCourses();
   }
 
   resetForm() {
@@ -66,7 +68,7 @@ export class DocentesComponent implements OnInit {
   addDocente() {
 
     if(this.docenteForm.controls.password.value !== this.docenteForm.controls.repeatPassword.value){
-      console.log("las contraseñas no coimciden");
+
       this.toast.open("las contraseñas no coimciden",'cerrar', { duration: 2500 });
 
       return;
@@ -139,6 +141,10 @@ export class DocentesComponent implements OnInit {
         }
 
       })
+  }
+
+  getCourses(){
+    this.courses.getCourses().subscribe( courses =>{ this.listCourses = courses })
   }
 
 }

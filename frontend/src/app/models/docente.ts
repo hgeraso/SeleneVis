@@ -1,12 +1,12 @@
 export class Docente {
 
        
-    _id: String;
-    name:String;
-    course:String;
+    _id: string;
+    name:string;
+    course:string;
     correo: string;
-    password:String; 
-    credencial: String;
+    password:string; 
+    credencial: string;
 
    
     constructor(){

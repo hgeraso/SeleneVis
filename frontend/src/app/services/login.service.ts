@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -15,12 +15,15 @@ export class LoginService {
 
   user: Docente;
   token: string;
+  isLoged$ = new EventEmitter<Boolean>();
+  userRole$ = new EventEmitter<string>();
 
   constructor(private http: HttpClient, private route: Router) { 
     this.loadStorage();
   }
 
   login(body: { email: string, password: string }): Observable<boolean> {
+
     return this.http.post<object>(this.URL_SERVER + 'login/', body).pipe(
       map((res: any) => {
         localStorage.setItem('id', res.id);
@@ -35,7 +38,15 @@ export class LoginService {
   }
 
   isLoged() {
-    return (this.token.length > 3) ? true : false;
+    if(this.token.length > 3){
+      this.userRole$.emit(this.user.credencial);
+      this.isLoged$.emit(true);
+      return true;
+    }else{
+      this.userRole$.emit(this.user.credencial);
+      this.isLoged$.emit(false);
+      return false;
+    }
   }
 
   logOut(){
@@ -44,8 +55,9 @@ export class LoginService {
 
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
-
     this.route.navigate(['/login']);
+
+    this.isLoged$.emit(false);
   }
 
   loadStorage() {

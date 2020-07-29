@@ -15,16 +15,19 @@
                 <mat-form-field class="full-width">
                     <mat-label>Nombre</mat-label>
                     <input formControlName="name" matInput placeholder="Paulo Vaszquez" value="">
+                    <mat-error *ngIf="docenteForm.controls.name.errors.required">Este campo es requerido</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="full-width">
                     <mat-label>Curso</mat-label>
                     <input formControlName="course" matInput placeholder="Curso" value="">
+                    <mat-error *ngIf="docenteForm.controls.course.errors.required">Este campo es requerido</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="full-width">
                     <mat-label>Correo</mat-label>
                     <input formControlName="correo" matInput placeholder="Correo" value="">
+                    <mat-error *ngIf="docenteForm.controls.correo.errors.required">Este campo es requerido</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="full-width">
