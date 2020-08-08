@@ -16,6 +16,7 @@ import { ChartsModule } from 'ng2-charts';
 import { BarsComponent } from './components/shared/bars/bars.component';
 import { TableStadisticsComponent } from './components/table-stadistics/table-stadistics.component';
 import { ListCoursesStudentsComponent } from './components/shared/list-courses-students/list-courses-students.component';
+import { LoginComponent } from './components/shared/login/login.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ListCoursesStudentsComponent } from './components/shared/list-courses-s
     NavbarComponent,
     BarsComponent,
     TableStadisticsComponent,
-    ListCoursesStudentsComponent
+    ListCoursesStudentsComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

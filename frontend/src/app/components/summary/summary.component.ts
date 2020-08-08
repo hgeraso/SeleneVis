@@ -9,7 +9,8 @@ import { IndicatorsService } from 'src/app/services/indicators.service';
 import { Indicator } from 'src/app/models/indicators';
 import { studentCourse } from 'src/app/models/studentCourse';
 import { StadiscticGraph } from 'src/app/models/stadistics-graphs';
-import { Network, DataSet, Node, Edge, IdType, Graph2d } from 'vis';
+// import { Network, DataSet, Node, Edge, IdType, Graph2d } from 'vis';
+import * as vis from 'vis';
 
 
 @Component({
@@ -27,7 +28,9 @@ export class SummaryComponent implements OnInit {
   course: string;
   loading = false;
   loadingIndicators = false;
+  cleanByRound= true;
 
+  existGraph = false;
   constructor(private inicatorsCourseService: IndicatorsService, private staticsservice: SeguimientoService) {
   }
 
@@ -68,51 +71,72 @@ export class SummaryComponent implements OnInit {
   }
 
   loadStadisticsByCourse() {
-    this.inicatorsCourseService.getStadisticsByCourse(this.course).subscribe( data => this.createStadisticsCourse(data) )
+
+    this.loadingIndicators = true;
+    this.inicatorsCourseService.getStadisticsByCourse(this.course).subscribe(data => this.createStadisticsCourse(data))
   }
 
   createStadisticsCourse(vectors: StadiscticGraph[]) {
 
-    let names = ["name1", "name2", "name3"];
-    let groups = new DataSet();
+    let graph2d;
 
-    groups.add({
-      id: 0,
-      content: names[0],
-      className: "custom-style1",
-      options: {
-        drawPoints: {
-          style: "square", // square, circle
-        },
-        shaded: {
-          orientation: "bottom", // top, bottom
-        },
-      },
-    });
+    // let names = ["SquareShaded", "Bargraph", "Blank", "CircleShaded"];
+    let groups = new vis.DataSet();
 
-    groups.add({
-      id: 1,
-      content: names[1],
-      className: "custom-style2",
-      options: {
-        style: "bar",
-        drawPoints: { style: "circle", size: 10 },
-      },
-    });
+    // groups.add({
+    //   id: 0,
+    //   content: names[0],
+    //   className: "custom-style1",
+    //   options: {
+    //     drawPoints: {
+    //       style: "square", // square, circle
+    //     },
+    //     shaded: {
+    //       orientation: "bottom", // top, bottom
+    //     },
+    //   },
+    // });
 
-    groups.add({
-      id: 2,
-      content: names[2],
-      options: {
-        yAxisOrientation: "right", // right, left
-        drawPoints: false,
-      },
-    });
+    // groups.add({
+    //   id: 1,
+    //   content: names[1],
+    //   className: "custom-style2",
+    //   options: {
+    //     style: "bar",
+    //     drawPoints: { style: "circle", size: 10 },
+    //   },
+    // });
+
+    // groups.add({
+    //   id: 2,
+    //   content: names[2],
+    //   options: {
+    //     yAxisOrientation: "right", // right, left
+    //     drawPoints: false,
+    //   },
+    // });
+
+    // groups.add({
+    //   id: 3,
+    //   content: names[3],
+    //   className: "custom-style3",
+    //   options: {
+    //     yAxisOrientation: "right", // right, left
+    //     drawPoints: {
+    //       style: "circle", // square, circle
+    //     },
+    //     shaded: {
+    //       orientation: "top", // top, bottom
+    //     },
+    //   },
+    // });
 
     let container = document.getElementById("visualization");
+    container.innerHTML="";
+
     let items = vectors;
 
-    let dataset = new DataSet(items);
+    let dataset = new vis.DataSet(items);
 
     let options = {
       defaultGroup: "",
@@ -120,17 +144,23 @@ export class SummaryComponent implements OnInit {
         showMinorLabels: true,
         right: {
           title: {
-            text: "Title (right axis)",
+            text: "actividades",
           },
         },
       },
-      legend: { left: { position: "bottom-left" } },
+      legend: { left: { position: "top-left" } },
       start: vectors[0].x,
       end: vectors[(vectors.length - 1)].x
     };
 
-    let graph2d = new Graph2d(container, items, groups, options);
-
+    
+    graph2d = new vis.Graph2d(container, dataset, groups, options);
+    
+    
+    graph2d.on('rangechange', function (props) {
+      graph2d.redraw()
+    });
+    
   }
 
 }

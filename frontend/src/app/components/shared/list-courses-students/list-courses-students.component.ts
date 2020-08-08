@@ -50,7 +50,7 @@ export class ListCoursesStudentsComponent implements OnInit {
   }
 
   sendCourse() {
-    console.log("enviar curso", this.body.course)
+    this.body.student = '';
     this.sendcourse.emit(this.body.course);
   }
 

@@ -1,4 +1,5 @@
 const seguimiento = require('../models/seguimiento');
+const { count } = require('../models/seguimiento');
 const grafosController = {};
 
 grafosController.getGrafosStudentByDay = async (req, res) => {
@@ -98,7 +99,7 @@ function getDays(student, course) {
 function getSessions(student, course) {
 
     return new Promise((resolve, reject) => {
-        seguimiento.find({ course: course, username: student }).distinct('session')
+        seguimiento.find({ "course": course, "username": student }).distinct('session')
             .exec((err, sessions) => {
 
                 if (err) reject("error", err);
@@ -207,17 +208,17 @@ function agoupingNodes(nodes) {
 
                 nodes = nodes.filter((el, index) => nodes.indexOf(el) === index);
                 let count2 = 0;
-                let newNodes = [{ id: -1, label: 'login' }]
+                let newNodes = [{ id: -1, label: 'Inicio', color:`#${randomColor()}` }]
 
                 for (let name of nodes) {
                     activityByNode[name] = activityByNode[name].filter((el, index) => activityByNode[name].indexOf(el) === index);
                     const title = activityByNode[name].join(', ')
                     count2++;
-                    newNodes.push({ id: count2, label: name, title: title })
+                    newNodes.push({ id: count2, label: name, title: title, color:`#${randomColor()}` })
                 }
 
                 if (count2 == nodes.length) {
-                    newNodes.push({ id: -2, label: 'logOut' });
+                    newNodes.push({ id: -2, label: '  Fin  ', color:`#${randomColor()}` });
                     resolve(newNodes);;
                 }
             }
@@ -247,8 +248,11 @@ function buildEdges(activities, nodes, days, control) {
             }
 
             let nodesByDay = [];
+            let nodesByDayOrder = [];
             console.log("total actividades en ", day, activitiesByControl.length);
             let countOrder = 1;
+            let secRepeat = false;
+
             if (activitiesByControl.length) {
 
                 for (let index = 0; index < activitiesByControl.length; index++) {
@@ -258,12 +262,23 @@ function buildEdges(activities, nodes, days, control) {
 
                     // if exist more than one register
                     if (!nodesByDay.length) {
+
                         nodesByDay.push({
                             id: '-11',
                             to: element.id,
                             nameto: element.label,
                             from: -1,
-                            namefrom: 'login',
+                            namefrom: 'Inicio',
+                            label: '1',
+                            visits: 1
+                        })
+
+                        nodesByDayOrder.push({
+                            id: '-11',
+                            to: element.id,
+                            nameto: element.label,
+                            from: -1,
+                            namefrom: 'Inicio',
                             label: countOrder.toString(),
                             visits: countOrder
                         })
@@ -278,14 +293,84 @@ function buildEdges(activities, nodes, days, control) {
                             nameto: elementnext.label,
                             from: element.id,
                             namefrom: element.label,
+                            label: '1',
+                            visits: 1
+                        }
+                        const edgeOrder = {
+
+                            id: `${element.id}${elementnext.id}`,
+                            idOrder: `${element.id}${elementnext.id}`,
+                            to: elementnext.id,
+                            nameto: elementnext.label,
+                            from: element.id,
+                            namefrom: element.label,
                             label: (countOrder + 1).toString(),
                             visits: countOrder + 1
                         }
 
                         if (!nodeWasAdded(edge.id, nodesByDay)) {
 
-                            countOrder++;
                             nodesByDay.push(edge);
+                        }
+
+                        if (!nodeWasAddedOrder(edgeOrder, nodesByDayOrder)) {
+                            edgeOrder.id = edgeOrder.id + countOrder;
+                            nodesByDayOrder.push(edgeOrder);
+                            countOrder++;
+                        } else {
+
+                            nodesByDayOrder.map(objNode => {
+
+                                if (objNode.idOrder === edgeOrder.idOrder) {
+
+
+                                    const lastElement = (objNode.label.split(',')[objNode.label.split(',').length - 1]).trim();
+
+                                    if (parseInt(edgeOrder.label) != (parseInt(lastElement) + 1)) {
+                                        objNode.label = objNode.label + ', ' + edgeOrder.label;
+                                        countOrder++;
+                                        return
+                                    } else {
+                                        console.log("consecutivos", lastElement + 1, "label node", edgeOrder.label);
+                                        return
+                                    }
+
+                                }
+                            })
+                            // nodesByDayOrder.map((objnode, index) => {
+
+                            //     if (objnode.idOrder == edgeOrder.idOrder) {
+                            //         if (nodesByDayOrder[(nodesByDayOrder.length - 1)].idOrder === edgeOrder.idOrder) {
+                            //             return
+                            //         } else {
+                            //             if (edgeOrder.to === edgeOrder.from) {
+                            //                 const lastElement = (objnode.label.split(',')[objnode.label.split(',').length - 1]).trim();
+                            //                 console.log(parseInt(lastElement + 1), edgeOrder.label)
+                            //                 if (parseInt(lastElement) + 1 != edgeOrder.label) {
+                            //                     objnode.label = objnode.label + ', ' + edgeOrder.label;
+                            //                     countOrder++;
+                            //                 } else {
+                            //                     secRepeat = true;
+                            //                 }
+                            //             } else {
+                            //                 if (secRepeat) {
+                            //                     countOrder++;
+                            //                     edgeOrder.label = (countOrder).toString();
+                            //                     edgeOrder.id = edgeOrder.id + countOrder;
+                            //                     nodesByDayOrder.push(edgeOrder);
+                            //                     // objnode.label = objnode.label + ', ' + edgeOrder.label;
+                            //                     secRepeat = false;
+
+                            //                 } else {
+                            //                     edgeOrder.id = edgeOrder.id + countOrder;
+                            //                     // nodesByDayOrder.push(edgeOrder);
+                            //                     objnode.label = objnode.label + ', ' + edgeOrder.label;
+                            //                     countOrder++;
+                            //                 }
+                            //             }
+                            //         }
+                            //     }
+                            // })
                         }
 
                     } else {
@@ -294,33 +379,31 @@ function buildEdges(activities, nodes, days, control) {
 
                             id: `${element.id}-2`,
                             to: -2,
-                            nameto: 'logOut',
+                            nameto: 'Fin',
+                            from: element.id,
+                            namefrom: element.label,
+                            label: '1',
+                            visits: 1
+                        }
+
+                        const edgeOrder = {
+
+                            id: `${element.id}-2`,
+                            idOrder: `${element.id}-2`,
+                            to: -2,
+                            nameto: 'Fin',
                             from: element.id,
                             namefrom: element.label,
                             label: (countOrder + 1).toString(),
                             visits: countOrder + 1
                         }
-                        nodesByDay.push(edge)
+                        nodesByDay.push(edge);
+                        nodesByDayOrder.push(edgeOrder);
 
                     }
                     if (index === (activitiesByControl.length - 1)) {
 
-                        // if (nodesByDay.length > 1) {
-
-                        //     const length = nodesByDay.length - 1;
-                        //     console.log(nodesByDay[length], "ultima posiscion", length, nodesByDay)
-                        //     // const objedge = {
-                        //     //     id: '-2',
-                        //     //     to: -2,
-                        //     //     nameto: 'logOut',
-                        //     //     from: nodesByDay[length].to,
-                        //     //     namefrom: nodesByDay[length].nameto,
-                        //     //     visits: 1
-                        //     // }
-                        //     // nodesByDay.push(objedge);
-                        // }
-
-                        nodesTotal.push({ day: day, nodes: nodesByDay })
+                        nodesTotal.push({ day: day, nodes: nodesByDay, nodesOrder: nodesByDayOrder })
                     }
 
                     // console.log("se reaolvio", indexDay, days.length,  "num avtivities", countActivities, activities.length);
@@ -341,9 +424,59 @@ function nodeWasAdded(idnode, nodes) {
 
     const itemOnArray = nodes.find(node => node.id === idnode);
     if (itemOnArray) {
-        // itemOnArray.visits += 1;
-        // itemOnArray.label = (parseInt(itemOnArray.label) + 1).toString();
+        itemOnArray.visits += 1;
+        itemOnArray.label = (parseInt(itemOnArray.label) + 1).toString();
         return true;
+    } else {
+        return false;
+    }
+}
+
+// generate a color for each student
+function randomColor(){
+    return Math.floor(Math.random() * 16777215).toString(16);
+}
+
+// function nodeWasAddedOrder(idnode, nodes) {
+function nodeWasAddedOrder(node, nodes) {
+
+    const lengthnodes = nodes.length - 1;
+
+    // console.log(lengthnodes, nodes)
+    if (lengthnodes) {
+
+        const itemOnArray = nodes.find(nodese => nodese.idOrder === node.idOrder);
+        const itemOnArraysec = nodes[lengthnodes].idOrder === node.idOrder ? true : false;
+        if (itemOnArray) {
+            return true;
+        } else {
+
+            // if (itemOnArray) {
+            //     node.label = itemOnArray.label + ', ' + node.label+ 'agrega';
+            //     nodes = nodes.filter(nodese => nodese.idOrder !== itemOnArray.idOrder)
+            //     // return false to increment count
+            //     return false;
+            // }
+
+            return false
+
+        }
+        // if (itemOnArray) {
+
+        //     if (itemOnArraysec) {
+        //         nodes[lengthnodes].label = nodes[lengthnodes].label + ', ' + node.label;
+        //         // itemOnArray.label = itemOnArray.label + ', ' + node.label;
+        //     } else {
+        //         console.log("nodo", itemOnArray.label,"agregar", node )
+        //         itemOnArray.label = itemOnArray.label + ', ' + node.label;
+        //     }
+        //     return true;
+        // } else {
+        //     if (lengthnodes) {
+        //         node.label = (parseInt(nodes[lengthnodes].label) + 1).toString();
+        //     }
+        //     return false;
+        // }
     } else {
         return false;
     }

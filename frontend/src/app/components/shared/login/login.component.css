@@ -1,0 +1,29 @@
+.login-box{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+
+}
+.container-card{
+    width: 320px;
+    height: 420px;
+    justify-content: center;
+}
+.items-form{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.title{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn-login{
+    margin-top: 1rem;
+}

@@ -30,8 +30,8 @@ export class TableStadisticsComponent implements OnInit, OnChanges {
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 25, this.pageSizeIndicators];
 
-  stadistics:object;
-  loading=false;
+  stadistics: object;
+  loading = false;
 
   constructor() { }
 
@@ -42,12 +42,21 @@ export class TableStadisticsComponent implements OnInit, OnChanges {
   ngOnChanges() {
 
     if (this.course && this.indicators) {
+      // order alphabetilcally
+      this.indicators.sort((a, b) => {
+        if (a.student > b.student)
+          return 1;
+        if (a.student < b.student)
+          return -1;
+        return 0;
+      })
+
       this.buildGraps();
     }
 
   }
 
-  clear(){
+  clear() {
     this.stadistics = null;
   }
 
@@ -57,15 +66,16 @@ export class TableStadisticsComponent implements OnInit, OnChanges {
     this.dataSource = new MatTableDataSource<Indicator>(this.indicators);
     this.dataSource.paginator = this.paginator;
 
-    this.getStadisticsByIndicators().then((stadiscticsbycourse:object) => {
+    this.getStadisticsByIndicators().then((stadiscticsbycourse: object) => {
 
       this.loading = false;
       this.stadistics = stadiscticsbycourse;
       this.indicators = [];
 
     }).catch(err => {
-      this.loading =false;
-      console.log(err)})
+      this.loading = false;
+      console.log(err)
+    })
   }
 
   getStadisticsByIndicators() {

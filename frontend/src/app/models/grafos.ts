@@ -1,10 +1,11 @@
 export interface Grafo {
     edges:item[],
     nodes:object[],
-    options:[]
+    options:string[]
 }
 
 export interface item{
     day:string,
-    nodes:object[]
+    nodes:object[],
+    nodesOrder:object[],
 }

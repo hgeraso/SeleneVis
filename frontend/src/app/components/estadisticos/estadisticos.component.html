@@ -1,32 +1,43 @@
-<div class="main-container">
-    <list-courses-students (sendbody)="getGrafos($event)"></list-courses-students>
+<div class="head-consult">
+    <list-courses-students (sendbody)="getGrafos($event)" (sendcourse)="clear()"></list-courses-students>
 </div>
+<mat-divider></mat-divider>
 
+<div class="goup-grafos" *ngIf="body.student">
+    <mat-card class="main-control">
 
-<div class="goup-grafos" *ngIf="body.student" >
+        <div class="control-panel">
+            <div class="option-consult">
+                <mat-button-toggle-group name="fontStyle" aria-label="Font Style" value="dia">
+                    <mat-button-toggle value="dia" (click)="getGrafosByDay()" selected={true}>Consulta por día
+                    </mat-button-toggle>
+                    <mat-button-toggle value="session" (click)="getGrafosBySession()">Consulta por Sesión
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
 
-    <div class="mat-elevation-z8">
-        <div class="option-consult" >            
-            <button mat-stroked-button color="primary" (click)="getGrafosByDay()">Consulta por día</button>
-            <button mat-stroked-button color="accent" (click)="getGrafosBySession()">Consulta por Sesión</button>
+            <!-- <mat-card> -->
+                <div>
+                <mat-form-field>
+                    <mat-label>Opciones</mat-label>
+                    <mat-select [(ngModel)]="optionSelected">
+                        <mat-option *ngFor="let option of grafoService.options" [value]="option"
+                            (click)="getGrafoByOption(option)">
+                            {{option}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            <!-- </mat-card> -->
+            </div>
         </div>
 
-        <mat-card>
-            <mat-form-field>
-                <mat-label>Opciones</mat-label>
-                <mat-select>
-                    <mat-option *ngFor="let option of grafoService.options" [value]="option"
-                        (click)="getGrafoByOption(option)">
-                        {{option}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </mat-card>
-    </div>
+        <h2>Interacciones</h2>
+        <div class="bars-control mat-elevation-z8" *ngIf="stadistics">
+            <app-bars [labelTitle]="labelTable" [stadistics]="stadistics" (clearData)="clearStadistic()"
+                [clearByRound]="cleanByRound"></app-bars>
+        </div>
+    </mat-card>
 
     <div class="grafo mat-elevation-z8" id="mynetwork"></div>
-    <!-- <pre id="eventSpan"></pre> -->
-    <!-- <div class="grafo mat-elevation-z8" id="mynetwork"></div> -->
+    <!-- <div class="grafo mat-elevation-z8" id="mynetwork2"></div> -->
 </div>
-
-<!-- <div class="container" id="visualization"></div> -->

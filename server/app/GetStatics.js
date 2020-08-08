@@ -33,7 +33,7 @@ statisticCtrl.getStatistics = async (req, res) => {
 
     const numExamenes = await seguimiento.find({
         $and: [
-            { $or: [{ name: "problem_check" },/*  { name : "problem_graded" } */] },
+            { $or: [{ name: "problem_check" }, { name : "problem_graded" }] },
             { "username": student, "course": course }
         ]
     }).countDocuments();
