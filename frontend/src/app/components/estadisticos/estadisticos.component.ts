@@ -4,8 +4,6 @@ import { GrafosService } from 'src/app/services/grafos.service';
 import { Grafo, item } from 'src/app/models/grafos';
 import { studentCourse } from 'src/app/models/studentCourse';
 import { IndicatorsService } from 'src/app/services/indicators.service';
-import { StadiscticGraph } from 'src/app/models/stadistics-graphs';
-import { Indicator } from 'src/app/models/indicators';
 import { StadisticByControl } from 'src/app/models/stadisticByControl';
 
 @Component({
@@ -31,7 +29,6 @@ export class EstadisticosComponent implements OnInit {
 
   constructor(private grafosService: GrafosService, private servicesStadistics: IndicatorsService) {
   }
-
   ngOnInit(): void { }
 
   // === get grafos general ===
