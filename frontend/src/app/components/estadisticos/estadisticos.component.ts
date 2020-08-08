@@ -116,11 +116,8 @@ export class EstadisticosComponent implements OnInit {
 
   //create graphs
   createNetwork(nodesOnOptions: item) {
-<<<<<<< HEAD
-=======
 
     this.optionSelected = this.grafoService.options[0];
->>>>>>> aldair
 
     const nodes = new DataSet(this.grafoService.nodes)
     // const nodes = new DataSet([
@@ -143,89 +140,11 @@ export class EstadisticosComponent implements OnInit {
       edges: edges
     };
 
-<<<<<<< HEAD
-  }
-
-  // === get grafos general ===
-  getGrafos(body: studentCourse) {
-    this.body = body;
-    this.grafosService.getGrafosByDay(body).subscribe((grafo: Grafo) => {
-      console.log("grafos", grafo)
-      this.grafoService = grafo
-      // this.createNetwork(grafo.edges[0]);
-    })
-    // this.loadStadistics()
-
-  }
-
-  // === when select another option ===
-  getGrafoByOption(option) {
-    const nodeOnOption = this.grafoService.edges.find(objedge => objedge.day === option);
-    this.createNetwork(nodeOnOption);
-  }
-
-  // === By session ===
-  getGrafosBySession() {
-    this.grafosService.getGrafosBySession(this.body).subscribe((grafo: Grafo) => {
-      console.log("grafos por session", grafo)
-
-      this.grafoService = grafo
-      this.createNetwork(grafo.edges[0]);
-    })
-  }
-  // === By Day ===
-  getGrafosByDay() {
-    this.grafosService.getGrafosByDay(this.body).subscribe((grafo: Grafo) => {
-      console.log("grafos por dia", grafo)
-      this.grafoService = grafo
-      this.createNetwork(grafo.edges[0]);
-    })
-  }
-
-  loadStadistics() {
-
-    this.servicesStadistics.getStadisticsByCourse(this.body.course).subscribe(stadistics => this.createStadistics(stadistics))
-  }
-  //create Stadistics
-  createStadistics(vectors: StadiscticGraph[]) {
-
-    const items = vectors;
-    // [
-    //   { x: "2014-06-11", y: 10, group: 0 },
-    //   { x: "2014-06-12", y: 25, group: 0 },
-    //   { x: "2014-06-13", y: 30, group: 0 },
-    //   { x: "2014-06-14", y: 10, group: 0 },
-    //   { x: "2014-06-15", y: 15, group: 0 },
-    //   { x: "2014-06-16", y: 30, group: 0 },
-    //   { x: "2014-06-11", y: 12, group: 1 },
-    //   { x: "2014-06-12", y: 15, group: 1 },
-    //   { x: "2014-06-13", y: 34, group: 1 },
-    //   { x: "2014-06-14", y: 24, group: 1 },
-    //   { x: "2014-06-15", y: 5, group: 1 },
-    //   { x: "2014-06-16", y: 12, group: 1 },
-    //   { x: "2014-06-11", y: 22, group: 2 },
-    //   { x: "2014-06-12", y: 14, group: 2 },
-    //   { x: "2014-06-13", y: 24, group: 2 },
-    //   { x: "2014-06-14", y: 21, group: 2 },
-    //   { x: "2014-06-15", y: 30, group: 2 },
-    //   { x: "2014-06-16", y: 18, group: 2 }
-    // ];
-
-    let groups = new DataSet();
-    groups.add({ id: 0, content: "group0" });
-    groups.add({ id: 1, content: "group1" });
-    groups.add({ id: 2, content: "group2" });
-
-    const container = document.getElementById("visualization");
-
-    const dataset = new DataSet(items);
-=======
     const data2 = {
       nodes: nodes,
       edges: edges2
     };
 
->>>>>>> aldair
     const options = {
       nodes: {
         shape: "circle",
@@ -236,11 +155,6 @@ export class EstadisticosComponent implements OnInit {
           strokeWidth: 4
         }
       },
-<<<<<<< HEAD
-      orientation: "top",
-      start: vectors[0].x,
-      end: vectors[(vectors.length - 1)].x
-=======
       interaction: { hover: true },
       edges: {
         arrows: 'to',
@@ -270,7 +184,6 @@ export class EstadisticosComponent implements OnInit {
         timestep: 0.35,
         stabilization: { iterations: 10 }
       }
->>>>>>> aldair
     };
 
     const options2 = {
