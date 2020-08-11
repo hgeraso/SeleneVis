@@ -15,9 +15,9 @@ export class TableStadisticsComponent implements OnInit, OnChanges {
   @Input() course: string;
 
   // indicators = [ {name:"carlos", age:"12", cc:"105"} ];
-  //    
+  // "T. Examen", "T. Videos", "T. Otros"
   columnsToDisplay = ['Estudiante', '#Videos', '#Contenidos', '#Foros', "#Examanes",
-    '#Sesiones', "#SesionesDif", "#VideosDif", "T. Examen", "T. Videos", "T. Otros"]
+    '#Sesiones', "#SesionesDif", "#VideosDif",]
 
   dataSource: MatTableDataSource<Indicator>
 

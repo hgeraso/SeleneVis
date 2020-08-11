@@ -36,7 +36,8 @@ export class BarsComponent implements OnInit, OnChanges {
     }
   };
 
-  public barChartLabels: Label[] = ['# videos', 'T. Examenes', 'T. otros', 'T. video', 'contenido', '# examenes', '# foros', '# sesiones', 'sesiones', 'videos'];
+  // 'T. Examenes', 'T. otros', 'T. video',
+  public barChartLabels: Label[] = ['# videos', 'contenido', '# examenes', '# foros', '# sesiones', 'sesiones', 'videos'];
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
   public barChartPlugins = [pluginDataLabels];
@@ -68,14 +69,22 @@ export class BarsComponent implements OnInit, OnChanges {
 
   loadStatics() {
 
-    if(this.clearByRound && this.barChartData.length){
+    if (this.clearByRound && this.barChartData.length) {
       this.barChartData = [];
     }
 
-    let dataset = { data: Object.values(this.stadistics), label: this.labelTitle, backgroundColor: '#' + this.randomColor() };
+    const stadiscticsFilter = {};
+
+    for (let key in this.stadistics) {
+      if(key != 'TimeVideos' && key != 'TimeExam' && key != 'TimeOthers' ){
+        stadiscticsFilter[key] = this.stadistics[key];
+      }
+    }
+
+    let dataset = { data: Object.values(stadiscticsFilter), label: this.labelTitle, backgroundColor: '#' + this.randomColor() };
     this.barChartData.push(dataset);
 
-    let keys = Object.keys(this.stadistics);
+    let keys = Object.keys(stadiscticsFilter);
     this.barChartLabels = keys;
     this.stadistics = {}
   }
@@ -87,7 +96,7 @@ export class BarsComponent implements OnInit, OnChanges {
     this.clearData.emit('clear');
   }
 
-// generate a color for each student
+  // generate a color for each student
   randomColor(): string {
     return Math.floor(Math.random() * 16777215).toString(16);
   }
@@ -121,11 +130,11 @@ export class BarsComponent implements OnInit, OnChanges {
 
   // function to convert timeother on hours and return statics values as array
 
-  valuesStatics(statics:Object):number[]{
-    
+  valuesStatics(statics: Object): number[] {
+
     // statics['TimeOthers'] = (parseInt(statics['TimeOthers']) /( 60 *60));
-    statics['TimeVideo'] = (parseInt(statics['TimeVideo']) /( 60 *60));
-    statics['TimeExam'] = (parseInt(statics['TimeExam']) /( 60 *60));
+    statics['TimeVideo'] = (parseInt(statics['TimeVideo']) / (60 * 60));
+    statics['TimeExam'] = (parseInt(statics['TimeExam']) / (60 * 60));
 
     return Object.values(statics);
 
