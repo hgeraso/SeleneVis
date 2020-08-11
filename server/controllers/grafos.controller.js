@@ -208,17 +208,17 @@ function agoupingNodes(nodes) {
 
                 nodes = nodes.filter((el, index) => nodes.indexOf(el) === index);
                 let count2 = 0;
-                let newNodes = [{ id: -1, label: 'Inicio', color:`#${randomColor()}` }]
+                let newNodes = [{ id: -1, label: 'Inicio', color: `#${randomColor()}` }]
 
                 for (let name of nodes) {
                     activityByNode[name] = activityByNode[name].filter((el, index) => activityByNode[name].indexOf(el) === index);
                     const title = activityByNode[name].join(', ')
                     count2++;
-                    newNodes.push({ id: count2, label: name, title: title, color:`#${randomColor()}` })
+                    newNodes.push({ id: count2, label: name, title: title, color: `#${randomColor()}` })
                 }
 
                 if (count2 == nodes.length) {
-                    newNodes.push({ id: -2, label: '  Fin  ', color:`#${randomColor()}` });
+                    newNodes.push({ id: -2, label: '  Fin  ', color: `#${randomColor()}` });
                     resolve(newNodes);;
                 }
             }
@@ -280,7 +280,8 @@ function buildEdges(activities, nodes, days, control) {
                             from: -1,
                             namefrom: 'Inicio',
                             label: countOrder.toString(),
-                            visits: countOrder
+                            visits: countOrder,
+                            length: 200
                         })
                     }
                     if ((index + 1) <= (activitiesByControl.length - 1) && nodes.length) {
@@ -305,7 +306,9 @@ function buildEdges(activities, nodes, days, control) {
                             from: element.id,
                             namefrom: element.label,
                             label: (countOrder + 1).toString(),
-                            visits: countOrder + 1
+                            visits: countOrder + 1,
+                            length: 300
+
                         }
 
                         if (!nodeWasAdded(edge.id, nodesByDay)) {
@@ -319,58 +322,35 @@ function buildEdges(activities, nodes, days, control) {
                             countOrder++;
                         } else {
 
-                            nodesByDayOrder.map(objNode => {
+                            const nodeIn = nodesByDayOrder.find(objNode => objNode.idOrder == edgeOrder.idOrder);
+                            const lastElement = (nodeIn.label.split(',')[nodeIn.label.split(',').length - 1]).trim();
 
-                                if (objNode.idOrder === edgeOrder.idOrder) {
+                            if (parseInt(edgeOrder.label) != (parseInt(lastElement) + 1)) {
+                                // edgeOrder.id = edgeOrder.id + countOrder;
+                                // nodesByDayOrder.push(edgeOrder);
+                                nodeIn.label = nodeIn.label + ', ' + edgeOrder.label;
+                                countOrder++;
+                            }
+
+                            // nodesByDayOrder.map(objNode => {
+
+                            //     if (objNode.idOrder === edgeOrder.idOrder) {
 
 
-                                    const lastElement = (objNode.label.split(',')[objNode.label.split(',').length - 1]).trim();
+                            //         const lastElement = (objNode.label.split(',')[objNode.label.split(',').length - 1]).trim();
 
-                                    if (parseInt(edgeOrder.label) != (parseInt(lastElement) + 1)) {
-                                        objNode.label = objNode.label + ', ' + edgeOrder.label;
-                                        countOrder++;
-                                        return
-                                    } else {
-                                        console.log("consecutivos", lastElement + 1, "label node", edgeOrder.label);
-                                        return
-                                    }
-
-                                }
-                            })
-                            // nodesByDayOrder.map((objnode, index) => {
-
-                            //     if (objnode.idOrder == edgeOrder.idOrder) {
-                            //         if (nodesByDayOrder[(nodesByDayOrder.length - 1)].idOrder === edgeOrder.idOrder) {
+                            //         if (parseInt(edgeOrder.label) != (parseInt(lastElement) + 1)) {
+                            //             objNode.label = objNode.label + ', ' + edgeOrder.label;
+                            //             countOrder++;
                             //             return
                             //         } else {
-                            //             if (edgeOrder.to === edgeOrder.from) {
-                            //                 const lastElement = (objnode.label.split(',')[objnode.label.split(',').length - 1]).trim();
-                            //                 console.log(parseInt(lastElement + 1), edgeOrder.label)
-                            //                 if (parseInt(lastElement) + 1 != edgeOrder.label) {
-                            //                     objnode.label = objnode.label + ', ' + edgeOrder.label;
-                            //                     countOrder++;
-                            //                 } else {
-                            //                     secRepeat = true;
-                            //                 }
-                            //             } else {
-                            //                 if (secRepeat) {
-                            //                     countOrder++;
-                            //                     edgeOrder.label = (countOrder).toString();
-                            //                     edgeOrder.id = edgeOrder.id + countOrder;
-                            //                     nodesByDayOrder.push(edgeOrder);
-                            //                     // objnode.label = objnode.label + ', ' + edgeOrder.label;
-                            //                     secRepeat = false;
-
-                            //                 } else {
-                            //                     edgeOrder.id = edgeOrder.id + countOrder;
-                            //                     // nodesByDayOrder.push(edgeOrder);
-                            //                     objnode.label = objnode.label + ', ' + edgeOrder.label;
-                            //                     countOrder++;
-                            //                 }
-                            //             }
+                            //             console.log("consecutivos", lastElement + 1, "label node", edgeOrder.label);
+                            //             return
                             //         }
+
                             //     }
                             // })
+
                         }
 
                     } else {
@@ -395,14 +375,16 @@ function buildEdges(activities, nodes, days, control) {
                             from: element.id,
                             namefrom: element.label,
                             label: (countOrder + 1).toString(),
-                            visits: countOrder + 1
+                            visits: countOrder + 1,
+                            length: 300
+
                         }
                         nodesByDay.push(edge);
                         nodesByDayOrder.push(edgeOrder);
 
                     }
-                    if (index === (activitiesByControl.length - 1)) {
 
+                    if (index === (activitiesByControl.length - 1)) {
                         nodesTotal.push({ day: day, nodes: nodesByDay, nodesOrder: nodesByDayOrder })
                     }
 
@@ -433,7 +415,7 @@ function nodeWasAdded(idnode, nodes) {
 }
 
 // generate a color for each student
-function randomColor(){
+function randomColor() {
     return Math.floor(Math.random() * 16777215).toString(16);
 }
 

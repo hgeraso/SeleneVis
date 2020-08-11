@@ -18,7 +18,7 @@ export class LoginService {
   isLoged$ = new EventEmitter<Boolean>();
   userRole$ = new EventEmitter<string>();
 
-  constructor(private http: HttpClient, private route: Router) { 
+  constructor(private http: HttpClient, private route: Router) {
     this.loadStorage();
   }
 
@@ -38,18 +38,20 @@ export class LoginService {
   }
 
   isLoged() {
-    if(this.token.length > 3){
+    if (this.token.length > 3) {
       this.userRole$.emit(this.user.credencial);
       this.isLoged$.emit(true);
       return true;
-    }else{
-      this.userRole$.emit(this.user.credencial);
-      this.isLoged$.emit(false);
+    } else {
+      if (this.user) {
+        this.userRole$.emit(this.user.credencial);
+        this.isLoged$.emit(false);
+      }
       return false;
     }
   }
 
-  logOut(){
+  logOut() {
     this.token = '';
     this.user = null;
 

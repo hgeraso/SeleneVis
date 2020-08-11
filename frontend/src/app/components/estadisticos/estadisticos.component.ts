@@ -179,7 +179,7 @@ export class EstadisticosComponent implements OnInit {
         maxVelocity: 146,
         solver: "forceAtlas2Based",
         timestep: 0.35,
-        stabilization: { iterations: 10 }
+        stabilization: { iterations: 5 }
       }
     };
 
