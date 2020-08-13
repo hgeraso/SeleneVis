@@ -8,10 +8,10 @@
 
         <div class="control-panel">
             <div class="option-consult">
-                <mat-button-toggle-group name="fontStyle" aria-label="Font Style" value="dia">
-                    <mat-button-toggle value="dia" (click)="getGrafosByDay()" selected={true}>Consulta por día
+                <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [(value)] = "selectedValue">
+                    <mat-button-toggle value="dia" (click)="getGrafosByDay()" >Consulta por día
                     </mat-button-toggle>
-                    <mat-button-toggle value="session" (click)="getGrafosBySession()">Consulta por Sesión
+                    <mat-button-toggle value="session" (click)="getGrafosBySession()" selected>Consulta por Sesión
                     </mat-button-toggle>
                 </mat-button-toggle-group>
             </div>

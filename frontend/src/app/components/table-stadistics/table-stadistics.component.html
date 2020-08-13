@@ -1,7 +1,7 @@
 <div class="main-container">
 
     <mat-card class="form-card-chart" *ngIf="stadistics">
-        <app-bars [labelTitle]="course" [stadistics]="stadistics" (clearData)="clear()"></app-bars>
+        <app-bars [labelTitle]="course" [stadistics]="stadistics" (clearData)="clear()" [clearByRound]="true"></app-bars>
     </mat-card>
 
     <mat-card class="list-card">

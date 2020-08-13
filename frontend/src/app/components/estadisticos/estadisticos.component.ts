@@ -29,6 +29,8 @@ export class EstadisticosComponent implements OnInit {
   stadistics: object;
   cleanByRound = true;
 
+  selectedValue = 'dia';
+
   constructor(private grafosService: GrafosService, private servicesStadistics: IndicatorsService) {
   }
 
@@ -42,9 +44,13 @@ export class EstadisticosComponent implements OnInit {
     const student = this.body.student.split('_');
     this.labelTable = student[0] + ' ' + student[1]
 
-    this.getGrafosByDay();
-
+    if (this.selectedValue == "session") {
+      this.getGrafosBySession();
+    } else {
+      this.getGrafosByDay();
+    }
   }
+
 
   // === when select another option ===
   getGrafoByOption(option) {
@@ -56,6 +62,7 @@ export class EstadisticosComponent implements OnInit {
 
   // === By session ===
   getGrafosBySession() {
+    this.selectedValue = 'session';
     this.grafosService.getGrafosBySession(this.body).subscribe((grafo: Grafo) => {
 
       this.grafoService = grafo
@@ -76,7 +83,7 @@ export class EstadisticosComponent implements OnInit {
   // === By Day ===
   getGrafosByDay() {
     // console.log(stadisticsByControl);
-
+    this.selectedValue = 'dia';
     this.grafosService.getGrafosByDay(this.body).subscribe((grafo: Grafo) => {
       this.grafoService = grafo;
       this.createNetwork(grafo.edges[0]);
@@ -162,7 +169,7 @@ export class EstadisticosComponent implements OnInit {
           color: '#000',
           size: 15,
           strokeColor: '#ffffff',
-          align:'horizontal'
+          align: 'horizontal'
         },
         shadow: {
           enabled: true,

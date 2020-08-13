@@ -307,7 +307,7 @@ function buildEdges(activities, nodes, days, control) {
                             namefrom: element.label,
                             label: (countOrder + 1).toString(),
                             visits: countOrder + 1,
-                            length: 300
+                            length: 350
 
                         }
 
@@ -317,20 +317,45 @@ function buildEdges(activities, nodes, days, control) {
                         }
 
                         if (!nodeWasAddedOrder(edgeOrder, nodesByDayOrder)) {
+
+                            let lastEdgeAdded = nodesByDayOrder[(nodesByDayOrder.length - 1)];
+
+                            if (edgeOrder.from !== lastEdgeAdded.to) {
+                                // lastEdgeAdded.label = lastEdgeAdded.label + ', ' + edgeOrder.label;
+                                const idnodechange = `${lastEdgeAdded.to}${edgeOrder.from}`;
+                                console.log("son difrenetes se debe agregar al nodo con id ", idnodechange)
+
+                                const nodeIn = nodesByDayOrder.find(objNode => objNode.idOrder == idnodechange);
+                                if (nodeIn) {
+                                    nodeIn.label = nodeIn.label + ', ' + edgeOrder.label;
+                                    countOrder++;
+                                    edgeOrder.label = (countOrder + 1).toString()
+                                }
+
+                            }
+
                             edgeOrder.id = edgeOrder.id + countOrder;
                             nodesByDayOrder.push(edgeOrder);
                             countOrder++;
+
                         } else {
 
-                            const nodeIn = nodesByDayOrder.find(objNode => objNode.idOrder == edgeOrder.idOrder);
-                            const lastElement = (nodeIn.label.split(',')[nodeIn.label.split(',').length - 1]).trim();
+                            // const nodeIn = nodesByDayOrder.find(objNode => objNode.idOrder == edgeOrder.idOrder);
+                            // const lastElement = (nodeIn.label.split(',')[nodeIn.label.split(',').length - 1]).trim();
 
-                            if (parseInt(edgeOrder.label) != (parseInt(lastElement) + 1)) {
-                                // edgeOrder.id = edgeOrder.id + countOrder;
-                                // nodesByDayOrder.push(edgeOrder);
-                                nodeIn.label = nodeIn.label + ', ' + edgeOrder.label;
-                                countOrder++;
-                            }
+                            // const lastEdgeAdded = nodesByDayOrder[(nodesByDayOrder.length - 1)];
+
+                            // if (edgeOrder.from != lastEdgeAdded.to) {
+                            //     nodeIn.label = nodeIn.label + ', ' + edgeOrder.label;
+                            //     countOrder++;
+
+                            // }
+                            // if (parseInt(edgeOrder.label) != (parseInt(lastElement) + 1)) {1
+                            // edgeOrder.id = edgeOrder.id + countOrder;
+                            // nodesByDayOrder.push(edgeOrder);
+                            // nodeIn.label = nodeIn.label + ', ' + edgeOrder.label;
+                            // countOrder++;
+                            // }1
 
                             // nodesByDayOrder.map(objNode => {
 
@@ -355,6 +380,8 @@ function buildEdges(activities, nodes, days, control) {
 
                     } else {
 
+                        let lastEdgeAdded = nodesByDayOrder[(nodesByDayOrder.length - 1)];
+
                         const edge = {
 
                             id: `${element.id}-2`,
@@ -372,7 +399,8 @@ function buildEdges(activities, nodes, days, control) {
                             idOrder: `${element.id}-2`,
                             to: -2,
                             nameto: 'Fin',
-                            from: element.id,
+                            // from: element.id,
+                            from: lastEdgeAdded.to,
                             namefrom: element.label,
                             label: (countOrder + 1).toString(),
                             visits: countOrder + 1,
