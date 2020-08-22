@@ -51,7 +51,10 @@ export class DocentesComponent implements OnInit {
   ngOnInit(): void {
     this.getDocentes();
     this.getCourses();
+    console.log(this.docenteForm.controls.name.errors)
   }
+
+  get f() { return this.docenteForm.controls; }
 
   resetForm() {
     this.docenteForm.setValue({
