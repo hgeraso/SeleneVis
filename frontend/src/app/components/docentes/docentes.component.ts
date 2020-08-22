@@ -36,7 +36,7 @@ export class DocentesComponent implements OnInit {
 
     this.docenteForm = new FormGroup({
       '_id': new FormControl(''),
-      'name': new FormControl('', Validators.required),
+      name: new FormControl('', Validators.required),
       'course': new FormControl('', Validators.required),
       'correo': new FormControl('', [Validators.required, Validators.email]),
       'credencial': new FormControl('', Validators.required),

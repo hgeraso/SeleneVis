@@ -38,7 +38,7 @@ export class LoginService {
   }
 
   isLoged() {
-    if (this.token.length > 3) {
+    if (this.token.length > 3 && this.user) {
       this.userRole$.emit(this.user.credencial);
       this.isLoged$.emit(true);
       return true;
