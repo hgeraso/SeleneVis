@@ -3,10 +3,6 @@ import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 import { Label } from 'ng2-charts';
 import { SeguimientoService } from 'src/app/services/seguimiento.service';
-import { NgModel } from '@angular/forms';
-import Swal from 'sweetalert2';
-import { Indicator } from 'src/app/models/indicators';
-import { studentCourse } from 'src/app/models/studentCourse';
 
 @Component({
   selector: 'app-bars',
@@ -69,10 +65,12 @@ export class BarsComponent implements OnInit, OnChanges {
 
   loadStatics() {
 
+    // clear data id clearByRound
     if (this.clearByRound && this.barChartData.length) {
       this.barChartData = [];
     }
 
+    // create a filter to choose onli the necessary labels
     const stadiscticsFilter = {};
 
     for (let key in this.stadistics) {

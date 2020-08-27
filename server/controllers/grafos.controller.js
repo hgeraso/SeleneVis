@@ -208,7 +208,7 @@ function agoupingNodes(nodes) {
 
                 nodes = nodes.filter((el, index) => nodes.indexOf(el) === index);
                 let count2 = 0;
-                let newNodes = [{ id: -1, label: 'Inicio', color: `#${randomColor()}` }]
+                let newNodes = [{ id: -1, label: 'Inicio', color: `#64DD17` }]
 
                 for (let name of nodes) {
                     activityByNode[name] = activityByNode[name].filter((el, index) => activityByNode[name].indexOf(el) === index);
@@ -218,7 +218,7 @@ function agoupingNodes(nodes) {
                 }
 
                 if (count2 == nodes.length) {
-                    newNodes.push({ id: -2, label: '  Fin  ', color: `#${randomColor()}` });
+                    newNodes.push({ id: -2, label: '  Fin  ', color: `#D32F2F` });
                     resolve(newNodes);;
                 }
             }
@@ -347,7 +347,14 @@ function buildEdges(activities, nodes, days, control) {
 
                             // if (edgeOrder.from != lastEdgeAdded.to) {
                             //     nodeIn.label = nodeIn.label + ', ' + edgeOrder.label;
-                            //     countOrder++;
+                            // nodesByDayOrder.map(nodese => {
+                            //     if (nodese.idOrder === edgeOrder.idOrder) {
+                            //         nodese.label = (countOrder + 1).toString();
+                            //         return;
+                            //     }
+                            // });
+
+                            // countOrder++;
 
                             // }
                             // if (parseInt(edgeOrder.label) != (parseInt(lastElement) + 1)) {1
@@ -442,7 +449,7 @@ function nodeWasAdded(idnode, nodes) {
     }
 }
 
-// generate a color for each student
+// generate a color for each node
 function randomColor() {
     return Math.floor(Math.random() * 16777215).toString(16);
 }

@@ -64,7 +64,7 @@ function getBasicStadisticByDay(course, student, day) {
 
     return new Promise(async (resolve, reject) => {
 
-        const numVideos = await seguimiento.find(
+        const Videos = await seguimiento.find(
             {
                 $and: [
                     { "username": student, "course": course, "date": day },
@@ -73,28 +73,35 @@ function getBasicStadisticByDay(course, student, day) {
             }).countDocuments()
 
 
-        const numContenido = await seguimiento.find({
+        const Contenido = await seguimiento.find({
             $and: [
                 { $or: [{ name: "nav_content" }, { name: "nav_content_click" }, { name: "nav_content_prev" }, { name: "nav_content_next" }, { name: "nav_content_tab" }] },
                 { "username": student, "course": course, "date": day }
             ]
         }).countDocuments();
 
-        const numForos = await seguimiento.find({
+        const Foros = await seguimiento.find({
             $and: [
                 { $or: [{ name: "edx.forum.comment.created" }, { name: "edx.forum.response.created" }, { name: "edx.forum.thread.created" }] },
                 { "username": student, "course": course, "date": day }
             ]
         }).countDocuments();
 
-        const numExamenes = await seguimiento.find({
+        const Examenes = await seguimiento.find({
             $and: [
                 { $or: [{ name: "problem_check" }, { name: "problem_graded" }] },
                 { "username": student, "course": course, "date": day }
             ]
         }).countDocuments();
 
-        resolve({ numVideos, numContenido, numForos, numExamenes })
+        const Home = await seguimiento.find({
+            $and: [
+                { $or: [{ name: "Signin" }] },
+                { "username": student, "course": course, "date": day }
+            ]
+        }).countDocuments();
+
+        resolve({ Home, Videos, Contenido, Foros, Examenes })
     })
 }
 
@@ -103,7 +110,7 @@ function getBasicStadisticSession(course, student, session) {
 
     return new Promise(async (resolve, reject) => {
 
-        const numVideos = await seguimiento.find(
+        const Videos = await seguimiento.find(
             {
                 $and: [
                     { "username": student, "course": course, "session": session },
@@ -112,28 +119,35 @@ function getBasicStadisticSession(course, student, session) {
             }).countDocuments()
 
 
-        const numContenido = await seguimiento.find({
+        const Contenido = await seguimiento.find({
             $and: [
                 { $or: [{ name: "nav_content" }, { name: "nav_content_click" }, { name: "nav_content_prev" }, { name: "nav_content_next" }, { name: "nav_content_tab" }] },
                 { "username": student, "course": course, "session": session }
             ]
         }).countDocuments();
 
-        const numForos = await seguimiento.find({
+        const Foros = await seguimiento.find({
             $and: [
                 { $or: [{ name: "edx.forum.comment.created" }, { name: "edx.forum.response.created" }, { name: "edx.forum.thread.created" }] },
                 { "username": student, "course": course, "session": session }
             ]
         }).countDocuments();
 
-        const numExamenes = await seguimiento.find({
+        const Examenes = await seguimiento.find({
             $and: [
                 { $or: [{ name: "problem_check" }, { name: "problem_graded" }] },
                 { "username": student, "course": course, "session": session }
             ]
         }).countDocuments();
 
-        resolve({ numVideos, numContenido, numForos, numExamenes })
+        const Home = await seguimiento.find({
+            $and: [
+                { $or: [{ name: "Signin" }] },
+                { "username": student, "course": course, "session": session }
+            ]
+        }).countDocuments();
+
+        resolve({ Home, Videos, Contenido, Foros, Examenes })
     })
 
 }
