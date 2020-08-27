@@ -26,9 +26,12 @@ export class ListCoursesStudentsComponent implements OnInit {
   }
 
   loadCourses() {
-    this.serviceCourse.getCourses().subscribe(coures => {
-      this.courses = coures;
-    })
+    const user = JSON.parse(localStorage.getItem('usuario'));
+    // console.log( user.course);
+    this.courses = user.course;
+    // this.serviceCourse.getCourses().subscribe(coures => {
+    //   this.courses = coures;
+    // })
   }
 
   loadStudentsByCourse(course: string) {

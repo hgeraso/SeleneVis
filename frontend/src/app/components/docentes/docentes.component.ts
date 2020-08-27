@@ -25,10 +25,10 @@ export class DocentesComponent implements OnInit {
   teacherList: Docente[];
   listCourses:string[];
 
-  columnsToDisplay = ['Nombre', 'Curso', 'Correo', 'Perfil', 'operation'];
+  columnsToDisplay = ['Nombre', 'Correo', 'Curso', 'Perfil', 'operation'];
 
-  list = [{ name: "Oscar", course: "exploracion", cedula: "1059365214", profile: "Docente" },
-  { name: "Andres", course: "Agricultura", cedula: "1059365214", profile: "Admin" }];
+  list = [{ name: "Oscar", course: "exploracion", profile: "Docente" },
+  { name: "Andres", course: "Agricultura", profile: "Admin" }];
 
   docenteForm: FormGroup;
 
@@ -36,7 +36,7 @@ export class DocentesComponent implements OnInit {
 
     this.docenteForm = new FormGroup({
       '_id': new FormControl(''),
-      'name': new FormControl('', Validators.required),
+      name: new FormControl('', Validators.required),
       'course': new FormControl('', Validators.required),
       'correo': new FormControl('', [Validators.required, Validators.email]),
       'credencial': new FormControl('', Validators.required),
@@ -52,6 +52,8 @@ export class DocentesComponent implements OnInit {
     this.getDocentes();
     this.getCourses();
   }
+
+  get f() { return this.docenteForm.controls; }
 
   resetForm() {
     this.docenteForm.setValue({
@@ -69,7 +71,7 @@ export class DocentesComponent implements OnInit {
 
     if(this.docenteForm.controls.password.value !== this.docenteForm.controls.repeatPassword.value){
 
-      this.toast.open("las contraseñas no coimciden",'cerrar', { duration: 2500 });
+      this.toast.open("las contraseñas no coinciden",'cerrar', { duration: 2500 });
 
       return;
     }
@@ -86,7 +88,6 @@ export class DocentesComponent implements OnInit {
 
     } else {
       this.docenteService.postDocente(this.docenteForm.value).subscribe(res => {
-        console.log(res)
         this.resetForm();
         this.getDocentes();
         this.toast.open('Docente creado', 'Cerrar', { duration: 2500 });

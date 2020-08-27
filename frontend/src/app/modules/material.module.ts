@@ -17,6 +17,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
   declarations: [],
@@ -36,7 +37,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatDividerModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatListModule
   ],
   exports:[    
     MatToolbarModule,
@@ -53,7 +55,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatDividerModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatListModule
   ]
 })
 export class MaterialModule { }

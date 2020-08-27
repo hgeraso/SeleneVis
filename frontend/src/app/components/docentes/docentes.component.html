@@ -15,7 +15,7 @@
                 <mat-form-field class="full-width">
                     <mat-label>Nombre</mat-label>
                     <input formControlName="name" matInput placeholder="Paulo Vaszquez" value="">
-                    <mat-error *ngIf="docenteForm.controls.name.errors.required">Este campo es requerido</mat-error>
+                    <mat-error *ngIf="docenteForm.controls.name.errors?.required">Este campo es requerido</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="full-width">
@@ -31,6 +31,7 @@
                     <mat-label>Correo</mat-label>
                     <input formControlName="correo" matInput placeholder="Correo" value="">
                     <mat-error *ngIf="docenteForm.controls.correo.errors?.required">Este campo es requerido</mat-error>
+                    <mat-error *ngIf="docenteForm.controls.correo.errors?.email">Correo no válido</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="full-width">
@@ -72,8 +73,8 @@
                 <td mat-cell *matCellDef="let user"> {{user.name}} </td>
             </ng-container>
             <ng-container matColumnDef="Curso">
-                <th mat-header-cell *matHeaderCellDef> Curso </th>
-                <td mat-cell *matCellDef="let user"> {{user.course}} </td>
+                <th mat-header-cell *matHeaderCellDef> Cursos </th>
+                <td mat-cell *matCellDef="let user"> {{user.course.length}} cursos </td>
             </ng-container>
             <ng-container matColumnDef="Correo">
                 <th mat-header-cell *matHeaderCellDef> Correo </th>
