@@ -14,7 +14,7 @@ export class AdminGuard implements CanActivate {
     if (this.loginService.user.credencial == "Administrador") {
       return true;
     } else {
-      this.router.navigate(['/summary']);
+      this.router.navigate(['/stadistics']);
       return false;
     }
   }

@@ -10,8 +10,8 @@ import { AdminGuard } from './services/guards/admin.guard';
 const routes: Routes = [
 { path:'',component: LoginComponent},
 { path: 'docents',component: DocentesComponent, canActivate: [LoginGuard, AdminGuard]},
-{ path: 'summary', component: SummaryComponent, canActivate: [LoginGuard]},
-{ path: 'estadisticos', component: EstadisticosComponent, canActivate: [LoginGuard]},
+{ path: 'stadistics', component: SummaryComponent, canActivate: [LoginGuard]},
+{ path: 'behaviour', component: EstadisticosComponent, canActivate: [LoginGuard]},
 { path: "**", redirectTo: "", pathMatch: 'full' },
 
 ];

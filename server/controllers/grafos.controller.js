@@ -321,9 +321,8 @@ function buildEdges(activities, nodes, days, control) {
                             let lastEdgeAdded = nodesByDayOrder[(nodesByDayOrder.length - 1)];
 
                             if (edgeOrder.from !== lastEdgeAdded.to) {
-                                // lastEdgeAdded.label = lastEdgeAdded.label + ', ' + edgeOrder.label;
+                                // is necessary create a scarcity node
                                 const idnodechange = `${lastEdgeAdded.to}${edgeOrder.from}`;
-                                console.log("son difrenetes se debe agregar al nodo con id ", idnodechange)
 
                                 const nodeIn = nodesByDayOrder.find(objNode => objNode.idOrder == idnodechange);
                                 if (nodeIn) {

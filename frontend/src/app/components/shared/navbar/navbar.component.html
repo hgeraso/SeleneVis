@@ -4,8 +4,8 @@
         <span>SeleneVis</span>
         <span class="space-spacer"></span>
         <a *ngIf="showMenu && isAdmin" class="space-icon active" mat-button [routerLink]="['docents']" routerLinkActive="active" >Admin</a>
-        <a *ngIf="showMenu" class="space-icon" mat-button [routerLink]="[ '/summary' ]" routerLinkActive="active">Estadisticas</a>
-        <a *ngIf="showMenu" class="space-icon" mat-button [routerLink]="[ 'estadisticos']" routerLinkActive="active">Comportamientos</a>
+        <a *ngIf="showMenu" class="space-icon" mat-button [routerLink]="[ '/stadistics' ]" routerLinkActive="active">Estadisticas</a>
+        <a *ngIf="showMenu" class="space-icon" mat-button [routerLink]="[ '/behaviour']" routerLinkActive="active">Comportamientos</a>
         <a *ngIf="showMenu" class="space-icon" mat-button (click)="logout()" >Cerrar Sesión</a>
     </mat-toolbar-row>
 </mat-toolbar>

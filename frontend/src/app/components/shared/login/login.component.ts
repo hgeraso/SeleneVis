@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
     // console.log(this.loginForm.controls.email.errors)
     this.loginService.login(this.loginForm.value).subscribe( res =>{
       
-        this.router.navigate(['/summary']);
+        this.router.navigate(['/stadistics']);
 
       }, err => {
         // console.log(err)
